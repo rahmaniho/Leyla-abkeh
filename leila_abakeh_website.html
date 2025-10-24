@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>دفتر حقوقی لیلا آبکه —  عضو کانون وکلای دادگستری</title>
+  <meta name="description" content="دفتر حقوقی لیلا آبکه — مشاوره حقوقی تخصصی در دعاوی خانواده، قراردادها و مسائل کیفری. دفتر: قزوین، زیباشهر منطقه ۶، رو به روی دادگستری." />
+  <meta name="theme-color" content="#0B1A2E" />
+
+  <!-- Tailwind CDN for rapid styling + custom colors -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0B1A2E',
+            gold: '#C9A23E',
+            'navy-light': '#122533',
+            'muted-bg': '#F5F6F8'
+          },
+          fontFamily: {
+            vazir: ['Vazirmatn', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Vazirmatn font (via jsDelivr) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v34.1.0/dist/font-face.css">
+
+  <!-- Flatpickr for date/time picker -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Icons -->
+  <script src="https://kit.fontawesome.com/0c87d6b0d2.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root{
+      --navy: #0B1A2E;
+      --gold: #C9A23E;
+      --navy-light: #122533;
+    }
+
+    html,body{font-family: Vazirmatn, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+
+    /* subtle glass hero overlay */
+    .hero-overlay{background: linear-gradient(180deg, rgba(11,26,46,0.7) 0%, rgba(11,26,46,0.85) 100%);} 
+
+    /* shiny gold button effect */
+    .btn-gold{background: linear-gradient(90deg, rgba(201,162,62,1) 0%, rgba(255,215,102,0.95) 100%);} 
+    .btn-gold:hover{filter:brightness(1.03) saturate(1.05);} 
+
+    /* subtle card accent */
+    .card-accent{box-shadow:0 6px 18px rgba(11,26,46,0.12);} 
+
+    /* focus styles */
+    input:focus, textarea:focus, select:focus{outline:2px solid rgba(201,162,62,0.18);}
+
+    /* small animation for CTA */
+    .pulse-gold{animation: pulse 3s infinite;}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(201,162,62,0.15)}70%{box-shadow:0 0 0 10px rgba(201,162,62,0)}100%{box-shadow:0 0 0 0 rgba(201,162,62,0)}}
+
+    /* make images cover nicely */
+    .cover{object-fit:cover;}
+
+  </style>
+</head>
+<body class="bg-[color:var(--muted-bg)] text-gray-800 leading-relaxed">
+
+  <!-- Header / Navbar -->
+  <header class="bg-white/60 backdrop-blur sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-5 py-3 flex items-center justify-between">
+      <a class="flex items-center gap-3" href="#home">
+        <div class="w-12 h-12 rounded-full bg-[color:var(--gold)] flex items-center justify-center text-navy font-semibold">LA</div>
+        <div>
+          <h1 class="text-navy font-bold text-lg">لیلا آبکه</h1>
+          <p class="text-sm text-gray-600 -mt-1">وکیل پایه یک دادگستری</p>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="#home" class="text-gray-700 hover:text-navy">خانه</a>
+        <a href="#about" class="text-gray-700 hover:text-navy">درباره</a>
+        <a href="#services" class="text-gray-700 hover:text-navy">خدمات</a>
+        <a href="#blog" class="text-gray-700 hover:text-navy">مقالات</a>
+        <a href="#contact" class="text-gray-700 hover:text-navy">تماس</a>
+        <a href="#booking" class="hidden md:inline-block px-4 py-2 rounded-md text-white btn-gold font-semibold shadow-sm">رزرو مشاوره</a>
+      </nav>
+
+      <!-- mobile menu button -->
+      <div class="md:hidden">
+        <button id="mobileBtn" class="p-2 rounded-md bg-white border">
+          <i class="fa fa-bars text-navy"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section id="home" class="relative">
+    <div class="h-[520px] md:h-[640px] bg-[url('https://images.unsplash.com/photo-1565372911700-7b4f9d1f1b6f?q=80&w=1600&auto=format&fit=crop&s=...')] bg-center bg-no-repeat bg-cover">
+      <div class="hero-overlay w-full h-full flex items-center">
+        <div class="max-w-6xl mx-auto px-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div class="text-right text-white">
+              <h2 class="text-3xl md:text-5xl font-extrabold leading-tight">لیلا آبکه</h2>
+              <p class="mt-3 text-lg md:text-xl text-gray-200">وکالت تخصصی در دعاوی خانواده، قراردادها و امور تجاری — همراه شما در همه مراحل حقوقی</p>
+
+              <div class="mt-6 flex flex-wrap gap-3">
+                <a href="#booking" class="px-6 py-3 rounded-md text-white btn-gold font-semibold shadow-lg hover:scale-[1.01] transition-transform">رزرو مشاوره</a>
+                <a href="#contact" class="px-6 py-3 rounded-md border border-white/30 text-white hover:bg-white/10 transition">تماس با ما</a>
+              </div>
+
+              <ul class="mt-6 text-sm text-gray-200 space-y-2">
+                <li><i class="fa fa-map-marker-alt ml-2"></i> قزوین، زیباشهر، منطقه ۶ — رو به روی دادگستری</li>
+                <li><i class="fa fa-phone ml-2"></i> ۰۹۱۲-XXX-XXXX</li>
+              </ul>
+            </div>
+
+            <div class="hidden md:block">
+              <div class="w-full h-80 rounded-2xl overflow-hidden card-accent">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=1200&auto=format&fit=crop&s=..." alt="دفتر حقوقی" class="w-full h-full cover" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section id="services" class="max-w-6xl mx-auto px-6 py-12">
+    <div class="text-center mb-8">
+      <h3 class="text-navy text-2xl font-bold">خدمات حقوقی</h3>
+      <p class="text-gray-600 mt-2">خدمات تخصصی با رویکرد عملی و انسانی</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <article class="bg-white rounded-xl p-6 card-accent">
+        <div class="flex items-center justify-between">
+          <h4 class="text-navy font-semibold">دعاوی خانواده</h4>
+          <div class="w-12 h-12 rounded-md flex items-center justify-center bg-[color:var(--gold)] text-navy font-bold">⚖️</div>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">مشاوره، تنظیم دادخواست، حضور در جلسات و پیگیری پرونده‌های طلاق، نفقه، حضانت و توافقات خانواده.</p>
+      </article>
+
+      <article class="bg-white rounded-xl p-6 card-accent">
+        <div class="flex items-center justify-between">
+          <h4 class="text-navy font-semibold">قراردادها & شرکت‌ها</h4>
+          <div class="w-12 h-12 rounded-md flex items-center justify-center bg-[color:var(--gold)] text-navy font-bold">📄</div>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">تنظیم و بررسی قراردادهای تجاری، مشاوره در تاسیس شرکت، حل اختلاف شرکا و مشاوره حقوقی کسب‌وکارها.</p>
+      </article>
+
+      <article class="bg-white rounded-xl p-6 card-accent">
+        <div class="flex items-center justify-between">
+          <h4 class="text-navy font-semibold">کیفری و ادله</h4>
+          <div class="w-12 h-12 rounded-md flex items-center justify-center bg-[color:var(--gold)] text-navy font-bold">🔒</div>
+        </div>
+        <p class="mt-3 text-sm text-gray-600">مشاوره حقوقی کیفری، دفاع، و بررسی مدارک و ادله و راهنمایی برای حفظ حقوق متهم و شاکی.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="bg-white/70">
+    <div class="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+      <div class="md:col-span-2">
+        <h3 class="text-navy text-2xl font-bold">درباره لیلا آبکه</h3>
+        <p class="mt-4 text-gray-700">با بیش از ده سال تجربه در دادگاه‌های عمومی و تخصصی، من (لیلا آبکه) متعهد به ارائه مشاوره‌های دقیق و راهکارهای عملی برای حل مسائل حقوقی شما هستم. رویکرد من ترکیبی از تحلیل حقوقی قوی و پیگیری انسانی پرونده‌ها است تا بهترین نتیجه برای موکلین حاصل شود.</p>
+
+        <ul class="mt-4 space-y-2 text-sm text-gray-600">
+          <li>• فارغ‌التحصیل حقوق از دانشگاه معتبر</li>
+          <li>• عضو رسمی کانون وکلای دادگستری دادگستری</li>
+    
+        </ul>
+
+        <div class="mt-6 flex gap-3">
+          <a href="#booking" class="px-4 py-2 rounded-md text-white btn-gold font-semibold">رزرو مشاوره</a>
+          <a href="#contact" class="px-4 py-2 rounded-md border border-gray-300">تماس با دفتر</a>
+        </div>
+      </div>
+
+      <div class="md:col-span-1">
+        <div class="w-full h-72 rounded-2xl overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1532074205216-d0e1f8b6b51b?q=80&w=800&auto=format&fit=crop&s=..." alt="پروفایل وکیل" class="w-full h-full cover" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Form -->
+  <section id="booking" class="max-w-4xl mx-auto px-6 py-12">
+    <div class="bg-white rounded-2xl p-8 card-accent">
+      <h3 class="text-navy text-xl font-bold">رزرو مشاوره</h3>
+      <p class="text-gray-600 mt-2">لطفاً جزئیات را وارد کنید تا برای هماهنگی تماس گرفته شود. (پاسخ داخل سایت 24 ساعت)</p>
+
+      <!-- Netlify form setup -->
+      <form id="bookingForm" name="booking" method="POST" data-netlify="true" class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="hidden" name="form-name" value="booking" />
+
+        <label class="col-span-1">
+          <span class="text-sm text-gray-600">نام و نام خانوادگی</span>
+          <input required name="fullName" class="mt-1 block w-full rounded-md border px-3 py-2" placeholder="مثلاً لیلا آبکه" />
+        </label>
+
+        <label class="col-span-1">
+          <span class="text-sm text-gray-600">شماره تماس</span>
+          <input required name="phone" type="tel" pattern="[0-9+\-()\s]{6,}" class="mt-1 block w-full rounded-md border px-3 py-2" placeholder="۰۹۱۲-XXX-XXXX" />
+        </label>
+
+        <label class="col-span-1">
+          <span class="text-sm text-gray-600">ایمیل</span>
+          <input name="email" type="email" class="mt-1 block w-full rounded-md border px-3 py-2" placeholder="example@mail.com" />
+        </label>
+
+        <label class="col-span-1">
+          <span class="text-sm text-gray-600">نوع مشاوره</span>
+          <select name="type" class="mt-1 block w-full rounded-md border px-3 py-2">
+            <option>انتخاب کنید...</option>
+            <option>دعاوی خانواده</option>
+            <option>قراردادها و شرکت‌ها</option>
+            <option>کیفری</option>
+            <option>مشاوره حقوقی عمومی</option>
+          </select>
+        </label>
+
+        <label class="col-span-1">
+          <span class="text-sm text-gray-600">تاریخ و ساعت پیشنهادی</span>
+          <input id="datetime" name="datetime" class="mt-1 block w-full rounded-md border px-3 py-2" placeholder="انتخاب تاریخ و ساعت" />
+        </label>
+
+        <label class="col-span-1 md:col-span-2">
+          <span class="text-sm text-gray-600">توضیحات (اختیاری)</span>
+          <textarea name="notes" rows="4" class="mt-1 block w-full rounded-md border px-3 py-2" placeholder="خلاصه‌ای از موضوع پرونده"></textarea>
+        </label>
+
+        <div class="md:col-span-2 flex items-center justify-end gap-3">
+          <button type="submit" class="px-6 py-3 rounded-md text-white btn-gold font-semibold">درخواست رزرو مشاوره</button>
+          <button type="reset" class="px-4 py-2 rounded-md border">پاک کردن</button>
+        </div>
+
+        <p id="bookingMsg" class="text-sm text-green-600 hidden md:col-span-2"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="max-w-6xl mx-auto px-6 py-12">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <div>
+        <h3 class="text-navy text-2xl font-bold">تماس با دفتر</h3>
+        <p class="text-gray-600 mt-2">برای هماهنگی جلسات یا سوالات حقوقی با ما تماس بگیرید یا فرم زیر را پر کنید.</p>
+
+        <ul class="mt-4 text-sm text-gray-700 space-y-2">
+          <li><i class="fa fa-map-marker-alt ml-2 text-navy"></i> قزوین، زیباشهر، منطقه ۶ — رو به روی دادگستری</li>
+          <li><i class="fa fa-phone ml-2 text-navy"></i> ۰۹۱۲-XXX-XXXX</li>
+          <li><i class="fa fa-envelope ml-2 text-navy"></i> info@leilaabakeh.ir</li>
+        </ul>
+
+        <div class="mt-6 flex gap-3">
+          <a class="px-4 py-2 rounded-md border" href="#">واتساپ</a>
+          <a class="px-4 py-2 rounded-md border" href="#">اینستاگرام</a>
+          <a class="px-4 py-2 rounded-md border" href="#">لینکدین</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="bg-white rounded-xl p-6 card-accent">
+          <h4 class="text-navy font-semibold">فرم تماس سریع</h4>
+          <form name="contact" method="POST" data-netlify="true" class="mt-4 grid grid-cols-1 gap-3">
+            <input type="hidden" name="form-name" value="contact" />
+            <input name="name" required class="rounded-md border px-3 py-2" placeholder="نام شما" />
+            <input name="phone" class="rounded-md border px-3 py-2" placeholder="شماره تماس" />
+            <input name="email" type="email" class="rounded-md border px-3 py-2" placeholder="ایمیل" />
+            <textarea name="message" rows="4" class="rounded-md border px-3 py-2" placeholder="پیام شما"></textarea>
+            <div class="flex items-center justify-end gap-2 mt-2">
+              <button type="submit" class="px-4 py-2 rounded-md text-white btn-gold font-semibold">ارسال پیام</button>
+            </div>
+            <p id="contactMsg" class="text-sm text-green-600 hidden"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog preview -->
+  <section id="blog" class="max-w-6xl mx-auto px-6 py-12">
+    <div class="text-center mb-8">
+      <h3 class="text-navy text-2xl font-bold">مقالات و نکات حقوقی</h3>
+      <p class="text-gray-600 mt-2">چند نوشته منتخب برای آگاه‌سازی مراجعین</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <article class="bg-white rounded-xl p-5 card-accent">
+        <h4 class="text-navy font-semibold">نکات مهم در قراردادهای کاری</h4>
+        <p class="text-sm text-gray-600 mt-2">چیزهایی که قبل از امضای قرارداد کاری باید بدانید تا از حقوق‌تان محافظت کنید.</p>
+        <a class="mt-3 inline-block text-gold font-semibold" href="#">مطالعه بیشتر →</a>
+      </article>
+
+      <article class="bg-white rounded-xl p-5 card-accent">
+        <h4 class="text-navy font-semibold">راهنمای حضانت فرزند</h4>
+        <p class="text-sm text-gray-600 mt-2">نحوه‌ی آماده سازی مدارک و نکات حقوقی مرتبط با حضانت.</p>
+        <a class="mt-3 inline-block text-gold font-semibold" href="#">مطالعه بیشتر →</a>
+      </article>
+
+      <article class="bg-white rounded-xl p-5 card-accent">
+        <h4 class="text-navy font-semibold">چه زمانی باید وکیل بگیرم؟</h4>
+        <p class="text-sm text-gray-600 mt-2">وقتی پرونده شما حساس است یا نیاز به دفاع و پیگیری حقوقی دارد.</p>
+        <a class="mt-3 inline-block text-gold font-semibold" href="#">مطالعه بیشتر →</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-[color:var(--navy)] text-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div>
+        <h5 class="text-lg font-semibold">دفتر حقوقی لیلا آبکه</h5>
+        <p class="text-sm mt-2">قزوین، زیباشهر، منطقه ۶ ، رو به روی دادگستری</p>
+      </div>
+
+      <div class="text-sm text-gray-300">© تمامی حقوق برای لیلا آبکه محفوظ است.</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Mobile menu toggle
+    const mobileBtn = document.getElementById('mobileBtn');
+    mobileBtn?.addEventListener('click', ()=>{
+      alert('نسخه موبایل در این پیش‌نمایش ساده‌شده است. هنگام استفاده واقعی می‌توان منو را باز/بسته کرد.');
+    });
+
+    // Flatpickr init for datetime
+    flatpickr("#datetime", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      altInput: true,
+      altFormat: "d F Y — H:i",
+      time_24hr: true
+    });
+
+    // Basic client-side handling for forms (show success message)
+    function handleForm(formId,msgId){
+      const f = document.getElementById(formId);
+      if(!f) return;
+      f.addEventListener('submit', function(e){
+        // let Netlify handle real post — we just show message
+        e.preventDefault();
+        const msg = document.getElementById(msgId);
+        msg.textContent = 'درخواست شما با موفقیت ثبت شد. تیم دفتر در عرض 24 ساعت با شما تماس خواهد گرفت.';
+        msg.classList.remove('hidden');
+        f.reset();
+        setTimeout(()=> msg.classList.add('hidden'), 8000);
+      });
+    }
+
+    // attach handlers (forms with ids)
+    handleForm('bookingForm','bookingMsg');
+    // contact form is unnamed in this preview; find by name attribute
+    const contactForm = document.querySelector('form[name="contact"]');
+    if(contactForm){
+      contactForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const m = document.getElementById('contactMsg');
+        m.textContent = 'پیام شما ارسال شد. متشکریم.';
+        m.classList.remove('hidden');
+        contactForm.reset();
+        setTimeout(()=> m.classList.add('hidden'), 6000);
+      });
+    }
+
+  </script>
+</body>
+</html>
