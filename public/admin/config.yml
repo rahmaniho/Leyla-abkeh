@@ -1,0 +1,20 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# محل ذخیره عکس‌ها و فایل‌های رسانه‌ای
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "blog" # نام داخلی مجموعه
+    label: "مقالات" # نامی که در پنل نمایش داده میشه
+    folder: "content/blog" # پوشه‌ای که فایل‌های متنی توش ذخیره میشن
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "عنوان", name: "title", widget: "string" }
+      - { label: "تاریخ انتشار", name: "date", widget: "datetime" }
+      - { label: "تصویر شاخص", name: "thumbnail", widget: "image", required: false }
+      - { label: "خلاصه", name: "description", widget: "text" }
+      - { label: "متن اصلی", name: "body", widget: "markdown" }
