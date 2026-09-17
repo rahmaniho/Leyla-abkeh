@@ -2,7 +2,6 @@ backend:
   name: git-gateway
   branch: main
 
-# محل ذخیره عکس‌ها و فایل‌های رسانه‌ای
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
