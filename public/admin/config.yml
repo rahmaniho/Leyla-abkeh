@@ -1,5 +1,6 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: rahmanihc/Leyla-abkeh # حتماً با حروف دقیقاً مثل نام کاربری و مخزنت
   branch: main
 
 # محل ذخیره عکس‌ها و فایل‌های رسانه‌ای
@@ -7,9 +8,9 @@ media_folder: "public/uploads"
 public_folder: "/uploads"
 
 collections:
-  - name: "blog" # نام داخلی مجموعه
-    label: "مقالات" # نامی که در پنل نمایش داده میشه
-    folder: "content/blog" # پوشه‌ای که فایل‌های متنی توش ذخیره میشن
+  - name: "blog"
+    label: "مقالات"
+    folder: "content/blog"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
