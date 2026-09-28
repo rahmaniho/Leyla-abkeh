@@ -7,6 +7,7 @@ import Benefits from "./components/Benefits";
 import Testimonials from "./components/Testimonials";
 import Pricing from "./components/Pricing";
 import FAQ from "./components/FAQ";
+import Contact from "./components/Contact";
 import FinalCTA from "./components/FinalCTA";
 import Footer from "./components/Footer";
 import FloatingCall from "./components/FloatingCall";
@@ -14,16 +15,13 @@ import FloatingCall from "./components/FloatingCall";
 export default function App() {
   return (
     <div className="min-h-screen bg-cream text-ink">
-      {/* لینک پرش برای کاربران صفحه‌خوان */}
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[60] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2.5 focus:text-sm focus:font-bold focus:text-ink-deep focus:shadow-gold"
+        className="sr-only focus:not-sr-only focus:fixed focus:right-3 focus:top-3 focus:z-[60] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2.5 focus:text-sm focus:font-bold focus:text-ink-deep"
       >
         پرش به محتوای اصلی
       </a>
-
       <Navbar />
-
       <main id="main">
         <Hero />
         <Stats />
@@ -33,9 +31,9 @@ export default function App() {
         <Testimonials />
         <Pricing />
         <FAQ />
+        <Contact />
         <FinalCTA />
       </main>
-
       <Footer />
       <FloatingCall />
     </div>
