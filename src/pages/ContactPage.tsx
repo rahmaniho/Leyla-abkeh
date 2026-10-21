@@ -18,7 +18,7 @@ const breadcrumbs = [
 ];
 
 export const meta: PageMeta = {
-  title: "تماس با دفتر وکالت در قزوین | آدرس، تلفن و ساعات کاری — لیلا آبکه",
+  title: "تماس با دفتر وکالت در قزوین | آدرس، تلفن و ساعات کاری | لیلا آبکه",
   description: `راه‌های تماس با دفتر وکالت ${siteConfig.lawyer.name} در ${siteConfig.site.city}: تلفن، واتساپ، نشانی دفتر، ساعات کاری و فرم درخواست مشاورهٔ آنلاین.`,
   path: "/contact",
   type: "website",

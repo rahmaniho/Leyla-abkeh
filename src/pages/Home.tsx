@@ -6,6 +6,7 @@ import Benefits from "../components/Benefits";
 import Testimonials from "../components/Testimonials";
 import Pricing from "../components/Pricing";
 import FAQ from "../components/FAQ";
+import { SITE_FAQS } from "../content/faqs";
 import FinalCTA from "../components/FinalCTA";
 import { buildAttorneySchema, buildWebsiteSchema, type PageMeta } from "../lib/seo";
 import { siteConfig } from "../config/site";
@@ -29,7 +30,7 @@ export default function HomePage() {
       <Benefits />
       <Testimonials />
       <Pricing />
-      <FAQ />
+      <FAQ items={SITE_FAQS.slice(0, 4)} moreHref="/faq" />
       <FinalCTA />
     </>
   );

@@ -6,7 +6,7 @@ import { siteConfig } from "../config/site";
 import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
 
 export const meta: PageMeta = {
-  title: "درباره لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
+  title: "دربارهٔ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
   description:
     "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانهٔ پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
   path: "/about",

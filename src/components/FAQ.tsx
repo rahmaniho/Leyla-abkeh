@@ -2,6 +2,7 @@ import { useState } from "react";
 import Reveal from "./Reveal";
 import SectionHeader from "./SectionHeader";
 import { ChevronDownIcon } from "./Icons";
+import { Link } from "../lib/router";
 import { cn } from "../utils/cn";
 import { SITE_FAQS, type SiteFaq } from "../content/faqs";
 
@@ -13,6 +14,9 @@ interface FAQProps {
   titleId?: string;
   /** اگر true باشد، اولین سوال باز است */
   openFirst?: boolean;
+  /** لینک «همهٔ پرسش‌ها» در پایان بخش */
+  moreHref?: string;
+  moreLabel?: string;
 }
 
 export default function FAQ({
@@ -22,6 +26,8 @@ export default function FAQ({
   description = "پاسخ شفاف به دغدغه‌هایی که معمولاً پیش از مراجعه به وکیل مطرح می‌شود.",
   titleId = "faq-title",
   openFirst = true,
+  moreHref,
+  moreLabel = "مشاهدهٔ همهٔ پرسش‌های متداول",
 }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number>(openFirst ? 0 : -1);
 
@@ -92,6 +98,17 @@ export default function FAQ({
             );
           })}
         </div>
+
+        {moreHref && (
+          <div className="mt-10 text-center">
+            <Link
+              to={moreHref}
+              className="inline-flex items-center gap-2 rounded-full border border-ink/15 px-6 py-3 text-[13px] font-extrabold text-ink transition-colors hover:border-gold/50 hover:text-gold-deep"
+            >
+              {moreLabel}
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
