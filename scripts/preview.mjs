@@ -4,6 +4,7 @@
  * - پوشه‌ها با index.html سرو می‌شوند (بدون بازنویسی SPA)
  * - مسیر ناموجود → 404.html با کد وضعیت ۴۰۴
  * - `/x` در صورت وجود `x/index.html` با ۳۰۱ به `/x/` هدایت می‌شود (رفتار Pretty URLs نتلیفای)
+ * - با `PREVIEW_BASE=/Leyla-abkeh` خروجی زیر همان مسیر پایه سرو می‌شود (شبیه‌سازی GitHub Pages)
  * - سرو فایل‌های استاتیک با MIME درست
  */
 import { createReadStream } from "node:fs";
@@ -15,6 +16,8 @@ import process from "node:process";
 const root = path.resolve(process.cwd(), "dist");
 const port = Number(process.env.PORT ?? 4173);
 const host = process.env.HOST ?? "0.0.0.0";
+/** مسیر پایهٔ اختیاری؛ خالی یعنی ریشه (Netlify) */
+const base = (process.env.PREVIEW_BASE ?? "").replace(/\/+$/, "");
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -71,16 +74,25 @@ async function isDirectoryWithIndex(urlPath) {
 }
 
 const server = createServer(async (req, res) => {
-  const [rawPath, query = ""] = (req.url ?? "/").split("?");
+  const [fullPath, query = ""] = (req.url ?? "/").split("?");
   const querySuffix = query ? `?${query}` : "";
 
-  if (!rawPath.endsWith("/") && !path.extname(rawPath) && (await isDirectoryWithIndex(rawPath))) {
-    res.writeHead(301, { location: `${rawPath}/${querySuffix}` });
+  // مسیر پایه: درخواست بیرون از پایه به آن هدایت می‌شود (رفتار GitHub Pages)
+  if (base && fullPath !== base && !fullPath.startsWith(`${base}/`)) {
+    res.writeHead(302, { location: `${base}${fullPath === "/" ? "/" : fullPath}${querySuffix}` });
     res.end();
     return;
   }
 
-  const file = await resolveFile(req.url ?? "/");
+  const rawPath = base ? fullPath.slice(base.length) || "/" : fullPath;
+
+  if (!rawPath.endsWith("/") && !path.extname(rawPath) && (await isDirectoryWithIndex(rawPath))) {
+    res.writeHead(301, { location: `${base}${rawPath}/${querySuffix}` });
+    res.end();
+    return;
+  }
+
+  const file = await resolveFile(`${rawPath}${querySuffix}`);
 
   if (!file) {
     try {
@@ -107,5 +119,5 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`پیش‌نمایش خروجی بیلد: http://${host}:${port}`);
+  console.log(`پیش‌نمایش خروجی بیلد: http://${host}:${port}${base}/`);
 });

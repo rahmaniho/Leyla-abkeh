@@ -1,0 +1,73 @@
+# ------------------------------------------------------------------
+# انتشار خودکار روی GitHub Pages
+# ------------------------------------------------------------------
+# سایت استاتیک است (پیش‌رندر زمان بیلد)، بنابراین روی Pages هم بدون سرور
+# کار می‌کند. دو نکتهٔ مهم برای زیرمسیر مخزن:
+#   1) VITE_BASE_PATH = /<repo>/        → همهٔ دارایی‌ها و لینک‌ها
+#   2) VITE_SITE_URL  = https://<owner>.github.io/<repo>
+#      (برای canonical، og:url و sitemap)
+# اگر بعداً روی دامنهٔ اختصاصی یا Netlify منتشر شد، این متغیرها لازم نیستند.
+#
+# پیش‌نیاز یک‌باره: Settings → Pages → Build and deployment → Source = GitHub Actions
+# ------------------------------------------------------------------
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: نصب وابستگی‌ها
+        run: npm ci
+
+      - name: کیفیت (lint + typecheck + test)
+        run: |
+          npm run lint
+          npm run typecheck
+          npm run test
+
+      - name: بیلد با مسیر پایهٔ مخزن
+        env:
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+        run: npm run build
+
+      - name: پیکربندی Pages
+        uses: actions/configure-pages@v5
+
+      - name: بارگذاری خروجی
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

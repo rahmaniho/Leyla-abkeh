@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import { normalizePath, pageHref } from "./seo";
+import { stripBase } from "./base";
 
 const NAVIGATE_EVENT = "app:navigate";
 
@@ -24,7 +25,7 @@ const RouterContext = createContext<RouterValue | null>(null);
 function readLocation(): { pathname: string; hash: string } {
   if (typeof window === "undefined") return { pathname: "/", hash: "" };
   return {
-    pathname: normalizePath(window.location.pathname),
+    pathname: normalizePath(stripBase(window.location.pathname)),
     hash: window.location.hash.replace(/^#/, ""),
   };
 }
