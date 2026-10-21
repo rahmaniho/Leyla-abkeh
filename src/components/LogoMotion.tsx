@@ -201,13 +201,15 @@ export default function LogoMotion({ className = "" }: { className?: string }) {
           onPlay={() => setStatus("playing")}
           onPause={() => setStatus((current) => (current === "ended" ? current : "paused"))}
         >
-          {/* ویدئو صدا ندارد؛ این ردیف متن تصویر را برای فناوری‌های کمکی توصیف می‌کند */}
+          {/*
+            ویدئو صدا ندارد؛ این ردیف، تصویر را به‌صورت متن توصیف می‌کند.
+            عمداً `default` نیست تا روی لوگو متن ناخواسته نمایش داده نشود.
+          */}
           <track
             kind="captions"
             src={withBase(logoMotion.captions)}
             srcLang="fa"
             label="توصیف تصویری"
-            default
           />
         </video>
       </div>
