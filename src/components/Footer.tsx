@@ -8,135 +8,153 @@ import {
   TelegramIcon,
   WhatsAppIcon,
 } from "./Icons";
+import { Link } from "../lib/router";
+import { FOOTER_LEGAL_LINKS, NAV_ITEMS } from "../config/nav";
+import { SERVICES, servicePath } from "../content/services";
+import {
+  activeSocials,
+  officePhone,
+  openingHoursFa,
+  primaryPhone,
+  siteConfig,
+  type SocialKey,
+} from "../config/site";
 
-const QUICK_LINKS = [
-  { href: "#top", label: "صفحهٔ اصلی" },
-  { href: "#about", label: "درباره من" },
-  { href: "#services", label: "خدمات حقوقی" },
-  { href: "#testimonials", label: "نظرات موکلان" },
-  { href: "#pricing", label: "تعرفه‌ها" },
-  { href: "#faq", label: "سوالات متداول" },
-];
-
-const SERVICE_LINKS = [
-  "دعاوی خانواده",
-  "دعاوی کیفری",
-  "امور ملکی و ثبتی",
-  "چک و اسناد تجاری",
-  "حقوق کار و بیمه",
-  "حقوق شرکت‌ها",
-];
-
-const SOCIALS = [
-  { icon: InstagramIcon, label: "اینستاگرام", href: "#" },
-  { icon: WhatsAppIcon, label: "واتساپ", href: "https://wa.me/989121234567" },
-  { icon: TelegramIcon, label: "تلگرام", href: "https://t.me/example" },
-  { icon: LinkedInIcon, label: "لینکدین", href: "#" },
-];
+const SOCIAL_ICONS: Record<SocialKey, typeof InstagramIcon> = {
+  instagram: InstagramIcon,
+  telegram: TelegramIcon,
+  linkedin: LinkedInIcon,
+  whatsapp: WhatsAppIcon,
+};
 
 export default function Footer() {
+  const year = new Intl.DateTimeFormat("fa-IR", {
+    year: "numeric",
+    timeZone: "Asia/Tehran",
+  }).format(new Date());
+
   return (
-    <footer className="border-t border-white/8 bg-ink-deep" aria-label="پاورقی سایت">
+    <footer className="border-t border-white/8 bg-ink-deep pb-24 md:pb-0" aria-label="پاورقی سایت">
       <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.3fr_0.8fr_0.9fr_1fr]">
-          {/* برند */}
+        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1fr_1.1fr]">
           <div>
-            <a href="#top" className="flex items-center gap-3" aria-label="لیلا آبکه — بازگشت به ابتدای صفحه">
+            <Link
+              to="/"
+              className="flex items-center gap-3"
+              aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحهٔ اصلی`}
+            >
               <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-gold-light to-gold-deep text-ink-deep shadow-gold">
                 <ScaleIcon className="h-6 w-6" />
               </span>
               <span className="flex flex-col leading-tight">
-                <span className="text-lg font-extrabold text-white">لیلا آبکه</span>
-                <span className="text-[11px] font-medium text-gold-light">وکیل پایه یک دادگستری</span>
+                <span className="text-lg font-extrabold text-white">{siteConfig.lawyer.name}</span>
+                <span className="text-[11px] font-medium text-gold-light">
+                  {siteConfig.lawyer.jobTitle}
+                </span>
               </span>
-            </a>
-            <p className="mt-5 max-w-xs text-[13px] leading-7 text-white/50">
-              دفاعِ هوشمند، همراه با اعتماد؛ دفتر تخصصی وکالت و مشاورهٔ حقوقی در
-              قزوین با بیش از ۱۲ سال تجربه در دعاوی خانواده، کیفری، ملکی و تجاری.
+            </Link>
+            <p className="mt-5 max-w-xs text-[13px] leading-7 text-white/60">
+              دفتر وکالت و مشاورهٔ حقوقی در {siteConfig.site.city}؛ همراهی در دعاوی خانواده،
+              کیفری، ملکی، اسناد تجاری، حقوق کار و امور شرکت‌ها.
             </p>
-            <ul className="mt-6 flex gap-3">
-              {SOCIALS.map(({ icon: Icon, label, href }) => (
-                <li key={label}>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-white/60 transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 hover:bg-gold/15 hover:text-gold-light"
-                  >
-                    <Icon className="h-4.5 w-4.5" />
-                  </a>
-                </li>
-              ))}
-            </ul>
+            {activeSocials.length > 0 && (
+              <ul className="mt-6 flex gap-3">
+                {activeSocials.map(({ key, label, href }) => {
+                  const Icon = SOCIAL_ICONS[key];
+                  return (
+                    <li key={key}>
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-gold/50 hover:bg-gold/15 hover:text-gold-light"
+                      >
+                        <Icon className="h-4.5 w-4.5" />
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
 
-          {/* لینک‌های سریع */}
           <nav aria-label="لینک‌های سریع">
-            <h3 className="text-[14px] font-extrabold text-white">دسترسی سریع</h3>
+            <h2 className="text-[14px] font-extrabold text-white">دسترسی سریع</h2>
             <ul className="mt-5 space-y-3">
-              {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="group inline-flex items-center gap-2 text-[13px] text-white/55 transition-colors duration-300 hover:text-gold-light"
-                  >
-                    <span className="h-1 w-1 rounded-full bg-gold/50 transition-all duration-300 group-hover:w-2.5" />
-                    {link.label}
-                  </a>
-                </li>
-              ))}
+              {[{ href: "/", label: "صفحهٔ اصلی" }, ...NAV_ITEMS, ...FOOTER_LEGAL_LINKS].map(
+                (link) => (
+                  <li key={link.href}>
+                    <Link
+                      to={link.href}
+                      className="group inline-flex items-center gap-2 text-[13px] text-white/60 transition-colors duration-300 hover:text-gold-light"
+                    >
+                      <span className="h-1 w-1 rounded-full bg-gold/50 transition-all duration-300 group-hover:w-2.5" />
+                      {link.label}
+                    </Link>
+                  </li>
+                )
+              )}
             </ul>
           </nav>
 
-          {/* خدمات */}
           <nav aria-label="حوزه‌های فعالیت">
-            <h3 className="text-[14px] font-extrabold text-white">حوزه‌های فعالیت</h3>
+            <h2 className="text-[14px] font-extrabold text-white">حوزه‌های فعالیت</h2>
             <ul className="mt-5 space-y-3">
-              {SERVICE_LINKS.map((service) => (
-                <li key={service}>
-                  <a
-                    href="#services"
-                    className="group inline-flex items-center gap-2 text-[13px] text-white/55 transition-colors duration-300 hover:text-gold-light"
+              {SERVICES.map((service) => (
+                <li key={service.slug}>
+                  <Link
+                    to={servicePath(service.slug)}
+                    className="group inline-flex items-center gap-2 text-[13px] text-white/60 transition-colors duration-300 hover:text-gold-light"
                   >
                     <span className="h-1 w-1 rounded-full bg-gold/50 transition-all duration-300 group-hover:w-2.5" />
-                    {service}
-                  </a>
+                    {service.title}
+                  </Link>
                 </li>
               ))}
             </ul>
           </nav>
 
-          {/* اطلاعات تماس */}
           <div>
-            <h3 className="text-[14px] font-extrabold text-white">اطلاعات تماس</h3>
-            <ul className="mt-5 space-y-4 text-[13px] text-white/55">
+            <h2 className="text-[14px] font-extrabold text-white">اطلاعات تماس</h2>
+            <ul className="mt-5 space-y-4 text-[13px] text-white/60">
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
                   <PhoneIcon className="h-4 w-4" />
                 </span>
-                <a href="tel:+989121234567" dir="ltr" className="pt-1.5 font-semibold tracking-wider transition-colors hover:text-gold-light">
-                  ۰۹۱۲ ۱۲۳ ۴۵۶۷
-                </a>
+                <span className="flex flex-col gap-1">
+                  <a
+                    href={primaryPhone.href}
+                    dir="ltr"
+                    className="pt-1 font-semibold tracking-wider transition-colors hover:text-gold-light"
+                  >
+                    {primaryPhone.display}
+                  </a>
+                  {officePhone && (
+                    <a
+                      href={officePhone.href}
+                      dir="ltr"
+                      className="tracking-wider transition-colors hover:text-gold-light"
+                    >
+                      {officePhone.display}
+                    </a>
+                  )}
+                </span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
                   <MapPinIcon className="h-4 w-4" />
                 </span>
-                <span className="leading-6">
-                  قزوین، خیابان خیام شمالی، برج آرین،
-                  <br />
-                  طبقهٔ چهارم، واحد ۱۲
-                </span>
+                <span className="leading-6">{siteConfig.contact.address.full}</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
                   <ClockIcon className="h-4 w-4" />
                 </span>
-                <span className="leading-6">
-                  شنبه تا چهارشنبه: ۹ تا ۱۸
-                  <br />
-                  پنجشنبه‌ها: ۹ تا ۱۳
+                <span className="flex flex-col gap-1 leading-6">
+                  {openingHoursFa.map((day) => (
+                    <span key={day.schemaDay}>{day.display}</span>
+                  ))}
                 </span>
               </li>
             </ul>
@@ -144,11 +162,11 @@ export default function Footer() {
         </div>
 
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/8 pt-7 sm:flex-row">
-          <p className="text-[12px] text-white/40">
-            © ۱۴۰۵ لیلا آبکه — تمامی حقوق محفوظ است.
+          <p className="text-[12px] text-white/50" suppressHydrationWarning>
+            © {year} {siteConfig.lawyer.name} — تمامی حقوق محفوظ است.
           </p>
-          <p className="text-[12px] text-white/40">
-            عضو رسمی کانون وکلای دادگستری استان قزوین
+          <p className="text-[12px] text-white/50">
+            محتوای این سایت جنبهٔ اطلاع‌رسانی عمومی دارد و جایگزین مشاورهٔ حقوقی نیست.
           </p>
         </div>
       </div>

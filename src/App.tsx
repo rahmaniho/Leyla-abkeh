@@ -1,43 +1,24 @@
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Stats from "./components/Stats";
-import Features from "./components/Features";
-import Services from "./components/Services";
-import Benefits from "./components/Benefits";
-import Testimonials from "./components/Testimonials";
-import Pricing from "./components/Pricing";
-import FAQ from "./components/FAQ";
-import FinalCTA from "./components/FinalCTA";
-import Footer from "./components/Footer";
-import FloatingCall from "./components/FloatingCall";
+import { RouterProvider, usePathname } from "./lib/router";
+import Layout from "./components/Layout";
+import JsonLd from "./components/JsonLd";
+import { resolveRoute } from "./routes";
 
-export default function App() {
+function AppShell() {
+  const pathname = usePathname();
+  const route = resolveRoute(pathname);
+
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      {/* لینک پرش برای کاربران صفحه‌خوان */}
-      <a
-        href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:right-3 focus:z-[60] focus:rounded-full focus:bg-gold focus:px-5 focus:py-2.5 focus:text-sm focus:font-bold focus:text-ink-deep focus:shadow-gold"
-      >
-        پرش به محتوای اصلی
-      </a>
+    <Layout meta={route.meta}>
+      <JsonLd data={route.meta.jsonLd} />
+      {route.element}
+    </Layout>
+  );
+}
 
-      <Navbar />
-
-      <main id="main">
-        <Hero />
-        <Stats />
-        <Features />
-        <Services />
-        <Benefits />
-        <Testimonials />
-        <Pricing />
-        <FAQ />
-        <FinalCTA />
-      </main>
-
-      <Footer />
-      <FloatingCall />
-    </div>
+export default function App({ initialPath }: { initialPath?: string }) {
+  return (
+    <RouterProvider initialPath={initialPath}>
+      <AppShell />
+    </RouterProvider>
   );
 }

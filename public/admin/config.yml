@@ -1,19 +1,132 @@
+# ------------------------------------------------------------------
+# Decap CMS — پیکربندی پنل مدیریت محتوا
+# ------------------------------------------------------------------
+# مسیر محتوا همان پوشه‌ای است که سایت در زمان بیلد می‌خواند:
+#   src/content/blog  → نمایش در /articles/<slug>
+# تصاویر در public/uploads ذخیره و با نشانی /uploads/... منتشر می‌شوند.
+#
+# پیش‌نیاز فعال‌سازی (یک‌بار در پنل Netlify):
+#   1. Identity → Enable Identity
+#   2. Identity → Services → Git Gateway → Enable
+#   3. Identity → Invite users (افزودن ایمیل مدیر)
+#   4. در صورت استفاده از دامنهٔ نهایی، مقدار site_url را به‌روزرسانی کنید.
+# جزئیات: docs/CMS-SETUP.md
+
 backend:
   name: git-gateway
   branch: main
+  commit_messages:
+    create: "content: create {{collection}} «{{slug}}»"
+    update: "content: update {{collection}} «{{slug}}»"
+    delete: "content: delete {{collection}} «{{slug}}»"
+    uploadMedia: "media: upload {{path}}"
+    deleteMedia: "media: delete {{path}}"
+
+# نشانی عمومی سایت (برای پیش‌نمایش و بازگشت از پنل)
+site_url: https://leyla-abkeh.netlify.app
+display_url: https://leyla-abkeh.netlify.app
+logo_url: https://leyla-abkeh.netlify.app/favicon.svg
+
+locale: fa
+
+# گردش‌کار ویرایشی: پیش‌نویس → بازبینی → انتشار
+publish_mode: editorial_workflow
 
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
 collections:
-  - name: "blog"
-    label: "مقالات"
-    folder: "content/blog"
+  - name: blog
+    label: مقالات
+    label_singular: مقاله
+    description: مطالب بخش «مقالات» سایت
+    folder: src/content/blog
+    extension: md
+    format: frontmatter
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    delete: false
+    slug: "{{slug}}"
+    preview_path: "articles/{{slug}}"
+    sortable_fields: ["publishDate", "title"]
+    summary: "{{title}} — {{publishDate}}"
     fields:
-      - { label: "عنوان", name: "title", widget: "string" }
-      - { label: "تاریخ انتشار", name: "date", widget: "datetime" }
-      - { label: "تصویر شاخص", name: "thumbnail", widget: "image", required: false }
-      - { label: "خلاصه", name: "description", widget: "text" }
-      - { label: "متن اصلی", name: "body", widget: "markdown" }
+      - label: عنوان مقاله
+        name: title
+        widget: string
+        hint: عنوان اصلی که در صفحه و نتایج جست‌وجو نمایش داده می‌شود.
+      - label: نشانی یکتا (slug)
+        name: slug
+        widget: string
+        required: false
+        hint: فقط حروف لاتین کوچک، رقم و خط تیره؛ مثال chek-bargashkhte. خالی بماند، از نام فایل استفاده می‌شود.
+        pattern: ['^[a-z0-9]+(?:-[a-z0-9]+)*$', 'فقط حروف لاتین کوچک، رقم و خط تیره مجاز است.']
+      - label: خلاصه
+        name: description
+        widget: text
+        hint: یک یا دو جمله؛ در فهرست مقالات و توضیح متا استفاده می‌شود.
+      - label: متن مقاله
+        name: body
+        widget: markdown
+      - label: تصویر شاخص
+        name: cover
+        widget: image
+        required: false
+        media_library:
+          config:
+            multiple: false
+      - label: توضیح تصویر (alt)
+        name: coverAlt
+        widget: string
+        required: false
+      - label: نویسنده
+        name: author
+        widget: string
+        default: دفتر وکالت لیلا آبکه
+      - label: تاریخ انتشار
+        name: publishDate
+        widget: datetime
+        date_format: YYYY-MM-DD
+        time_format: HH:mm
+        format: YYYY-MM-DDTHH:mm:ss.SSSZ
+      - label: تاریخ آخرین بازبینی
+        name: lastReviewed
+        widget: datetime
+        required: false
+        date_format: YYYY-MM-DD
+        time_format: HH:mm
+        format: YYYY-MM-DDTHH:mm:ss.SSSZ
+      - label: وضعیت پیش‌نویس
+        name: draft
+        widget: boolean
+        default: false
+        hint: در حالت فعال، مقاله در سایت منتشر نمی‌شود.
+      - label: عنوان سئو
+        name: seoTitle
+        widget: string
+        required: false
+        hint: اگر خالی بماند از عنوان مقاله استفاده می‌شود. حداکثر حدود ۶۰ نویسه.
+      - label: توضیح متا
+        name: metaDescription
+        widget: text
+        required: false
+        hint: حدود ۱۵۰ نویسه؛ اگر خالی بماند از خلاصه استفاده می‌شود.
+      - label: برچسب‌ها
+        name: tags
+        widget: list
+        required: false
+        field:
+          label: برچسب
+          name: tag
+          widget: string
+      - label: حوزه‌های مرتبط
+        name: relatedServices
+        widget: select
+        multiple: true
+        required: false
+        options:
+          - { label: دعاوی خانواده, value: khanevadeh }
+          - { label: دعاوی کیفری, value: keyfari }
+          - { label: اموال غیرمنقول و امور ثبتی, value: amlak-va-sebat }
+          - { label: چک و اسناد تجاری, value: chek-va-esnad }
+          - { label: حقوق کار و بیمه, value: hoghoogh-kar }
+          - { label: حقوق شرکت‌ها و امور تجاری, value: sherkat-ha }

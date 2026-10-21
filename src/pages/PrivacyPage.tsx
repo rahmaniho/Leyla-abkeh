@@ -1,0 +1,119 @@
+import PageHero from "../components/PageHero";
+import { primaryPhone, siteConfig } from "../config/site";
+import { Link } from "../lib/router";
+import type { PageMeta } from "../lib/seo";
+
+const breadcrumbs = [
+  { name: "صفحهٔ اصلی", path: "/" },
+  { name: "سیاست حریم خصوصی", path: "/privacy" },
+];
+
+export const meta: PageMeta = {
+  title: "سیاست حریم خصوصی | دفتر وکالت لیلا آبکه",
+  description:
+    "توضیح شفاف دربارهٔ اطلاعاتی که از طریق فرم مشاوره دریافت می‌شود، هدف استفاده، مدت نگهداری، نحوهٔ محافظت و حقوق شما برای اصلاح یا حذف اطلاعات.",
+  path: "/privacy",
+  type: "website",
+  breadcrumbs,
+};
+
+const SECTIONS = [
+  {
+    heading: "چه اطلاعاتی دریافت می‌شود؟",
+    paragraphs: [
+      "تنها اطلاعاتی که خودتان در فرم درخواست مشاوره وارد می‌کنید: نام و نام خانوادگی، شمارهٔ تماس، موضوع پرونده و شرح اختیاری موضوع.",
+      "این وب‌سایت از ابزار تحلیل رفتار کاربران (Analytics)، پیکسل تبلیغاتی یا کوکی ردیابی استفاده نمی‌کند. برای جلوگیری از ارسال تکراری، یک مقدار زمانی کوتاه‌مدت در حافظهٔ مرورگر شما ذخیره می‌شود که پس از چند ثانیه بی‌اثر است.",
+    ],
+  },
+  {
+    heading: "چرا این اطلاعات را می‌خواهیم؟",
+    paragraphs: [
+      "فقط برای پاسخ‌گویی به همان درخواست و هماهنگی نوبت مشاوره. اطلاعات برای ارسال تبلیغات، فروش یا هر هدف دیگری استفاده نمی‌شود.",
+      "جزئیات پرونده در جلسهٔ مشاوره و به‌صورت مستقیم دریافت می‌شود؛ لطفاً اطلاعات حساس را در فرم وارد نکنید.",
+    ],
+  },
+  {
+    heading: "اطلاعات کجا می‌رود و چه مدت نگه داشته می‌شود؟",
+    paragraphs: [
+      "درخواست شما از طریق یک تابع سرور در سرویس میزبانی (Netlify) پردازش و به کانال اطلاع‌رسانی دفتر (ایمیل یا پیام‌رسان) ارسال می‌شود. در خود وب‌سایت پایگاه داده‌ای برای ذخیرهٔ درخواست‌ها وجود ندارد.",
+      "پس از پاسخ‌گویی و پایان موضوع، اطلاعات درخواست‌های بدون پرونده حذف می‌شود. اگر پرونده‌ای تشکیل شود، اطلاعات بر اساس مقررات حرفه‌ای و قانونی نگهداری می‌شود.",
+    ],
+  },
+  {
+    heading: "چه اقدام‌هایی برای محافظت انجام شده است؟",
+    paragraphs: [
+      "ارتباط با سایت از طریق HTTPS انجام می‌شود. اعتبارسنجی داده‌ها هم در مرورگر و هم در سرور انجام می‌شود، درخواست‌ها محدودیت نرخ دارند و برای جلوگیری از هرزنامه از روش‌های فنی (فیلد تله و کنترل زمان تکمیل فرم) استفاده می‌شود.",
+      "هیچ کلید محرمانه یا رمز دسترسی در کد فرانت‌اند قرار ندارد؛ کلیدهای سرویس ارسال پیام فقط در متغیرهای محیطی سرور نگهداری می‌شوند.",
+      "هیچ سامانه‌ای امنیت مطلق ندارد؛ در صورت مشاهدهٔ هرگونه مشکل امنیتی، لطفاً سریع اطلاع دهید.",
+    ],
+  },
+  {
+    heading: "حقوق شما",
+    paragraphs: [
+      "می‌توانید بخواهید اطلاعات ارسالی شما بررسی، اصلاح یا حذف شود. برای این کار با ذکر نام و شمارهٔ تماسی که در فرم وارد کرده‌اید با دفتر تماس بگیرید.",
+      "اگر مایل باشید درخواست شما بدون نگهداری هیچ نسخه‌ای حذف شود، پس از پاسخ‌گویی به درخواست، این موضوع را اعلام کنید.",
+    ],
+  },
+  {
+    heading: "تغییرات این سیاست",
+    paragraphs: [
+      "در صورت تغییر روش پردازش اطلاعات، این صفحه به‌روزرسانی می‌شود و تاریخ بازبینی در انتهای صفحه ذکر خواهد شد.",
+    ],
+  },
+];
+
+export default function PrivacyPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="حریم خصوصی"
+        title="سیاست حریم خصوصی"
+        description="این صفحه به زبان ساده توضیح می‌دهد چه اطلاعاتی از طریق سایت دریافت می‌شود، چرا و چگونه نگهداری می‌شود."
+        breadcrumbs={breadcrumbs}
+      />
+
+      <section className="bg-cream py-16 lg:py-24">
+        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+          <div className="space-y-10">
+            {SECTIONS.map((section) => (
+              <section key={section.heading}>
+                <h2 className="text-xl font-extrabold leading-8 text-ink">{section.heading}</h2>
+                <div className="mt-3 space-y-3">
+                  {section.paragraphs.map((paragraph) => (
+                    <p key={paragraph.slice(0, 24)} className="text-[14px] leading-9 text-ink/80">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+
+          <div className="mt-12 rounded-3xl border border-ink/10 bg-white/75 p-6">
+            <h2 className="text-[15px] font-extrabold text-ink">تماس دربارهٔ حریم خصوصی</h2>
+            <p className="mt-2 text-[13.5px] leading-7 text-ink/75">
+              برای هر پرسش یا درخواست مرتبط با اطلاعات خود، با دفتر تماس بگیرید:
+            </p>
+            <a
+              href={primaryPhone.href}
+              dir="ltr"
+              className="mt-3 inline-flex items-center gap-2 text-base font-extrabold tracking-wider text-gold-deep"
+            >
+              {primaryPhone.display}
+            </a>
+            <p className="mt-3 text-[12.5px] leading-7 text-ink/70">
+              نشانی: {siteConfig.contact.address.full}
+            </p>
+          </div>
+
+          <p className="mt-8 text-[12px] leading-7 text-ink/70">
+            آخرین بازبینی: ۲۹ مهر ۱۴۰۵ ·{" "}
+            <Link to="/contact" className="font-bold text-gold-deep underline underline-offset-4">
+              تماس با دفتر
+            </Link>
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}

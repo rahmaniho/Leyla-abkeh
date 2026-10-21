@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* ---------- فونت فارسی (self-host، بدون درخواست به سرویس خارجی) ---------- */
+@font-face {
+  font-family: "Vazirmatn";
+  src: url("/fonts/Vazirmatn-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @theme {
   --color-ink: #1a2a3a;
   --color-ink-deep: #0f1c28;
@@ -8,7 +17,7 @@
   --color-gold: #b8915a;
   --color-gold-light: #d4b483;
   --color-gold-pale: #ead9bd;
-  --color-gold-deep: #96743f;
+  --color-gold-deep: #86672f;
   --color-cream: #f7f5f0;
   --color-sand: #efe9df;
 
@@ -28,7 +37,8 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 92px;
+  scroll-padding-top: 96px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -38,6 +48,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  font-feature-settings: "kern" 1;
 }
 
 ::selection {
@@ -46,7 +57,7 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-gold-deep);
   outline-offset: 3px;
   border-radius: 6px;
 }
@@ -76,16 +87,17 @@ body {
 /* ---------- Scroll reveal ---------- */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
+  transform: translateY(24px);
   transition:
-    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.reveal[data-dir="down"] { transform: translateY(-30px); }
-.reveal[data-dir="right"] { transform: translateX(48px); }
-.reveal[data-dir="left"] { transform: translateX(-48px); }
-.reveal[data-dir="scale"] { transform: scale(0.92); }
+
+.reveal[data-dir="down"] { transform: translateY(-24px); }
+.reveal[data-dir="right"] { transform: translateX(32px); }
+.reveal[data-dir="left"] { transform: translateX(-32px); }
+.reveal[data-dir="scale"] { transform: scale(0.94); }
+
 .reveal.is-visible {
   opacity: 1;
   transform: none;
@@ -112,6 +124,113 @@ body {
     linear-gradient(rgba(26, 42, 58, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(26, 42, 58, 0.05) 1px, transparent 1px);
   background-size: 56px 56px;
+}
+
+/* ---------- محتوای مقالات ---------- */
+.article-prose {
+  color: color-mix(in oklab, var(--color-ink) 88%, white);
+  font-size: 14.5px;
+  line-height: 2.15;
+}
+
+.article-prose > * + * {
+  margin-top: 1.15em;
+}
+
+.article-prose h2 {
+  margin-top: 2em;
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.6;
+  color: var(--color-ink);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--color-ink) 12%, transparent);
+}
+
+.article-prose h3 {
+  margin-top: 1.7em;
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--color-ink);
+}
+
+.article-prose p {
+  margin-top: 0.9em;
+}
+
+.article-prose strong {
+  font-weight: 800;
+  color: var(--color-ink);
+}
+
+.article-prose a {
+  color: var(--color-gold-deep);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.article-prose ul,
+.article-prose ol {
+  margin-top: 0.9em;
+  padding-inline-start: 1.35rem;
+}
+
+.article-prose ul { list-style: disc; }
+.article-prose ol { list-style: decimal; }
+
+.article-prose li {
+  margin-top: 0.4em;
+  padding-inline-start: 0.2rem;
+}
+
+.article-prose li::marker {
+  color: var(--color-gold-deep);
+}
+
+.article-prose blockquote {
+  margin-top: 1.4em;
+  border-inline-start: 3px solid var(--color-gold);
+  background: color-mix(in oklab, var(--color-gold) 8%, white);
+  border-radius: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  color: color-mix(in oklab, var(--color-ink) 78%, white);
+}
+
+.article-prose blockquote p { margin-top: 0; }
+
+.article-prose hr {
+  margin-top: 2em;
+  border-color: color-mix(in oklab, var(--color-ink) 12%, transparent);
+}
+
+.article-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.article-prose th,
+.article-prose td {
+  border: 1px solid color-mix(in oklab, var(--color-ink) 14%, transparent);
+  padding: 0.5rem 0.7rem;
+  text-align: right;
+}
+
+/* ---------- جزئیات آکاردئون ---------- */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary {
+  list-style: none;
+}
+
+/* ---------- تصاویر محتوا ---------- */
+.article-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 1rem;
+  border: 1px solid color-mix(in oklab, var(--color-ink) 12%, transparent);
 }
 
 /* ---------- Reduced motion ---------- */
