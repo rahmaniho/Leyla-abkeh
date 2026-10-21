@@ -146,6 +146,21 @@ export function buildAttorneySchema(): JsonLd {
           })),
         }
       : {}),
+    ...(lawyer.licenseNumber
+      ? {
+          /** شمارۀ پروانۀ وکالت — فقط وقتی تأیید شده باشد منتشر می‌شود */
+          identifier: {
+            "@type": "PropertyValue",
+            propertyID: "شمارۀ پروانۀ وکالت",
+            value: lawyer.licenseNumberLatin,
+          },
+          hasCredential: {
+            "@type": "EducationalOccupationalCredential",
+            credentialCategory: "license",
+            identifier: lawyer.licenseNumberLatin,
+          },
+        }
+      : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
     knowsLanguage: ["fa-IR"],
   };

@@ -28,6 +28,15 @@ export const meta: PageMeta = {
       image: absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
       url: pageUrl("/about"),
       worksFor: { "@id": `${siteConfig.site.url}/#attorney` },
+      ...(siteConfig.lawyer.licenseNumber
+        ? {
+            identifier: {
+              "@type": "PropertyValue",
+              propertyID: "شمارۀ پروانۀ وکالت",
+              value: siteConfig.lawyer.licenseNumberLatin,
+            },
+          }
+        : {}),
       address: {
         "@type": "PostalAddress",
         addressLocality: siteConfig.contact.address.city,
@@ -82,6 +91,14 @@ export default function AboutPage() {
                   </p>
                 )}
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
+                {siteConfig.lawyer.licenseNumber && (
+                  <p className="text-[12.5px] text-ink/70">
+                    شمارۀ پروانۀ وکالت:{" "}
+                    <span className="font-extrabold text-ink/90">
+                      {siteConfig.lawyer.licenseNumber}
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
           </Reveal>
@@ -141,8 +158,7 @@ export default function AboutPage() {
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
-              اطلاعات حرفه‌ای تکمیلی (مانند شمارۀ پروانۀ وکالت) تنها پس از تأیید و به‌روزرسانی
-              مستندات منتشر می‌شود.
+              عضویت در کانون وکلا پس از تأیید دفتر در همین صفحه منتشر می‌شود.
             </p>
           </div>
         </div>

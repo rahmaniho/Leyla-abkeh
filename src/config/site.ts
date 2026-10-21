@@ -149,8 +149,14 @@ export const siteConfig = {
     name: "لیلا آبکه",
     nameLatin: "Leyla Abkeh",
     jobTitle: "وکیل پایه یک دادگستری",
-    /** pending: true → نیازمند تأیید (شمارۀ پروانه منتشر نمی‌شود) */
-    licenseNumber: null as string | null,
+    /**
+     * شمارۀ پروانۀ وکالت — تأییدشده توسط مالک (۳۰ مهر ۱۴۰۴).
+     * مثل بقیۀ داده‌های حساس، اگر این مورد دوباره به `verification.json`
+     * برگردد به‌صورت خودکار از سایت و دادۀ ساختاریافته حذف می‌شود.
+     */
+    licenseNumber: (verification.licenseNumber ? null : "۲۳۷۰") as string | null,
+    /** همان شماره با ارقام لاتین برای Schema.org */
+    licenseNumberLatin: "2370",
     /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادۀ ساختاریافته‌ای نمی‌آید. */
     barAssociation: (verification.barAssociation
       ? null

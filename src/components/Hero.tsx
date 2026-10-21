@@ -172,6 +172,11 @@ export default function Hero() {
                     {lawyer.jobTitle}
                     {lawyer.barAssociation ? ` · ${lawyer.barAssociation}` : ""}
                   </p>
+                  {lawyer.licenseNumber && (
+                    <p className="mt-1.5 text-[11.5px] text-white/45">
+                      شمارۀ پروانۀ وکالت: <span className="font-bold text-white/70">{lawyer.licenseNumber}</span>
+                    </p>
+                  )}
                 </div>
 
                 <div className="h-px bg-gradient-to-l from-transparent via-white/15 to-transparent" />
