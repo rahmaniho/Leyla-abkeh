@@ -222,6 +222,17 @@ npm run verify     # هر چهار مورد بالا در یک زنجیره
 
 ---
 
+## انتشار دوم: GitHub Pages
+
+- نشانی نمایشی: **https://rahmaniho.github.io/Leyla-abkeh/**
+- گردش‌کار `.github/workflows/pages.yml`: lint + typecheck + test → بیلد با
+  `VITE_BASE_PATH=/Leyla-abkeh/` و `VITE_SITE_URL=https://rahmaniho.github.io/Leyla-abkeh` → انتشار در Pages
+- پشتیبانی از مسیر پایه در `src/lib/base.ts`؛ canonical، sitemap، `og:url`، `srcset` و همهٔ
+  لینک‌های داخلی هم‌راستا با زیرمسیر. Netlify همچنان با `base: "/"` بدون تغییر بیلد می‌شود.
+- `.nojekyll` و `404.html` واقعی در خروجی؛ manifest با مسیرهای نسبی
+- **محدودیت‌ها روی Pages:** فرم مشاوره (تابع Netlify) و پنل `/admin/` (Git Gateway) کار نمی‌کنند
+  و هدرهای امنیتی اعمال نمی‌شوند؛ جزئیات در [`docs/GITHUB-PAGES.md`](GITHUB-PAGES.md).
+
 ## اعتبارسنجی روی استقرار واقعی (Netlify Deploy Preview)
 
 پس از باز شدن PR، استقرار پیش‌نمایش Netlify با موفقیت ساخته شد

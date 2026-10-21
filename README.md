@@ -3,7 +3,8 @@
 وب‌سایت رسمی دفتر وکالت لیلا آبکه، وکیل پایه یک دادگستری در قزوین.
 
 - **فناوری:** React 19 · TypeScript 5.9 · Vite 7 · Tailwind CSS 4
-- **میزبانی:** Netlify (Static + Functions)
+- **میزبانی:** Netlify (Static + Functions) — میزبان اصلی
+- **نسخهٔ نمایشی:** GitHub Pages → https://rahmaniho.github.io/Leyla-abkeh/
 - **مدیریت محتوا:** Decap CMS (محتوا در Git، پنل در `/admin/`)
 - **معماری:** چندصفحه‌ای با پیش‌رندر (SSG) در زمان بیلد
 
@@ -16,6 +17,15 @@ npm ci
 npm run dev          # http://localhost:5173
 ```
 
+### پیش‌نمایش با همان رفتار GitHub Pages
+
+```bash
+VITE_BASE_PATH=/Leyla-abkeh/ VITE_SITE_URL=https://rahmaniho.github.io/Leyla-abkeh npm run build
+PREVIEW_BASE=/Leyla-abkeh npm run preview   # → http://localhost:4173/Leyla-abkeh/
+```
+
+جزئیات و محدودیت‌ها: [`docs/GITHUB-PAGES.md`](docs/GITHUB-PAGES.md)
+
 > در حالت توسعه، صفحات به‌صورت کلاینتی رندر می‌شوند. برای بررسی خروجی واقعی
 > (HTML پیش‌رندرشده، sitemap و robots) از `npm run build` و `npm run preview` استفاده کنید.
 
@@ -25,7 +35,7 @@ npm run dev          # http://localhost:5173
 | --- | --- |
 | `npm run dev` | سرور توسعه |
 | `npm run build` | typecheck + بیلد کلاینت + بیلد SSR + پیش‌رندر + sitemap/robots |
-| `npm run preview` | سرو خروجی `dist` با رفتار نزدیک به Netlify (۳۰۱ مسیرهای بدون اسلش، ۴۰۴ واقعی) |
+| `npm run preview` | سرو خروجی `dist` با رفتار نزدیک به Netlify (۳۰۱ مسیرهای بدون اسلش، ۴۰۴ واقعی)؛ `PREVIEW_BASE` برای شبیه‌سازی زیرمسیر |
 | `npm run lint` | ESLint (TypeScript + React Hooks + jsx-a11y) |
 | `npm run typecheck` | بررسی نوع‌ها بدون خروجی |
 | `npm run test` | آزمون‌های واحد و یکپارچه (Vitest + Testing Library) |
