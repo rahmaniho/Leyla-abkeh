@@ -4,11 +4,11 @@ import {
   LinkedInIcon,
   MapPinIcon,
   PhoneIcon,
-  ScaleIcon,
   TelegramIcon,
   WhatsAppIcon,
 } from "./Icons";
 import { Link } from "../lib/router";
+import BrandLogo from "./BrandLogo";
 import { FOOTER_LEGAL_LINKS, NAV_ITEMS } from "../config/nav";
 import { SERVICES, servicePath } from "../content/services";
 import {
@@ -43,9 +43,7 @@ export default function Footer() {
               className="flex items-center gap-3"
               aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحهٔ اصلی`}
             >
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-gold-light to-gold-deep text-ink-deep shadow-gold">
-                <ScaleIcon className="h-6 w-6" />
-              </span>
+              <BrandLogo size={44} />
               <span className="flex flex-col leading-tight">
                 <span className="text-lg font-extrabold text-white">{siteConfig.lawyer.name}</span>
                 <span className="text-[11px] font-medium text-gold-light">

@@ -92,6 +92,7 @@ export function buildAttorneySchema(): JsonLd {
     alternateName: lawyer.name,
     url: SITE_URL,
     image: absoluteUrl(lawyer.photo.basePath + ".jpg"),
+    logo: absoluteUrl(siteConfig.brand.mark.png),
     telephone: contact.phoneE164,
     founder: {
       "@type": "Person",

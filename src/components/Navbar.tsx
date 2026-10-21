@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { cn } from "../utils/cn";
 import { NAV_ITEMS } from "../config/nav";
 import { Link, usePathname } from "../lib/router";
-import { CloseIcon, MenuIcon, PhoneIcon, ScaleIcon } from "./Icons";
+import { CloseIcon, MenuIcon, PhoneIcon } from "./Icons";
+import BrandLogo from "./BrandLogo";
 import { siteConfig, primaryPhone } from "../config/site";
 
 function isActive(pathname: string, href: string): boolean {
@@ -65,9 +66,10 @@ export default function Navbar() {
           className="group flex items-center gap-3"
           aria-label={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} — صفحهٔ اصلی`}
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-gold-light to-gold-deep text-ink-deep shadow-gold transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105">
-            <ScaleIcon className="h-6 w-6" />
-          </span>
+          <BrandLogo
+            size={42}
+            className="transition-transform duration-500 group-hover:scale-105"
+          />
           <span className="flex flex-col leading-tight">
             <span className="text-lg font-extrabold tracking-tight text-white">
               {siteConfig.lawyer.name}

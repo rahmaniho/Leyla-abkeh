@@ -4,7 +4,8 @@ import SectionHeader from "../components/SectionHeader";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
 import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
-import { withBase, withBaseSrcSet } from "../lib/base";
+import LawyerPortrait from "../components/LawyerPortrait";
+import { withBase } from "../lib/base";
 
 export const meta: PageMeta = {
   title: "دربارهٔ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
@@ -69,27 +70,7 @@ export default function AboutPage() {
         <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-16 lg:px-8">
           <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <div className="overflow-hidden rounded-3xl border border-ink/10 bg-white shadow-soft">
-              <picture>
-                <source
-                  type="image/avif"
-                  srcSet={withBaseSrcSet("/images/lawyer-560.avif 560w, /images/lawyer.avif 1122w")}
-                  sizes="(min-width: 1024px) 340px, 90vw"
-                />
-                <source
-                  type="image/webp"
-                  srcSet={withBaseSrcSet("/images/lawyer-560.webp 560w, /images/lawyer.webp 1122w")}
-                  sizes="(min-width: 1024px) 340px, 90vw"
-                />
-                <img
-                  src={withBase("/images/lawyer.jpg")}
-                  alt={siteConfig.lawyer.photo.alt}
-                  width={siteConfig.lawyer.photo.width}
-                  height={siteConfig.lawyer.photo.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="aspect-[4/4.7] w-full bg-ink-soft object-cover object-top"
-                />
-              </picture>
+              <LawyerPortrait sizes="(min-width: 1024px) 340px, 90vw" />
               <div className="space-y-2 p-5">
                 <p className="text-base font-extrabold text-ink">{siteConfig.lawyer.name}</p>
                 <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.jobTitle}</p>
@@ -142,7 +123,29 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <p className="mt-10 text-[12.5px] leading-7 text-ink/70">
+            <div className="mt-12 flex flex-col items-start gap-6 rounded-3xl border border-ink/10 bg-white/60 p-6 sm:flex-row sm:items-center">
+              <picture className="shrink-0">
+                <source type="image/webp" srcSet={withBase(siteConfig.brand.lockup.webp)} />
+                <img
+                  src={withBase(siteConfig.brand.lockup.png)}
+                  alt={siteConfig.brand.alt}
+                  width={siteConfig.brand.lockup.width}
+                  height={siteConfig.brand.lockup.height}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-28 w-auto object-contain"
+                />
+              </picture>
+              <div>
+                <p className="text-[14px] font-extrabold text-ink">نشان دفتر</p>
+                <p className="mt-2 max-w-md text-[12.5px] leading-7 text-ink/70">
+                  نشان دفتر ترکیبی از چهرهٔ زن — نماد دقت و همدلی — و ترازوی عدالت است؛
+                  همان دو اصلی که مبنای کار در پرونده‌های خانوادگی و حقوقی است.
+                </p>
+              </div>
+            </div>
+
+            <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
               اطلاعات حرفه‌ای تکمیلی (مانند شمارهٔ پروانهٔ وکالت) تنها پس از تأیید و به‌روزرسانی
               مستندات منتشر می‌شود.
             </p>

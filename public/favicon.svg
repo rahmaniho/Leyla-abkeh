@@ -1,12 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="لیلا آبکه — وکیل پایه یک دادگستری">
-  <rect width="32" height="32" rx="8" fill="#0f1c28"/>
-  <g transform="translate(4 4) scale(1)" fill="none" stroke="#d4b483" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M12 3v18"/>
-    <path d="M7 21h10"/>
-    <path d="M8 3h8"/>
-    <path d="M12 7a3 3 0 0 0-3 3h6a3 3 0 0 0-3-3z"/>
-    <path d="M4.5 11 2 18h5l-2.5-7z"/>
-    <path d="M19.5 11 17 18h5l-2.5-7z"/>
-    <path d="M2 21h5M17 21h5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="لیلا آبکه — وکیل پایه یک دادگستری">
+  <title>لیلا آبکه — وکیل پایه یک دادگستری</title>
+  <rect width="64" height="64" rx="15" fill="#0f1c28"/>
+  <g fill="none" stroke="#d4b483" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+    <!-- هلال -->
+    <path d="M44 15.5a17.5 17.5 0 1 0 0 33 14 14 0 1 1 0-33Z"/>
+    <!-- ترازو -->
+    <path d="M32 24v20"/>
+    <path d="M24 46h16"/>
+    <path d="M20 28h24"/>
+    <path d="M20 28l-4.5 8h9L20 28Z"/>
+    <path d="M44 28l-4.5 8h9L44 28Z"/>
   </g>
 </svg>
