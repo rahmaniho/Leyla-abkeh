@@ -8,14 +8,14 @@ import { Link } from "../lib/router";
 import { CARD_SIZES, COVER_HEIGHT, COVER_RATIO, COVER_WIDTH, coverImage } from "../lib/images";
 
 const breadcrumbs = [
-  { name: "صفحهٔ اصلی", path: "/" },
+  { name: "صفحۀ اصلی", path: "/" },
   { name: "مقالات", path: "/articles" },
 ];
 
 export const meta: PageMeta = {
   title: "مقالات حقوقی | راهنمای مسائل خانواده، ملکی و تجاری | لیلا آبکه",
   description:
-    "مقالات حقوقی دفتر وکالت لیلا آبکه: راهنمای عملی موضوعات خانواده، چک و اسناد تجاری، ملکی و کیفری با نگاه به رویهٔ عملی و مدارک لازم.",
+    "مقالات حقوقی دفتر وکالت لیلا آبکه: راهنمای عملی موضوعات خانواده، چک و اسناد تجاری، ملکی و کیفری با نگاه به رویۀ عملی و مدارک لازم.",
   path: "/articles",
   type: "website",
   breadcrumbs,
@@ -36,7 +36,7 @@ export default function ArticlesPage() {
       <PageHero
         eyebrow="مقالات حقوقی"
         title="راهنمای حقوقی، بدون پیچیدگی"
-        description="مطالب این بخش با هدف روشن‌کردن مسیرهای قانونی نوشته می‌شوند؛ نه جایگزین مشاورهٔ حقوقی، بلکه نقطهٔ شروع برای پرسش‌های درست."
+        description="مطالب این بخش با هدف روشن‌کردن مسیرهای قانونی نوشته می‌شوند؛ نه جایگزین مشاورۀ حقوقی، بلکه نقطۀ شروع برای پرسش‌های درست."
         breadcrumbs={breadcrumbs}
       />
 

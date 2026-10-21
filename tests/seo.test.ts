@@ -6,7 +6,7 @@ import { SITE_URL } from "../src/config/site";
 const paths = indexablePaths();
 
 describe("مسیرها", () => {
-  it("همهٔ مسیرهای قابل ایندکس صفحهٔ واقعی دارند (۴۰۴ نمی‌شوند)", () => {
+  it("همۀ مسیرهای قابل ایندکس صفحۀ واقعی دارند (۴۰۴ نمی‌شوند)", () => {
     for (const path of paths) {
       const route = resolveRoute(path);
       expect(route.notFound, `مسیر ${path} به ۴۰۴ رسید`).toBeFalsy();
@@ -14,7 +14,7 @@ describe("مسیرها", () => {
     }
   });
 
-  it("مسیر ناشناخته به صفحهٔ ۴۰۴ با noindex می‌رسد", () => {
+  it("مسیر ناشناخته به صفحۀ ۴۰۴ با noindex می‌رسد", () => {
     const route = resolveRoute("/this-does-not-exist");
     expect(route.notFound).toBe(true);
     expect(route.meta.noindex).toBe(true);
@@ -46,7 +46,7 @@ describe("مسیرها", () => {
     expect(pageHref("tel:+989121234567")).toBe("tel:+989121234567");
   });
 
-  it("همهٔ آدرس‌های sitemap اسلش انتهایی دارند", () => {
+  it("همۀ آدرس‌های sitemap اسلش انتهایی دارند", () => {
     for (const entry of sitemapEntries()) {
       const url = pageUrl(entry.path);
       expect(url.endsWith("/"), `آدرس ${entry.path} بدون اسلش است`).toBe(true);
@@ -65,7 +65,7 @@ describe("متادیتای صفحات", () => {
     expect(new Set(descriptions).size).toBe(descriptions.length);
   });
 
-  it("طول عنوان و توضیح متا در محدودهٔ منطقی است", () => {
+  it("طول عنوان و توضیح متا در محدودۀ منطقی است", () => {
     for (const path of paths) {
       const { meta } = resolveRoute(path);
       expect(meta.title.length, `عنوان ${path}`).toBeLessThanOrEqual(90);
@@ -84,16 +84,16 @@ describe("متادیتای صفحات", () => {
     expect(head).toContain("index, follow");
   });
 
-  it("صفحهٔ ۴۰۴ در head با noindex علامت می‌خورد", () => {
+  it("صفحۀ ۴۰۴ در head با noindex علامت می‌خورد", () => {
     const head = renderHeadTags(resolveRoute("/missing").meta);
     expect(head).toContain("noindex");
   });
 });
 
-describe("دادهٔ ساختاریافته", () => {
+describe("دادۀ ساختاریافته", () => {
   const allJsonLd = paths.flatMap((path) => resolveRoute(path).meta.jsonLd ?? []);
 
-  it("همهٔ JSON-LDها @context و @type دارند", () => {
+  it("همۀ JSON-LDها @context و @type دارند", () => {
     expect(allJsonLd.length).toBeGreaterThan(5);
     for (const item of allJsonLd) {
       expect(item["@context"]).toBe("https://schema.org");
@@ -108,14 +108,14 @@ describe("دادهٔ ساختاریافته", () => {
     expect(serialized).not.toContain("ratingValue");
   });
 
-  it("صفحهٔ خدمات، Service و FAQPage دارد", () => {
+  it("صفحۀ خدمات، Service و FAQPage دارد", () => {
     const types = (resolveRoute("/services/keyfari").meta.jsonLd ?? []).map((item) => item["@type"]);
     expect(types).toContain("Service");
     expect(types).toContain("FAQPage");
     expect(types).toContain("BreadcrumbList");
   });
 
-  it("صفحهٔ مقاله، Article با تاریخ انتشار و بازبینی دارد", () => {
+  it("صفحۀ مقاله، Article با تاریخ انتشار و بازبینی دارد", () => {
     const article = resolveRoute("/articles/chek-bargashkhte-masir-haye-ghanooni").meta.jsonLd ?? [];
     const articleSchema = article.find((item) => item["@type"] === "Article");
     expect(articleSchema).toBeDefined();
@@ -124,8 +124,8 @@ describe("دادهٔ ساختاریافته", () => {
   });
 });
 
-describe("نقشهٔ سایت", () => {
-  it("sitemap همهٔ مسیرهای قابل ایندکس را دارد", () => {
+describe("نقشۀ سایت", () => {
+  it("sitemap همۀ مسیرهای قابل ایندکس را دارد", () => {
     const sitemapPaths = sitemapEntries().map((entry) => entry.path);
     for (const path of paths) {
       expect(sitemapPaths).toContain(path);

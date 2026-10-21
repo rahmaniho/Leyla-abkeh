@@ -25,7 +25,7 @@ const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY as string | undefined;
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
 
 /**
- * ویجت ضد‌هرزنامهٔ Cloudflare Turnstile (اختیاری).
+ * ویجت ضد‌هرزنامۀ Cloudflare Turnstile (اختیاری).
  * تنها زمانی نمایش داده می‌شود که VITE_TURNSTILE_SITE_KEY تنظیم شده باشد؛
  * اعتبارسنجی نهایی همیشه در سرور انجام می‌شود.
  */

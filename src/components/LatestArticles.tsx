@@ -5,8 +5,8 @@ import { formatDateFa, toFaDigits } from "../lib/format";
 import { Link } from "../lib/router";
 
 /**
- * منتخب مقالات آموزشی در صفحهٔ اصلی.
- * فقط مقالات منتشرشده (بدون پیش‌نویس) نمایش داده می‌شوند و هر آیتم به صفحهٔ
+ * منتخب مقالات آموزشی در صفحۀ اصلی.
+ * فقط مقالات منتشرشده (بدون پیش‌نویس) نمایش داده می‌شوند و هر آیتم به صفحۀ
  * کامل مقاله لینک دارد؛ این بخش هم به کشف محتوا و هم به لینک‌سازی داخلی کمک می‌کند.
  */
 export default function LatestArticles({ limit = 2 }: { limit?: number }) {
@@ -24,7 +24,7 @@ export default function LatestArticles({ limit = 2 }: { limit?: number }) {
           <SectionHeader
             eyebrow="مقالات آموزشی"
             title="پیش از تصمیم، مسیر را بشناسید"
-            description="راهنماهای کوتاه و کاربردی دربارهٔ موضوعاتی که بیشتر سؤال می‌شوند؛ نوشته‌شده برای روشن‌کردن مسیر، نه وعدهٔ نتیجه."
+            description="راهنماهای کوتاه و کاربردی دربارۀ موضوعاتی که بیشتر سؤال می‌شوند؛ نوشته‌شده برای روشن‌کردن مسیر، نه وعدۀ نتیجه."
             titleId="latest-articles-title"
             align="start"
           />
@@ -32,7 +32,7 @@ export default function LatestArticles({ limit = 2 }: { limit?: number }) {
             to="/articles"
             className="inline-flex shrink-0 items-center gap-2 rounded-full border border-ink/15 px-5 py-2.5 text-[12.5px] font-bold text-ink transition-colors hover:border-gold hover:text-gold-deep"
           >
-            همهٔ مقالات
+            همۀ مقالات
             <span aria-hidden="true">←</span>
           </Link>
         </div>

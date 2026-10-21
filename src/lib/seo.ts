@@ -20,7 +20,7 @@ export interface PageMeta {
   publishedTime?: string;
   modifiedTime?: string;
   breadcrumbs?: BreadcrumbItem[];
-  /** دادهٔ ساختاریافتهٔ اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
+  /** دادۀ ساختاریافتۀ اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
   jsonLd?: JsonLd[];
 }
 
@@ -85,7 +85,7 @@ export function buildAttorneySchema(): JsonLd {
     .map((social) => social.href);
 
   /**
-   * فقط دادهٔ تأییدشده در Schema می‌آید.
+   * فقط دادۀ تأییدشده در Schema می‌آید.
    * تلفن، نشانی، ساعات کاری و عضویت حرفه‌ای تا زمانی که در
    * `verification.json` باشند، از خروجی ساختاریافته حذف می‌شوند؛ چون
    * موتورهای جست‌وجو آن‌ها را به‌عنوان واقعیت منتشر می‌کنند.

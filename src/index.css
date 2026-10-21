@@ -1,6 +1,44 @@
 @import "tailwindcss";
 
-/* ---------- فونت فارسی (self-host، بدون درخواست به سرویس خارجی) ---------- */
+/* ---------- فونت‌های فارسی (self-host، بدون درخواست به سرویس خارجی) ----------
+ * متن‌ها: B Nazanin · تیترها: B Titr · ارقام: B Titr (با unicode-range)
+ * هر دو فونت سبک Regular/Bold هستند؛ وزن‌های میانی توسط مرورگر بازسازی می‌شوند.
+ * Vazirmatn به‌عنوان فونت پشتیبان می‌ماند تا حروف لاتین، «٪»، «٬»، «…» و
+ * نشانه‌های ریاضی/تزئینی که در فونت‌های B وجود ندارند، خالی نمانند.
+ */
+@font-face {
+  font-family: "B Nazanin";
+  src:
+    url("/fonts/BNazanin.woff2") format("woff2"),
+    url("/fonts/BNazanin.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "B Titr";
+  src:
+    url("/fonts/BTitrBold.woff2") format("woff2"),
+    url("/fonts/BTitrBold.woff") format("woff");
+  /* فایل فقط یک وزن (Bold) دارد؛ اعلام بازهٔ کامل جلوی ضخیم‌سازی مصنوعی را می‌گیرد */
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ارقام فارسی/عربی و لاتین با فونت تیتر — در همهٔ متن‌ها */
+@font-face {
+  font-family: "B Titr Digits";
+  src:
+    url("/fonts/BTitrBold.woff2") format("woff2"),
+    url("/fonts/BTitrBold.woff") format("woff");
+  unicode-range: U+0030-0039, U+0660-0669, U+06F0-06F9;
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Vazirmatn";
   src: url("/fonts/Vazirmatn-Variable.woff2") format("woff2");
@@ -21,7 +59,9 @@
   --color-cream: #f7f5f0;
   --color-sand: #efe9df;
 
-  --font-sans: "Vazirmatn", "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* ترتیب مهم است: ارقام از تیتر، متن از نازنین، و بقیه از فونت پشتیبان */
+  --font-sans: "B Titr Digits", "B Nazanin", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "B Titr", "B Nazanin", "Vazirmatn", ui-sans-serif, system-ui, sans-serif;
 
   --shadow-soft: 0 10px 40px -12px rgba(26, 42, 58, 0.18);
   --shadow-deep: 0 24px 70px -20px rgba(15, 28, 40, 0.45);
@@ -39,6 +79,16 @@ html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
   -webkit-text-size-adjust: 100%;
+}
+
+/* تیترها همیشه با B Titr */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
 }
 
 body {

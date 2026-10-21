@@ -7,7 +7,7 @@ import { applyMetaInBrowser, type PageMeta } from "../lib/seo";
 import { track } from "../lib/analytics";
 
 /**
- * چیدمان مشترک صفحات: لینک پرش، ناوبری، محتوای اصلی، پاورقی و دکمهٔ تماس.
+ * چیدمان مشترک صفحات: لینک پرش، ناوبری، محتوای اصلی، پاورقی و دکمۀ تماس.
  * همچنین مدیریت اسکرول و اعلام تغییر صفحه برای صفحه‌خوان‌ها.
  */
 export default function Layout({ meta, children }: { meta: PageMeta; children: ReactNode }) {

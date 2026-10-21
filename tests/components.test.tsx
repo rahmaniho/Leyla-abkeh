@@ -9,17 +9,17 @@ function renderAt(path: string) {
   return render(<App initialPath={path} />);
 }
 
-describe("صفحهٔ اصلی", () => {
+describe("صفحۀ اصلی", () => {
   it("عنوان اصلی و اطلاعات وکیل را نشان می‌دهد", () => {
     renderAt("/");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("وکیل");
     expect(screen.getAllByText(siteConfig.lawyer.name).length).toBeGreaterThan(0);
   });
 
-  it("شمارهٔ تأییدشدهٔ دفتر با لینک tel درست نمایش داده می‌شود", () => {
+  it("شمارۀ تأییدشدۀ دفتر با لینک tel درست نمایش داده می‌شود", () => {
     const { unmount } = renderAt("/");
 
-    // شمارهٔ واقعی دفتر (تأییدشده توسط مالک)
+    // شمارۀ واقعی دفتر (تأییدشده توسط مالک)
     expect(primaryPhone?.e164).toBe("+989900925811");
 
     const telLinks = Array.from(document.querySelectorAll("a[href^='tel:']"));
@@ -28,7 +28,7 @@ describe("صفحهٔ اصلی", () => {
       expect(link.getAttribute("href")).toBe("tel:+989900925811");
     }
 
-    // شمارهٔ نمونهٔ قدیمی هرگز نباید در صفحه بماند
+    // شمارۀ نمونۀ قدیمی هرگز نباید در صفحه بماند
     expect(document.body.innerHTML).not.toContain("09121234567");
     expect(document.body.innerHTML).not.toContain("+989121234567");
     unmount();
@@ -41,17 +41,17 @@ describe("صفحهٔ اصلی", () => {
     unmount();
   });
 
-  it("ایمیل، واتساپ و نقشهٔ مختصات در صفحهٔ تماس موجود است", () => {
+  it("ایمیل، واتساپ و نقشۀ مختصات در صفحۀ تماس موجود است", () => {
     const { unmount } = renderAt("/contact");
 
     const email = document.querySelector('a[href="mailto:info@leyla-abkeh.ir"]');
     expect(email).not.toBeNull();
 
-    // واتساپ از همان شمارهٔ تأییدشده ساخته می‌شود
+    // واتساپ از همان شمارۀ تأییدشده ساخته می‌شود
     const whatsapp = document.querySelector('a[href^="https://wa.me/"]');
     expect(whatsapp?.getAttribute("href")).toBe("https://wa.me/989900925811");
 
-    // نقشه بر پایهٔ مختصات تأییدشده
+    // نقشه بر پایۀ مختصات تأییدشده
     const map = Array.from(document.querySelectorAll("a[href*='google.com/maps']")).map((a) =>
       a.getAttribute("href")
     );
@@ -63,7 +63,7 @@ describe("صفحهٔ اصلی", () => {
     unmount();
   });
 
-  it("صفحهٔ تماس، نشانی تأییدشده را «تأییدنشده» معرفی نمی‌کند", () => {
+  it("صفحۀ تماس، نشانی تأییدشده را «تأییدنشده» معرفی نمی‌کند", () => {
     const { unmount } = renderAt("/contact");
     const text = document.body.textContent ?? "";
 
@@ -78,11 +78,11 @@ describe("صفحهٔ اصلی", () => {
     expect(screen.getByRole("link", { name: "پرش به محتوای اصلی" })).toHaveAttribute("href", "#main");
   });
 
-  it("هیچ دادهٔ تأییدنشده (آمار و نظرات) منتشر نمی‌شود", () => {
+  it("هیچ دادۀ تأییدنشده (آمار و نظرات) منتشر نمی‌شود", () => {
     renderAt("/");
     expect(screen.queryByText("نرخ موفقیت")).toBeNull();
-    expect(screen.queryByText("پروندهٔ موفق")).toBeNull();
-    expect(screen.queryByText("آنچه موکلان از تجربهٔ خود می‌گویند")).toBeNull();
+    expect(screen.queryByText("پروندۀ موفق")).toBeNull();
+    expect(screen.queryByText("آنچه موکلان از تجربۀ خود می‌گویند")).toBeNull();
     expect(screen.queryByText(/بیش از ۱۲ سال/)).toBeNull();
   });
 
@@ -110,7 +110,7 @@ describe("ناوبری موبایل", () => {
     expect(menu).not.toHaveAttribute("inert");
   });
 
-  it("با کلید Escape بسته می‌شود و فوکوس به دکمهٔ منو برمی‌گردد", () => {
+  it("با کلید Escape بسته می‌شود و فوکوس به دکمۀ منو برمی‌گردد", () => {
     renderAt("/");
     const toggle = screen.getByRole("button", { name: "باز کردن منوی ناوبری" });
     fireEvent.click(toggle);
@@ -124,16 +124,16 @@ describe("ناوبری موبایل", () => {
 });
 
 describe("صفحات خدمات", () => {
-  it("هر خدمت صفحهٔ مستقل با H1 و FAQ دارد", () => {
+  it("هر خدمت صفحۀ مستقل با H1 و FAQ دارد", () => {
     for (const service of SERVICES) {
       const { unmount } = renderAt(`/services/${service.slug}`);
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(service.title);
-      expect(screen.getByText("پرسش‌های متداول دربارهٔ " + service.title)).toBeInTheDocument();
+      expect(screen.getByText("پرسش‌های متداول دربارۀ " + service.title)).toBeInTheDocument();
       unmount();
     }
   });
 
-  it("صفحهٔ فهرست خدمات به همهٔ صفحات خدمات لینک می‌دهد", () => {
+  it("صفحۀ فهرست خدمات به همۀ صفحات خدمات لینک می‌دهد", () => {
     renderAt("/services");
     const main = document.getElementById("main") as HTMLElement;
     for (const service of SERVICES) {
@@ -143,14 +143,14 @@ describe("صفحات خدمات", () => {
     }
   });
 
-  it("مسیر ناموجود صفحهٔ ۴۰۴ نشان می‌دهد", () => {
+  it("مسیر ناموجود صفحۀ ۴۰۴ نشان می‌دهد", () => {
     renderAt("/nope");
     expect(screen.getByText("این صفحه پیدا نشد")).toBeInTheDocument();
     expect(document.title).toContain("پیدا نشد");
   });
 });
 
-describe("صفحهٔ تماس و فرم مشاوره", () => {
+describe("صفحۀ تماس و فرم مشاوره", () => {
   const originalFetch = globalThis.fetch;
 
   beforeEach(() => {
@@ -174,7 +174,7 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
       target: { value: "دعاوی خانواده" },
     });
     fireEvent.change(screen.getByLabelText(/شرح کوتاه موضوع/), {
-      target: { value: "دربارهٔ مهریه سوال دارم." },
+      target: { value: "دربارۀ مهریه سوال دارم." },
     });
   }
 
@@ -183,18 +183,18 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
     fireEvent.submit(screen.getByRole("form", { name: "فرم درخواست مشاوره" }));
 
     expect(screen.getByText("نام و نام خانوادگی را کامل وارد کنید.")).toBeInTheDocument();
-    expect(screen.getByText(/شمارهٔ تماس معتبر نیست/)).toBeInTheDocument();
+    expect(screen.getByText(/شمارۀ تماس معتبر نیست/)).toBeInTheDocument();
     expect(screen.getByLabelText("نام و نام خانوادگی")).toHaveAttribute("aria-invalid", "true");
   });
 
-  it("شمارهٔ نامعتبر را رد می‌کند و درخواستی ارسال نمی‌کند", () => {
+  it("شمارۀ نامعتبر را رد می‌کند و درخواستی ارسال نمی‌کند", () => {
     renderAt("/contact");
     fillForm();
     fireEvent.change(screen.getByLabelText("شماره تماس"), { target: { value: "12345" } });
     vi.setSystemTime(new Date(Date.now() + 5000));
     fireEvent.submit(screen.getByRole("form", { name: "فرم درخواست مشاوره" }));
 
-    expect(screen.getByText(/شمارهٔ تماس معتبر نیست/)).toBeInTheDocument();
+    expect(screen.getByText(/شمارۀ تماس معتبر نیست/)).toBeInTheDocument();
     expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
@@ -261,7 +261,7 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
     fireEvent.submit(screen.getByRole("form", { name: "فرم درخواست مشاوره" }));
 
     expect(
-      await screen.findByText(/ثبت آنلاین درخواست در این نسخهٔ سایت فعال نیست/, {}, { timeout: 3000 })
+      await screen.findByText(/ثبت آنلاین درخواست در این نسخۀ سایت فعال نیست/, {}, { timeout: 3000 })
     ).toBeInTheDocument();
     expect(screen.queryByText("درخواست شما ثبت شد")).toBeNull();
     // اطلاعات فرم نباید از دست برود
@@ -293,24 +293,24 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
 });
 
 describe("صفحات محتوایی", () => {
-  it("صفحهٔ سوالات متداول، همهٔ پرسش‌ها را دارد", () => {
+  it("صفحۀ سوالات متداول، همۀ پرسش‌ها را دارد", () => {
     renderAt("/faq");
     expect(screen.getAllByRole("button", { expanded: false }).length).toBeGreaterThan(0);
   });
 
-  it("صفحهٔ تعرفه‌ها تا تأیید دفتر هیچ رقم تأییدنشده‌ای نشان نمی‌دهد", () => {
+  it("صفحۀ تعرفه‌ها تا تأیید دفتر هیچ رقم تأییدنشده‌ای نشان نمی‌دهد", () => {
     renderAt("/pricing");
     expect(screen.queryByText(/۹۸۰٬۰۰۰/)).toBeNull();
     expect(screen.getAllByText(/اعلام پیش از جلسه/).length).toBeGreaterThan(0);
-    expect(screen.queryByText(/مشاورهٔ اولیهٔ تلفنی رایگان/)).toBeNull();
+    expect(screen.queryByText(/مشاورۀ اولیۀ تلفنی رایگان/)).toBeNull();
   });
 
-  it("صفحهٔ مقالات، مقاله‌ها را فهرست می‌کند", () => {
+  it("صفحۀ مقالات، مقاله‌ها را فهرست می‌کند", () => {
     renderAt("/articles");
     expect(screen.getAllByRole("link", { name: /خواندن مقاله/ }).length).toBeGreaterThan(0);
   });
 
-  it("کارت هر مقاله تصویر شاخص با نسخهٔ AVIF/WebP و بارگذاری تنبل دارد", () => {
+  it("کارت هر مقاله تصویر شاخص با نسخۀ AVIF/WebP و بارگذاری تنبل دارد", () => {
     renderAt("/articles");
     const cards = document.querySelectorAll("article picture");
     expect(cards.length).toBe(ARTICLES.length);
@@ -332,7 +332,7 @@ describe("صفحات محتوایی", () => {
     }
   });
 
-  it("صفحهٔ مقاله تصویر شاخص با alt توصیفی و بارگذاری با اولویت بالا دارد", () => {
+  it("صفحۀ مقاله تصویر شاخص با alt توصیفی و بارگذاری با اولویت بالا دارد", () => {
     const article = ARTICLES[0];
     renderAt(articlePath(article.slug));
 
@@ -346,7 +346,7 @@ describe("صفحات محتوایی", () => {
     expect(picture.querySelectorAll("source").length).toBe(2);
   });
 
-  it("صفحهٔ حریم خصوصی توضیح جمع‌آوری داده دارد", () => {
+  it("صفحۀ حریم خصوصی توضیح جمع‌آوری داده دارد", () => {
     renderAt("/privacy");
     expect(screen.getByText("چه اطلاعاتی دریافت می‌شود؟")).toBeInTheDocument();
   });

@@ -36,6 +36,7 @@ const MIME = {
   ".mp4": "video/mp4",
   ".webm": "video/webm",
   ".avif": "image/avif",
+  ".woff": "font/woff",
   ".woff2": "font/woff2",
   ".webmanifest": "application/manifest+json",
   ".ico": "image/x-icon",

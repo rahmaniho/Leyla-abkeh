@@ -18,7 +18,7 @@ export default function LogoMotion({ className = "" }: { className?: string }) {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   /**
-   * چرا همهٔ کارها در یک افکت انجام می‌شود؟
+   * چرا همۀ کارها در یک افکت انجام می‌شود؟
    * - React ویژگی `muted` را در خروجی سرور نمی‌نویسد؛ اگر مقداردهی را به
    *   کلاینت بسپاریم، مرورگر ویدیوی بی‌صدا‌نشده را autoplay نمی‌کند. پس
    *   بی‌صدا بودن را روی خود عنصر اعمال و سپس پخش را آغاز می‌کنیم.
@@ -44,7 +44,7 @@ export default function LogoMotion({ className = "" }: { className?: string }) {
         return;
       }
 
-      // پخش خودکار ممکن است توسط سیاست مرورگر رد شود؛ در آن حالت دکمهٔ پخش می‌ماند.
+      // پخش خودکار ممکن است توسط سیاست مرورگر رد شود؛ در آن حالت دکمۀ پخش می‌ماند.
       // در محیط‌های آزمایشی (jsdom) این متد Promise برنمی‌گرداند؛ بنابراین محافظت می‌کنیم.
       const attempt = video.play?.();
       if (attempt && typeof attempt.catch === "function") {

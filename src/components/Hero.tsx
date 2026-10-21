@@ -19,9 +19,9 @@ import {
 
 /** نشان‌های اعتماد فقط شامل گزاره‌های قابل اثبات (بدون ادعای مدرک تأییدنشده) */
 const TRUST_BADGES = [
-  { icon: ShieldIcon, text: "ارزیابی صادقانه، بدون وعدهٔ نتیجه" },
+  { icon: ShieldIcon, text: "ارزیابی صادقانه، بدون وعدۀ نتیجه" },
   { icon: LockIcon, text: "رازداری حرفه‌ای اطلاعات موکل" },
-  { icon: ScaleIcon, text: "توضیح شفاف هر مرحلهٔ پرونده" },
+  { icon: ScaleIcon, text: "توضیح شفاف هر مرحلۀ پرونده" },
 ];
 
 export default function Hero() {
@@ -109,7 +109,7 @@ export default function Hero() {
                   to="/services"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-white/10"
                 >
-                  مشاهدهٔ خدمات حقوقی
+                  مشاهدۀ خدمات حقوقی
                 </Link>
               )}
             </div>
@@ -117,7 +117,7 @@ export default function Hero() {
 
           <Reveal delay={350}>
             <p className="mt-4 max-w-md text-[12px] leading-6 text-white/55">
-              فرم کوتاه است: نام، شمارهٔ تماس و موضوع کلی پرونده. جزئیات حساس را در جلسه مطرح
+              فرم کوتاه است: نام، شمارۀ تماس و موضوع کلی پرونده. جزئیات حساس را در جلسه مطرح
               کنید.
             </p>
           </Reveal>

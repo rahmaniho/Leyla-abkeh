@@ -11,7 +11,7 @@ export const meta: PageMeta = {
   path: "/services",
   type: "website",
   breadcrumbs: [
-    { name: "صفحهٔ اصلی", path: "/" },
+    { name: "صفحۀ اصلی", path: "/" },
     { name: "خدمات حقوقی", path: "/services" },
   ],
   jsonLd: [buildAttorneySchema()],
@@ -27,8 +27,8 @@ const STEPS = [
     body: "در ساعات کاری، درخواست بررسی و برای تعیین وقت تماس گرفته می‌شود. اگر موضوع فوری باشد (مانند مهلت قانونی یا بازداشت)، این نکته را در تماس مشخص کنید.",
   },
   {
-    title: "جلسه و برنامهٔ اقدام",
-    body: "در جلسهٔ مشاوره، مدارک بررسی و گزینه‌های پیشِ رو با مزایا، ریسک و برآورد هزینهٔ هر مرحله توضیح داده می‌شود تا تصمیم با آگاهی گرفته شود.",
+    title: "جلسه و برنامۀ اقدام",
+    body: "در جلسۀ مشاوره، مدارک بررسی و گزینه‌های پیشِ رو با مزایا، ریسک و برآورد هزینۀ هر مرحله توضیح داده می‌شود تا تصمیم با آگاهی گرفته شود.",
   },
 ];
 
@@ -48,7 +48,7 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-5xl px-5 lg:px-8">
           <p className="text-[12.5px] font-extrabold tracking-[0.2em] text-gold-deep">مسیر همکاری</p>
           <h2 id="process-title" className="mt-4 text-2xl font-extrabold leading-[1.45] text-ink sm:text-3xl">
-            از نخستین تماس تا برنامهٔ روشن
+            از نخستین تماس تا برنامۀ روشن
           </h2>
           <p className="mt-4 max-w-2xl text-[14px] leading-8 text-ink/70">
             هیچ پرونده‌ای بدون شناخت مدارک و شرایط، ارزیابی نمی‌شود. سه گام زیر چارچوب کار است؛
@@ -72,7 +72,7 @@ export default function ServicesPage() {
               to="/pricing"
               className="rounded-full border border-ink/15 px-6 py-3 text-[13px] font-extrabold text-ink transition-colors hover:border-gold/50 hover:text-gold-deep"
             >
-              تعرفهٔ مشاوره و وکالت
+              تعرفۀ مشاوره و وکالت
             </Link>
             <Link
               to="/faq"

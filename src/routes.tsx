@@ -59,7 +59,7 @@ function serviceMeta(slug: string): PageMeta | null {
 
   const path = servicePath(service.slug);
   const breadcrumbs = [
-    { name: "صفحهٔ اصلی", path: "/" },
+    { name: "صفحۀ اصلی", path: "/" },
     { name: "خدمات حقوقی", path: "/services" },
     { name: service.title, path },
   ];
@@ -97,7 +97,7 @@ function articleMeta(slug: string): PageMeta | null {
 
   const path = articlePath(article.slug);
   const breadcrumbs = [
-    { name: "صفحهٔ اصلی", path: "/" },
+    { name: "صفحۀ اصلی", path: "/" },
     { name: "مقالات", path: "/articles" },
     { name: article.title, path },
   ];
@@ -135,7 +135,7 @@ function articleMeta(slug: string): PageMeta | null {
   };
 }
 
-/** تطبیق مسیر با صفحهٔ مربوطه */
+/** تطبیق مسیر با صفحۀ مربوطه */
 export function resolveRoute(rawPath: string): RouteMatch {
   const path = normalizePath(rawPath);
 
