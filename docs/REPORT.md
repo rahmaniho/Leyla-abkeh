@@ -455,6 +455,7 @@ public/images/Lawyer.jpg      جایگزین با lawyer.jpg + نسخه‌های
 | حوزه | تغییر | فایل |
 | --- | --- | --- |
 | تبدیل | بخش «فرایند همکاری» در چهار گام + ریزنوشت کاهش اصطکاک در Hero | `src/components/Process.tsx`, `Home.tsx`, `Hero.tsx` |
+| محتوا | بخش «مقالات آموزشی» در صفحهٔ اصلی با تاریخ، زمان مطالعه و بازبینی | `src/components/LatestArticles.tsx`, `Home.tsx` |
 | فرم | تفکیک «سرور در دسترس نیست» از خطای شبکه؛ پیام صریح و حفظ مقادیر | `src/lib/consultation.ts`, `ConsultationForm.tsx` |
 | فرم | حالت استاتیک Pages با `VITE_FORM_MODE=static` و هشدار پیش از فرم | `.github/workflows/pages.yml`, `site.ts` |
 | دسترس‌پذیری | بازگشت فوکوس به دکمهٔ منو پس از Escape؛ اصلاح نشانه‌گذاری فهرست در بخش فرایند | `Navbar.tsx`, `Process.tsx` |
