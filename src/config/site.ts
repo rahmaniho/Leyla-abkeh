@@ -31,7 +31,7 @@ export const SITE_URL = normalizeSiteUrl(import.meta.env?.VITE_SITE_URL);
  * `contact.phone` در `verification.json` باقی است. پس از دریافت شمارهٔ واقعی،
  * همین مقدار را عوض کنید و آن مورد را از فهرست حذف کنید.
  */
-const PRIMARY_PHONE_E164 = "+989121234567";
+const PRIMARY_PHONE_E164 = "+989900925811";
 
 /**
  * مقدار نمونهٔ کارخانه‌ای. اگر این مقدار در سایت بماند، حتی پس از حذف مورد از
@@ -169,31 +169,40 @@ export const siteConfig = {
   /** هویت بصری: لوگوی رسمی دفتر (طلایی روی زمینهٔ شفاف) */
   brand: {
     /** مارک تنها (بدون خطاطی و نام لاتین) — برای نوار بالا، پاورقی و آیکون‌ها */
-    mark: { png: "/images/brand/logo-mark.png", webp: "/images/brand/logo-mark.webp", width: 300, height: 311 },
-    /** لوگوی کامل: مارک + خطاطی «لیلا» + نام لاتین */
+    mark: { png: "/images/brand/logo-mark.png", webp: "/images/brand/logo-mark.webp", width: 300, height: 274 },
+    /** لوگوی کامل: مارک + خطاطی «لیلا» + نام لاتین (با حاشیهٔ امن، بدون بریدگی) */
     lockup: {
       png: "/images/brand/logo-lockup.png",
       webp: "/images/brand/logo-lockup.webp",
-      width: 420,
-      height: 630,
+      width: 460,
+      height: 651,
+      /** نسخهٔ بزرگ‌تر برای نمایشگرهای پرتراکم و بخش‌های بزرگ‌تر */
+      pngLarge: "/images/brand/logo-lockup-700.png",
+      webpLarge: "/images/brand/logo-lockup-700.webp",
     },
     alt: "لوگوی دفتر وکالت لیلا آبکه",
   },
 
   contact: {
-    /** شمارهٔ اصلی (pending: true) */
+    /** شمارهٔ اصلی — تأییدشده توسط دفتر */
     phoneE164: PRIMARY_PHONE_E164,
     officePhoneE164: OFFICE_PHONE_E164,
-    /** خالی‌گذاری‌شده: کد پستی و مختصات تا تأیید */
+    /** ایمیل رسمی دفتر */
+    email: "info@leyla-abkeh.ir" as string | null,
+    /** خالی‌گذاری‌شده: کد پستی تا تأیید */
     postalCode: null as string | null,
-    geo: null as { latitude: number; longitude: number } | null,
+    /** مختصات تأییدشدهٔ دفتر (برای نقشه و دادهٔ ساختاریافته) */
+    geo: { latitude: 36.2665941, longitude: 50.0236544 } as {
+      latitude: number;
+      longitude: number;
+    } | null,
     address: {
-      street: "خیابان خیام شمالی، برج آرین، طبقهٔ چهارم، واحد ۱۲",
+      street: "جنب بیمارستان پاستور، مجتمع تجاری نیایش",
       city: "قزوین",
       region: "قزوین",
       country: "IR",
       /** نمایش یک‌خطی */
-      full: `قزوین، خیابان خیام شمالی، برج آرین، طبقهٔ چهارم، واحد ۱۲`,
+      full: `قزوین، جنب بیمارستان پاستور، مجتمع تجاری نیایش`,
     },
     hours: {
       days: OPENING_DAYS,
@@ -222,6 +231,20 @@ export const siteConfig = {
      * تا فرم به‌جای وعدهٔ بی‌عمل، وضعیت واقعی را نشان دهد.
      */
     deliveryAvailable: (import.meta.env?.VITE_FORM_MODE ?? "live") !== "static",
+  },
+
+  media: {
+    /** لوگوموشن رسمی (بدون صدا، بهینه‌شده برای وب) */
+    logoMotion: {
+      mp4: "/media/logo-motion.mp4",
+      poster: "/media/logo-motion-poster.jpg",
+      width: 416,
+      height: 752,
+      /** توضیح متنی جایگزین برای فناوری‌های کمکی */
+      alt: "لوگوموشن دفتر وکالت لیلا آبکه: نشان طلایی دفتر روی زمینهٔ تیره",
+      /** ردیف متن توصیفی (ویدیو صدا ندارد) */
+      captions: "/media/logo-motion.vtt",
+    },
   },
 
   /** مسیر پنل مدیریت (فقط برای لینک داخلی/مستندسازی) */
@@ -306,6 +329,24 @@ export const officePhone: PhoneLink | null =
  * لینک واتساپ فقط با شمارهٔ تأییدشده ساخته می‌شود؛ شمارهٔ نمونه نباید به یک
  * حساب واقعی در واتساپ وصل شود.
  */
+/** پیوند ایمیل (تنها وقتی ایمیل تنظیم شده باشد) */
+export const emailLink =
+  siteConfig.contact.email && !isPending("contact.email")
+    ? {
+        address: siteConfig.contact.email,
+        href: `mailto:${siteConfig.contact.email}`,
+      }
+    : siteConfig.contact.email
+      ? { address: siteConfig.contact.email, href: `mailto:${siteConfig.contact.email}` }
+      : null;
+
+/** پیوند نقشه بر پایهٔ مختصات تأییدشده (در نبود مختصات، جست‌وجوی نشانی) */
+export const mapUrl: string | null = siteConfig.contact.geo
+  ? `https://www.google.com/maps/search/?api=1&query=${siteConfig.contact.geo.latitude},${siteConfig.contact.geo.longitude}`
+  : siteConfig.contact.address.full
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(siteConfig.contact.address.full)}`
+    : null;
+
 export const whatsappUrl: string | null =
   verification.phone || siteConfig.contact.phoneE164 === SAMPLE_PHONE_E164
   ? null

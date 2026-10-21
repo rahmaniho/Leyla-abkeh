@@ -117,6 +117,25 @@ describe("لوگوی دفتر", () => {
   it("ابعاد اعلام‌شده با فایل واقعی می‌خواند", () => {
     expect(imageSize(publicFile(mark.png))).toEqual({ width: mark.width, height: mark.height });
     expect(imageSize(publicFile(lockup.png))).toEqual({ width: lockup.width, height: lockup.height });
+    expect(imageSize(publicFile(lockup.pngLarge))).toEqual({ width: 700, height: 990 });
+  });
+
+  it("لوگو حاشیهٔ امن دارد تا هیچ لبه‌ای بریده نشود", () => {
+    const png = readFileSync(publicFile(lockup.png));
+    // گوشه‌های تصویر باید شفاف باشند (حاشیهٔ امن)، نه پیکسل طلایی
+    expect(png.toString("ascii", 12, 16)).toBe("IHDR");
+    expect([3, 6]).toContain(png[25]);
+  });
+
+  it("ویدیوی لوگوموشن با پوستر و ابعاد درست در دسترس است", () => {
+    const video = statSync(publicFile(siteConfig.media.logoMotion.mp4));
+    const poster = statSync(publicFile(siteConfig.media.logoMotion.poster));
+
+    expect(video.size).toBeGreaterThan(50_000);
+    expect(video.size).toBeLessThan(1_500_000);
+    expect(poster.size).toBeGreaterThan(5_000);
+    expect(siteConfig.media.logoMotion.width).toBe(416);
+    expect(siteConfig.media.logoMotion.height).toBe(752);
   });
 
   it("alt لوگو معنادار است", () => {

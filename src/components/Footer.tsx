@@ -2,6 +2,7 @@ import {
   ClockIcon,
   InstagramIcon,
   LinkedInIcon,
+  MailIcon,
   MapPinIcon,
   PhoneIcon,
   TelegramIcon,
@@ -13,6 +14,7 @@ import { FOOTER_LEGAL_LINKS, NAV_ITEMS } from "../config/nav";
 import { SERVICES, servicePath } from "../content/services";
 import {
   activeSocials,
+  emailLink,
   officePhone,
   openingHoursFa,
   primaryPhone,
@@ -43,12 +45,12 @@ export default function Footer() {
               className="flex items-center gap-3"
               aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحهٔ اصلی`}
             >
-              <BrandLogo size={44} />
+              <BrandLogo height={78} />
               <span className="flex flex-col leading-tight">
-                <span className="text-lg font-extrabold text-white">{siteConfig.lawyer.name}</span>
                 <span className="text-[11px] font-medium text-gold-light">
                   {siteConfig.lawyer.jobTitle}
                 </span>
+                <span className="text-[11px] text-white/50">دفتر قزوین</span>
               </span>
             </Link>
             <p className="mt-5 max-w-xs text-[13px] leading-7 text-white/60">
@@ -148,6 +150,20 @@ export default function Footer() {
                   )}
                 </span>
               </li>
+              {emailLink && (
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
+                    <MailIcon className="h-4 w-4" />
+                  </span>
+                  <a
+                    href={emailLink.href}
+                    dir="ltr"
+                    className="break-all pt-1 leading-6 transition-colors hover:text-gold-light"
+                  >
+                    {emailLink.address}
+                  </a>
+                </li>
+              )}
               <li className="flex items-start gap-3">
                 <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
                   <MapPinIcon className="h-4 w-4" />

@@ -70,17 +70,21 @@ export default function Navbar() {
       >
         <Link
           to="/"
-          className="group flex items-center gap-3"
+          className="group flex shrink-0 items-center gap-3"
           aria-label={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} — صفحهٔ اصلی`}
         >
+          {/* لوگوی کامل رسمی: نشان + خطاطی + نام لاتین، بدون بریدگی */}
           <BrandLogo
-            size={42}
-            className="transition-transform duration-500 group-hover:scale-105"
+            height={54}
+            priority
+            className="block shrink-0 transition-transform duration-500 group-hover:scale-[1.03] sm:hidden"
           />
-          <span className="flex flex-col leading-tight">
-            <span className="text-lg font-extrabold tracking-tight text-white">
-              {siteConfig.lawyer.name}
-            </span>
+          <BrandLogo
+            height={62}
+            priority
+            className="hidden shrink-0 transition-transform duration-500 group-hover:scale-[1.03] sm:block"
+          />
+          <span className="hidden flex-col leading-tight xl:flex">
             <span className="text-[11px] font-medium text-gold-light">
               {siteConfig.lawyer.jobTitle}
             </span>

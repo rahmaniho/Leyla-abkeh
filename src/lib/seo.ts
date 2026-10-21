@@ -104,6 +104,7 @@ export function buildAttorneySchema(): JsonLd {
     image: absoluteUrl(lawyer.photo.basePath + ".jpg"),
     logo: absoluteUrl(siteConfig.brand.mark.png),
     ...(verifiedTelephone ? { telephone: verifiedTelephone } : {}),
+    ...(siteConfig.contact.email ? { email: siteConfig.contact.email } : {}),
     founder: {
       "@type": "Person",
       name: lawyer.name,
@@ -119,6 +120,16 @@ export function buildAttorneySchema(): JsonLd {
             addressCountry: contact.address.country,
             ...(contact.postalCode ? { postalCode: contact.postalCode } : {}),
           },
+        }
+      : {}),
+    ...(siteConfig.contact.geo
+      ? {
+          geo: {
+            "@type": "GeoCoordinates",
+            latitude: siteConfig.contact.geo.latitude,
+            longitude: siteConfig.contact.geo.longitude,
+          },
+          hasMap: `https://www.google.com/maps/search/?api=1&query=${siteConfig.contact.geo.latitude},${siteConfig.contact.geo.longitude}`,
         }
       : {}),
     areaServed: {

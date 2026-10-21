@@ -1,10 +1,12 @@
 import PageHero from "../components/PageHero";
 import ConsultationForm from "../components/ConsultationForm";
-import { ClockIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "../components/Icons";
+import { ClockIcon, MailIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "../components/Icons";
 import {
   CONTACT_DETAILS_PENDING_MESSAGE,
   PHONE_PENDING_MESSAGE,
   activeSocials,
+  emailLink,
+  mapUrl,
   officePhone,
   openingHoursFa,
   primaryPhone,
@@ -39,10 +41,6 @@ export const meta: PageMeta = {
 };
 
 export default function ContactPage() {
-  const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    siteConfig.contact.address.full
-  )}`;
-
   return (
     <>
       <PageHero
@@ -136,6 +134,26 @@ export default function ContactPage() {
                 </a>
               )}
 
+              {emailLink && (
+                <a
+                  href={emailLink.href}
+                  className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-white/75 p-5 transition-colors hover:border-gold/45 hover:bg-white"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
+                    <MailIcon className="h-5 w-5" />
+                  </span>
+                  <span>
+                    <span className="block text-[12.5px] font-medium text-ink/70">ایمیل دفتر</span>
+                    <span dir="ltr" className="mt-1 block text-[15px] font-extrabold text-ink">
+                      {emailLink.address}
+                    </span>
+                    <span className="mt-1 block text-[11.5px] text-ink/60">
+                      برای ارسال مدارک و مکاتبات غیرفوری
+                    </span>
+                  </span>
+                </a>
+              )}
+
               <div className="rounded-2xl border border-ink/10 bg-white/75 p-5">
                 <div className="flex items-start gap-4">
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
@@ -146,15 +164,17 @@ export default function ContactPage() {
                     <p className="mt-1 text-[14px] font-bold leading-7 text-ink">
                       {siteConfig.contact.address.full}
                     </p>
-                    <a
-                      href={mapUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-bold text-gold-deep underline decoration-gold/40 underline-offset-4 hover:text-ink"
-                    >
-                      مسیریابی در نقشه
-                      <span className="sr-only">(باز شدن در پنجرهٔ جدید)</span>
-                    </a>
+                    {mapUrl && (
+                      <a
+                        href={mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-bold text-gold-deep underline decoration-gold/40 underline-offset-4 hover:text-ink"
+                      >
+                        مسیریابی در نقشه
+                        <span className="sr-only">(باز شدن در پنجرهٔ جدید)</span>
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

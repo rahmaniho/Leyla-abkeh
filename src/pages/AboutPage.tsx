@@ -1,11 +1,11 @@
 import PageHero from "../components/PageHero";
 import Reveal from "../components/Reveal";
 import SectionHeader from "../components/SectionHeader";
+import LogoMotion from "../components/LogoMotion";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
 import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
 import LawyerPortrait from "../components/LawyerPortrait";
-import { withBase } from "../lib/base";
 
 export const meta: PageMeta = {
   title: "دربارهٔ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
@@ -129,26 +129,8 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="mt-12 flex flex-col items-start gap-6 rounded-3xl border border-ink/10 bg-white/60 p-6 sm:flex-row sm:items-center">
-              <picture className="shrink-0">
-                <source type="image/webp" srcSet={withBase(siteConfig.brand.lockup.webp)} />
-                <img
-                  src={withBase(siteConfig.brand.lockup.png)}
-                  alt={siteConfig.brand.alt}
-                  width={siteConfig.brand.lockup.width}
-                  height={siteConfig.brand.lockup.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-28 w-auto object-contain"
-                />
-              </picture>
-              <div>
-                <p className="text-[14px] font-extrabold text-ink">نشان دفتر</p>
-                <p className="mt-2 max-w-md text-[12.5px] leading-7 text-ink/70">
-                  نشان دفتر ترکیبی از چهرهٔ زن — نماد دقت و همدلی — و ترازوی عدالت است؛
-                  همان دو اصلی که مبنای کار در پرونده‌های خانوادگی و حقوقی است.
-                </p>
-              </div>
+            <div className="mx-auto mt-12 w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-ink-deep">
+              <LogoMotion />
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">

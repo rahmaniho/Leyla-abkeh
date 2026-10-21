@@ -16,25 +16,50 @@ describe("صفحهٔ اصلی", () => {
     expect(screen.getAllByText(siteConfig.lawyer.name).length).toBeGreaterThan(0);
   });
 
-  it("تا تأیید شماره، هیچ پیوند تلفنی با شمارهٔ نمونه در صفحه نیست", () => {
+  it("شمارهٔ تأییدشدهٔ دفتر با لینک tel درست نمایش داده می‌شود", () => {
     const { unmount } = renderAt("/");
 
-    // شمارهٔ نمونه هرگز نباید به‌عنوان شمارهٔ واقعی دفتر منتشر شود
-    expect(primaryPhone).toBeNull();
-    expect(document.body.innerHTML).not.toContain("0912");
-    expect(document.body.innerHTML).not.toContain(siteConfig.contact.phoneE164);
+    // شمارهٔ واقعی دفتر (تأییدشده توسط مالک)
+    expect(primaryPhone?.e164).toBe("+989900925811");
 
-    for (const link of Array.from(document.querySelectorAll("a[href^='tel:']"))) {
-      expect(link.getAttribute("href")).not.toContain(siteConfig.contact.phoneE164);
+    const telLinks = Array.from(document.querySelectorAll("a[href^='tel:']"));
+    expect(telLinks.length).toBeGreaterThan(0);
+    for (const link of telLinks) {
+      expect(link.getAttribute("href")).toBe("tel:+989900925811");
     }
-    for (const link of Array.from(document.querySelectorAll("a[href*='wa.me']"))) {
-      expect(link.getAttribute("href")).not.toContain("989121234567");
-    }
-    expect(
-      Array.from(document.querySelectorAll("a[href]")).some((link) =>
-        link.getAttribute("href")?.includes("/contact")
-      )
-    ).toBe(true);
+
+    // شمارهٔ نمونهٔ قدیمی هرگز نباید در صفحه بماند
+    expect(document.body.innerHTML).not.toContain("09121234567");
+    expect(document.body.innerHTML).not.toContain("+989121234567");
+    unmount();
+  });
+
+  it("شماره به شکل فارسی و خوانا نمایش داده می‌شود", () => {
+    const { unmount } = renderAt("/contact");
+    expect(primaryPhone?.display).toBe("۰۹۹۰ ۰۹۲ ۵۸۱۱");
+    expect(document.body.textContent).toContain("۰۹۹۰ ۰۹۲ ۵۸۱۱");
+    unmount();
+  });
+
+  it("ایمیل، واتساپ و نقشهٔ مختصات در صفحهٔ تماس موجود است", () => {
+    const { unmount } = renderAt("/contact");
+
+    const email = document.querySelector('a[href="mailto:info@leyla-abkeh.ir"]');
+    expect(email).not.toBeNull();
+
+    // واتساپ از همان شمارهٔ تأییدشده ساخته می‌شود
+    const whatsapp = document.querySelector('a[href^="https://wa.me/"]');
+    expect(whatsapp?.getAttribute("href")).toBe("https://wa.me/989900925811");
+
+    // نقشه بر پایهٔ مختصات تأییدشده
+    const map = Array.from(document.querySelectorAll("a[href*='google.com/maps']")).map((a) =>
+      a.getAttribute("href")
+    );
+    expect(map.some((href) => href?.includes("36.2665941") && href?.includes("50.0236544"))).toBe(
+      true
+    );
+
+    expect(document.body.textContent).toContain("مجتمع تجاری نیایش");
     unmount();
   });
 
@@ -208,9 +233,8 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
     expect(screen.queryByText("درخواست شما ثبت شد")).toBeNull();
     expect(screen.getByLabelText("نام و نام خانوادگی")).toHaveValue("سارا محمدی");
     expect(screen.getByLabelText("شماره تماس")).toHaveValue("۰۹۱۲۱۲۳۴۵۶۷");
-    // تا تأیید شمارهٔ واقعی، مسیر جایگزین متنی نمایش داده می‌شود (بدون لینک تلفنی جعلی)
-    expect(screen.queryByRole("link", { name: /تماس تلفنی با دفتر/ })).toBeNull();
-    expect(screen.getByText(/شمارهٔ تلفن دفتر در حال/)).toBeInTheDocument();
+    // مسیر جایگزین تماس تلفنی (شماره اکنون تأیید شده است)
+    expect(screen.getByRole("link", { name: /تماس تلفنی با دفتر/ })).toBeInTheDocument();
   });
 
   it("اگر مسیر تابع وجود نداشته باشد (استقرار ایستا) پیام «فعال نیست» نشان می‌دهد", async () => {
