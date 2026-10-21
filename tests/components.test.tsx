@@ -63,6 +63,16 @@ describe("صفحهٔ اصلی", () => {
     unmount();
   });
 
+  it("صفحهٔ تماس، نشانی تأییدشده را «تأییدنشده» معرفی نمی‌کند", () => {
+    const { unmount } = renderAt("/contact");
+    const text = document.body.textContent ?? "";
+
+    // نشانی و مختصات تأیید شده‌اند؛ تنها ساعات کاری تأییدنشده می‌ماند
+    expect(text).not.toContain("نشانی و ساعات کاری این صفحه هنوز تأیید نهایی نشده");
+    expect(text).toContain("ساعات کاری این صفحه هنوز تأیید نهایی نشده");
+    unmount();
+  });
+
   it("لینک پرش به محتوای اصلی وجود دارد", () => {
     renderAt("/");
     expect(screen.getByRole("link", { name: "پرش به محتوای اصلی" })).toHaveAttribute("href", "#main");

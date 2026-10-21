@@ -311,9 +311,9 @@ export const PHONE_PENDING_MESSAGE =
 /** متن کوتاه برای دکمه‌ها و نوارها */
 export const PHONE_PENDING_SHORT = "شمارهٔ تلفن در حال تأیید است";
 
-/** پیام تأییدنشدن نشانی/ساعات کاری (نمایش داده می‌شوند اما صحتشان تأیید نشده) */
+/** پیام تأییدنشدن ساعات کاری (نمایش داده می‌شوند اما صحتشان تأیید نشده) */
 export const CONTACT_DETAILS_PENDING_MESSAGE =
-  "نشانی و ساعات کاری این صفحه هنوز تأیید نهایی نشده است؛ پیش از مراجعهٔ حضوری، از طریق فرم هماهنگ کنید.";
+  "ساعات کاری این صفحه هنوز تأیید نهایی نشده است؛ پیش از مراجعهٔ حضوری، از طریق فرم یا تلفن هماهنگ کنید.";
 
 export const officePhone: PhoneLink | null =
   !verification.officePhone && siteConfig.contact.officePhoneE164

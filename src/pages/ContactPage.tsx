@@ -196,7 +196,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {(verification.address || verification.hours) && (
+            {verification.hours && (
               <p className="mt-6 rounded-2xl border border-ink/12 bg-sand/70 p-4 text-[12px] leading-6 text-ink/70">
                 {CONTACT_DETAILS_PENDING_MESSAGE}
               </p>
