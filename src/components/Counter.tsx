@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 interface CounterProps {
   /** مقدار نهایی */
   value: number;
-  /** چند رقم اعشار (برای ۴٫۹) */
+  /** تعداد رقم اعشار مقدار نهایی */
   decimals?: number;
   prefix?: string;
   suffix?: string;

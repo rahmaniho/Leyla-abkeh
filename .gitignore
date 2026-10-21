@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.ssr/
+coverage/
+.env
+.env.local
+.netlify/
+.DS_Store
+*.log

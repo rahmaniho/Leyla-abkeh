@@ -1,15 +1,34 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex" />
-    <title>پنل مدیریت سایت</title>
-    <!-- ویجت احراز هویت Netlify -->
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>پنل مدیریت محتوا</title>
+    <!-- ویجت احراز هویت Netlify (برای ورود با Git Gateway) -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
   </head>
   <body>
-    <!-- اسکریپت اصلی Decap CMS -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <div id="loading" style="font-family: Tahoma, sans-serif; padding: 2rem; text-align: center">
+      در حال بارگذاری پنل مدیریت…
+    </div>
+    <!-- Decap CMS — نسخهٔ قفل‌شده -->
+    <script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        var loading = document.getElementById("loading");
+        if (loading) loading.remove();
+        if (window.netlifyIdentity) {
+          window.netlifyIdentity.on("init", function (user) {
+            if (!user) {
+              window.netlifyIdentity.on("login", function () {
+                document.location.href = "/admin/";
+              });
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>

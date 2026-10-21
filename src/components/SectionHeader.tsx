@@ -6,6 +6,7 @@ interface SectionHeaderProps {
   description?: string;
   dark?: boolean;
   align?: "center" | "start";
+  titleId?: string;
 }
 
 /** عنوان مشترک بخش‌ها با برچسب طلایی، عنوان و توضیح */
@@ -15,6 +16,7 @@ export default function SectionHeader({
   description,
   dark = false,
   align = "center",
+  titleId,
 }: SectionHeaderProps) {
   const centered = align === "center";
   return (
@@ -27,13 +29,14 @@ export default function SectionHeader({
               : "border-gold/40 bg-gold/10 text-gold-deep"
           }`}
         >
-          <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+          <span className="h-1.5 w-1.5 rounded-full bg-gold" aria-hidden="true" />
           {eyebrow}
         </span>
       </Reveal>
       <Reveal delay={100}>
         <h2
-          className={`mt-5 text-3xl font-black leading-[1.4] sm:text-4xl ${
+          id={titleId}
+          className={`mt-5 text-[1.65rem] font-black leading-[1.4] sm:text-4xl ${
             dark ? "text-white" : "text-ink"
           }`}
         >
@@ -43,8 +46,8 @@ export default function SectionHeader({
       {description && (
         <Reveal delay={200}>
           <p
-            className={`mt-4 text-[15px] leading-8 sm:text-base sm:leading-8 ${
-              dark ? "text-white/60" : "text-ink/60"
+            className={`mt-4 text-[14.5px] leading-8 sm:text-base sm:leading-8 ${
+              dark ? "text-white/70" : "text-ink/70"
             }`}
           >
             {description}

@@ -49,7 +49,7 @@ export default function Features() {
                     <feature.icon className="h-7 w-7" />
                   </span>
                   <h3 className="mt-6 text-lg font-extrabold text-ink">{feature.title}</h3>
-                  <p className="mt-3 text-[13.5px] leading-7 text-ink/60">{feature.desc}</p>
+                  <p className="mt-3 text-[13.5px] leading-7 text-ink/70">{feature.desc}</p>
                 </div>
               </article>
             </Reveal>
