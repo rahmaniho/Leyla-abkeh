@@ -110,13 +110,27 @@ export const siteConfig = {
     barAssociation: "کانون وکلای دادگستری استان قزوین",
     barAssociationPending: true,
     photo: {
-      /** تصویر رسمی وکیل؛ تا زمان دریافت عکس واقعی، تصویر فعلی نمونهٔ بازسازی‌شده است. */
-      isPlaceholder: true,
+      /** تصویر رسمی و ارسالی خود وکیل (نه تصویر نمونه). */
+      isPlaceholder: false,
       basePath: "/images/lawyer",
-      width: 1122,
-      height: 1402,
+      width: 762,
+      height: 1016,
       alt: "پرترهٔ لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
     },
+  },
+
+  /** هویت بصری: لوگوی رسمی دفتر (طلایی روی زمینهٔ شفاف) */
+  brand: {
+    /** مارک تنها (بدون خطاطی و نام لاتین) — برای نوار بالا، پاورقی و آیکون‌ها */
+    mark: { png: "/images/brand/logo-mark.png", webp: "/images/brand/logo-mark.webp", width: 300, height: 311 },
+    /** لوگوی کامل: مارک + خطاطی «لیلا» + نام لاتین */
+    lockup: {
+      png: "/images/brand/logo-lockup.png",
+      webp: "/images/brand/logo-lockup.webp",
+      width: 420,
+      height: 630,
+    },
+    alt: "لوگوی دفتر وکالت لیلا آبکه",
   },
 
   contact: {

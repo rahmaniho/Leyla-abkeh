@@ -1,5 +1,5 @@
 import Reveal from "./Reveal";
-import { withBase, withBaseSrcSet } from "../lib/base";
+import LawyerPortrait from "./LawyerPortrait";
 import {
   ClockIcon,
   LockIcon,
@@ -124,29 +124,11 @@ export default function Hero() {
 
             <article className="relative rounded-[2rem] border border-white/12 bg-white/[0.07] p-4 shadow-deep backdrop-blur-2xl sm:p-5">
               <div className="overflow-hidden rounded-3xl">
-                <picture>
-                  <source
-                    type="image/avif"
-                    srcSet={withBaseSrcSet("/images/lawyer-560.avif 560w, /images/lawyer.avif 1122w")}
-                    sizes="(min-width: 1024px) 420px, 88vw"
-                  />
-                  <source
-                    type="image/webp"
-                    srcSet={withBaseSrcSet("/images/lawyer-560.webp 560w, /images/lawyer.webp 1122w")}
-                    sizes="(min-width: 1024px) 420px, 88vw"
-                  />
-                  <img
-                    src={withBase("/images/lawyer.jpg")}
-                    srcSet={withBaseSrcSet("/images/lawyer-560.jpg 560w, /images/lawyer.jpg 1122w")}
-                    sizes="(min-width: 1024px) 420px, 88vw"
-                    alt={lawyer.photo.alt}
-                    width={lawyer.photo.width}
-                    height={lawyer.photo.height}
-                    fetchPriority="high"
-                    decoding="async"
-                    className="aspect-[4/4.6] w-full bg-ink-soft object-cover object-top"
-                  />
-                </picture>
+                <LawyerPortrait
+                  sizes="(min-width: 1024px) 420px, 88vw"
+                  priority
+                  className="rounded-2xl"
+                />
 
                 <div className="relative -mt-14 px-3">
                   <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/15 bg-ink/90 px-4 py-3 backdrop-blur-xl">
