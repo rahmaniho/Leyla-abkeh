@@ -28,6 +28,15 @@ export const meta: PageMeta = {
       image: absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
       url: pageUrl("/about"),
       worksFor: { "@id": `${siteConfig.site.url}/#attorney` },
+      ...(siteConfig.lawyer.licenseNumber && siteConfig.lawyer.licenseNumberLatin
+        ? {
+            identifier: {
+              "@type": "PropertyValue",
+              propertyID: "شمارۀ پروانۀ وکالت",
+              value: siteConfig.lawyer.licenseNumberLatin,
+            },
+          }
+        : {}),
       address: {
         "@type": "PostalAddress",
         addressLocality: siteConfig.contact.address.city,
@@ -82,6 +91,14 @@ export default function AboutPage() {
                   </p>
                 )}
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
+                {siteConfig.lawyer.licenseNumber && (
+                  <p className="text-[12.5px] text-ink/70">
+                    شمارۀ پروانۀ وکالت:{" "}
+                    <span className="font-extrabold text-ink/90">
+                      {siteConfig.lawyer.licenseNumber}
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
           </Reveal>
@@ -129,13 +146,19 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="mx-auto mt-12 w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-ink-deep">
-              <LogoMotion />
+            <div className="mt-16 flex flex-col items-center">
+              <span aria-hidden="true" className="mb-10 h-px w-16 bg-gold/40" />
+              <div className="relative flex w-full justify-center">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[80px]"
+                />
+                <LogoMotion className="relative w-full max-w-[280px] sm:max-w-[320px]" />
+              </div>
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
-              اطلاعات حرفه‌ای تکمیلی (مانند شمارۀ پروانۀ وکالت) تنها پس از تأیید و به‌روزرسانی
-              مستندات منتشر می‌شود.
+              عضویت در کانون وکلا پس از تأیید دفتر در همین صفحه منتشر می‌شود.
             </p>
           </div>
         </div>

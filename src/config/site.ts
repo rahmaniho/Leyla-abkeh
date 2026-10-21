@@ -149,8 +149,14 @@ export const siteConfig = {
     name: "لیلا آبکه",
     nameLatin: "Leyla Abkeh",
     jobTitle: "وکیل پایه یک دادگستری",
-    /** pending: true → نیازمند تأیید (شمارۀ پروانه منتشر نمی‌شود) */
-    licenseNumber: null as string | null,
+    /**
+     * شمارۀ پروانۀ وکالت — تأییدشده توسط مالک (۳۰ مهر ۱۴۰۴).
+     * مثل بقیۀ داده‌های حساس، اگر این مورد دوباره به `verification.json`
+     * برگردد به‌صورت خودکار از سایت و دادۀ ساختاریافته حذف می‌شود.
+     */
+    licenseNumber: (verification.licenseNumber ? null : "۲۳۷۰") as string | null,
+    /** همان شماره با ارقام لاتین برای Schema.org — هم‌زمان با فیلد بالا فعال/غیرفعال می‌شود */
+    licenseNumberLatin: (verification.licenseNumber ? null : "2370") as string | null,
     /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادۀ ساختاریافته‌ای نمی‌آید. */
     barAssociation: (verification.barAssociation
       ? null
@@ -237,7 +243,10 @@ export const siteConfig = {
     /** لوگوموشن رسمی (بدون صدا، بهینه‌شده برای وب) */
     logoMotion: {
       mp4: "/media/logo-motion.mp4",
+      /** فریم شروع (۰ ثانیه) — پوستر ویدئو، برای شروع بدون پرش */
       poster: "/media/logo-motion-poster.jpg",
+      /** فریم پایان (۶ ثانیه) — لوگوی کامل و روشن؛ برای کاهش حرکت و جایگزین ثابت */
+      endFrame: "/media/logo-motion-end.jpg",
       width: 416,
       height: 752,
       /** توضیح متنی جایگزین برای فناوری‌های کمکی */
