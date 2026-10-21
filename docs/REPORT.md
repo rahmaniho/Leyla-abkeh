@@ -23,7 +23,7 @@ Decap CMS، سئوی فنی کامل، هدرهای امنیتی و زنجیره
 | فونت | اعلام‌شده اما بارگذاری‌نشده | Vazirmatn variable self-host (۸۲ KB) |
 | تصویر وکیل | آدرس اشتباه (۴۰۴) | AVIF/WebP/JPEG + srcset + ابعاد ثابت |
 | امنیت | بدون هدر، بدون بک‌اند | CSP، HSTS، محدودیت نرخ، بدون کلید در فرانت |
-| کیفیت | بدون lint/test | ۱۰۲ آزمون، ESLint، typecheck در زنجیرهٔ بیلد |
+| کیفیت | بدون lint/test | ۱۱۱ آزمون، ESLint، typecheck در زنجیرهٔ بیلد |
 
 ---
 
@@ -193,7 +193,7 @@ Decap CMS، سئوی فنی کامل، هدرهای امنیتی و زنجیره
 ```bash
 npm run lint       # ESLint: TypeScript + React Hooks + jsx-a11y  → پاک
 npm run typecheck  # tsc --noEmit (strict)                        → پاک
-npm run test       # Vitest: 7 فایل، ۱۰۲ آزمون                   → همه موفق
+npm run test       # Vitest: 7 فایل، ۱۱۱ آزمون                   → همه موفق
 npm run build      # typecheck + build + prerender               → موفق
 npm run verify     # هر چهار مورد بالا در یک زنجیره
 ```
@@ -209,6 +209,8 @@ npm run verify     # هر چهار مورد بالا در یک زنجیره
 | `components.test.tsx` | ۱۹ | H1، لینک تماس، دسترس‌پذیری منو، inert/Escape، فهرست خدمات، ۴۰۴، خطاهای فرم، موفقیت، خطای سرور با حفظ داده، قفل دکمه |
 | `a11y.test.tsx` | ۸ | یک H1، alt تصاویر، نام لینک/دکمه، شناسهٔ یکتا، برچسب فیلدها، rel امن |
 | `hydration.test.tsx` | ۱۳ | هم‌خوانی SSR/کلاینت در ۱۲ مسیر + وجود محتوای بدون JS |
+| `deploy.test.ts` | ۹ | بیلد/انتشار Netlify، بازنویسی API، CSP بدون `unsafe-inline`، کش دارایی‌ها،
+  هم‌راستایی Decap با ساختار محتوا، نبود کلید محرمانه در فرانت، ساختار فهرست تأییدنشده |
 
 ## مرحله ۱۱ — استقرار
 
