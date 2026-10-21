@@ -2,6 +2,7 @@ import Hero from "../components/Hero";
 import Stats from "../components/Stats";
 import Features from "../components/Features";
 import Services from "../components/Services";
+import Process from "../components/Process";
 import Benefits from "../components/Benefits";
 import Testimonials from "../components/Testimonials";
 import Pricing from "../components/Pricing";
@@ -27,6 +28,7 @@ export default function HomePage() {
       <Stats />
       <Features />
       <Services limit={6} />
+      <Process />
       <Benefits />
       <Testimonials />
       <Pricing />

@@ -74,7 +74,13 @@ export default function AboutPage() {
               <div className="space-y-2 p-5">
                 <p className="text-base font-extrabold text-ink">{siteConfig.lawyer.name}</p>
                 <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.jobTitle}</p>
-                <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.barAssociation}</p>
+                {siteConfig.lawyer.barAssociation ? (
+                  <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.barAssociation}</p>
+                ) : (
+                  <p className="text-[12.5px] text-ink/70">
+                    دفتر وکالت و مشاورهٔ حقوقی در {siteConfig.site.city}
+                  </p>
+                )}
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
               </div>
             </div>

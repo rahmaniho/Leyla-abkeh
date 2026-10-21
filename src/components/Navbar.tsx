@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "../utils/cn";
 import { NAV_ITEMS } from "../config/nav";
 import { Link, usePathname } from "../lib/router";
 import { CloseIcon, MenuIcon, PhoneIcon } from "./Icons";
 import BrandLogo from "./BrandLogo";
+import { track } from "../lib/analytics";
 import { siteConfig, primaryPhone } from "../config/site";
 
 function isActive(pathname: string, href: string): boolean {
@@ -14,6 +15,7 @@ function isActive(pathname: string, href: string): boolean {
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -34,8 +36,13 @@ export default function Navbar() {
   useEffect(() => {
     if (!open) return;
 
+    const toggle = menuButtonRef.current;
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle?.focus();
+      }
     };
 
     const previousOverflow = document.body.style.overflow;
@@ -103,25 +110,37 @@ export default function Navbar() {
         </ul>
 
         <div className="flex items-center gap-2.5">
-          <a
-            href={primaryPhone.href}
-            aria-label={primaryPhone.ariaLabel}
-            className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-[13px] font-bold text-white/85 transition-colors hover:border-gold/50 hover:text-gold-light md:inline-flex"
-          >
-            <PhoneIcon className="h-4 w-4 text-gold-light" />
-            <span dir="ltr" className="tracking-wide">
-              {primaryPhone.display}
-            </span>
-          </a>
+          {primaryPhone ? (
+            <a
+              href={primaryPhone.href}
+              aria-label={primaryPhone.ariaLabel}
+              className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-[13px] font-bold text-white/85 transition-colors hover:border-gold/50 hover:text-gold-light md:inline-flex"
+            >
+              <PhoneIcon className="h-4 w-4 text-gold-light" />
+              <span dir="ltr" className="tracking-wide">
+                {primaryPhone.display}
+              </span>
+            </a>
+          ) : (
+            <Link
+              to="/contact"
+              className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-[13px] font-bold text-white/85 transition-colors hover:border-gold/50 hover:text-gold-light md:inline-flex"
+            >
+              <PhoneIcon className="h-4 w-4 text-gold-light" />
+              درخواست تماس
+            </Link>
+          )}
 
           <Link
             to="/contact"
-            className="hidden rounded-full bg-gradient-to-l from-gold to-gold-deep px-5 py-2.5 text-[13px] font-bold text-white shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-10px_rgba(184,145,90,0.6)] sm:inline-flex"
+            onClick={() => track("cta_click", { location: "navbar", target: "/contact" })}
+            className="hidden rounded-full bg-gradient-to-l from-gold-light via-gold-light to-gold px-5 py-2.5 text-[13px] font-bold text-ink-deep shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_44px_-10px_rgba(184,145,90,0.6)] sm:inline-flex"
           >
             درخواست مشاوره
           </Link>
 
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
@@ -168,18 +187,29 @@ export default function Navbar() {
               <Link
                 to="/contact"
                 onClick={() => setOpen(false)}
-                className="flex-1 rounded-xl bg-gradient-to-l from-gold to-gold-deep px-4 py-3.5 text-center text-sm font-bold text-white shadow-gold"
+                className="flex-1 rounded-xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-4 py-3.5 text-center text-sm font-bold text-ink-deep shadow-gold"
               >
                 درخواست مشاوره
               </Link>
-              <a
-                href={primaryPhone.href}
-                aria-label={primaryPhone.ariaLabel}
-                className="flex items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-3.5 text-sm font-bold text-white/85"
-              >
-                <PhoneIcon className="h-4 w-4 text-gold-light" />
-                تماس
-              </a>
+              {primaryPhone ? (
+                <a
+                  href={primaryPhone.href}
+                  aria-label={primaryPhone.ariaLabel}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-3.5 text-sm font-bold text-white/85"
+                >
+                  <PhoneIcon className="h-4 w-4 text-gold-light" />
+                  تماس
+                </a>
+              ) : (
+                <Link
+                  to="/contact"
+                  onClick={() => setOpen(false)}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-white/15 px-4 py-3.5 text-sm font-bold text-white/85"
+                >
+                  <PhoneIcon className="h-4 w-4 text-gold-light" />
+                  تماس
+                </Link>
+              )}
             </li>
           </ul>
         </div>

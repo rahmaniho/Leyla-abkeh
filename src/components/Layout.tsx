@@ -4,6 +4,7 @@ import Footer from "./Footer";
 import FloatingCall from "./FloatingCall";
 import { usePathname, useRouter } from "../lib/router";
 import { applyMetaInBrowser, type PageMeta } from "../lib/seo";
+import { track } from "../lib/analytics";
 
 /**
  * چیدمان مشترک صفحات: لینک پرش، ناوبری، محتوای اصلی، پاورقی و دکمهٔ تماس.
@@ -41,6 +42,11 @@ export default function Layout({ meta, children }: { meta: PageMeta; children: R
     const timer = window.setTimeout(() => setAnnouncement(`${meta.title} — صفحه بارگذاری شد`), 150);
     return () => window.clearTimeout(timer);
   }, [pathname, meta.title]);
+
+  // سنجش بازدید صفحه‌ای — فقط مسیر، بدون شناسه یا داده شخصی
+  useEffect(() => {
+    track("page_view", { path: pathname });
+  }, [pathname]);
 
   return (
     <div className="flex min-h-screen flex-col bg-cream text-ink">

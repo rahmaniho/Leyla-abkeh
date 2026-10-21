@@ -31,20 +31,29 @@ export default function ServicePage({ service }: { service: Service }) {
         <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
             to="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-6 py-3 text-sm font-bold text-ink-deep shadow-gold transition-transform hover:-translate-y-0.5"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-6 py-3 text-sm font-bold text-ink-deep shadow-gold transition-transform hover:-translate-y-0.5"
           >
             درخواست مشاوره در این حوزه
           </Link>
-          <a
-            href={primaryPhone.href}
-            aria-label={primaryPhone.ariaLabel}
-            className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/20 px-6 py-3 text-sm font-bold text-white/90 transition-colors hover:border-gold/50 hover:text-gold-light"
-          >
-            <PhoneIcon className="h-4.5 w-4.5 text-gold-light" />
-            <span dir="ltr" className="tracking-wide">
-              {primaryPhone.display}
-            </span>
-          </a>
+          {primaryPhone ? (
+            <a
+              href={primaryPhone.href}
+              aria-label={primaryPhone.ariaLabel}
+              className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/20 px-6 py-3 text-sm font-bold text-white/90 transition-colors hover:border-gold/50 hover:text-gold-light"
+            >
+              <PhoneIcon className="h-4.5 w-4.5 text-gold-light" />
+              <span dir="ltr" className="tracking-wide">
+                {primaryPhone.display}
+              </span>
+            </a>
+          ) : (
+            <Link
+              to="/about"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 px-6 py-3 text-sm font-bold text-white/90 transition-colors hover:border-gold/50 hover:text-gold-light"
+            >
+              دربارهٔ وکیل
+            </Link>
+          )}
         </div>
       </PageHero>
 
@@ -155,22 +164,25 @@ export default function ServicePage({ service }: { service: Service }) {
             <div className="rounded-3xl border border-ink/10 bg-white/75 p-6 shadow-soft">
               <h2 className="text-base font-extrabold text-ink">موضوع پروندهٔ شما در این حوزه است؟</h2>
               <p className="mt-2 text-[13px] leading-7 text-ink/70">
-                برای بررسی اولیه و تعیین مسیر، درخواست مشاوره ثبت کنید یا تلفنی تماس بگیرید.
+                برای بررسی اولیه و تعیین مسیر، درخواست مشاوره ثبت کنید
+                {primaryPhone ? " یا تلفنی تماس بگیرید." : "؛ پس از بررسی، برای تعیین وقت با شما تماس گرفته می‌شود."}
               </p>
               <Link
                 to="/contact"
-                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-5 py-3 text-sm font-bold text-ink-deep shadow-gold transition-transform hover:-translate-y-0.5"
+                className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-5 py-3 text-sm font-bold text-ink-deep shadow-gold transition-transform hover:-translate-y-0.5"
               >
                 درخواست مشاوره
               </Link>
-              <a
-                href={primaryPhone.href}
-                dir="ltr"
-                aria-label={primaryPhone.ariaLabel}
-                className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-ink/15 px-5 py-3 text-sm font-bold tracking-wide text-ink transition-colors hover:border-gold hover:text-gold-deep"
-              >
-                {primaryPhone.display}
-              </a>
+              {primaryPhone && (
+                <a
+                  href={primaryPhone.href}
+                  dir="ltr"
+                  aria-label={primaryPhone.ariaLabel}
+                  className="mt-2.5 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-ink/15 px-5 py-3 text-sm font-bold tracking-wide text-ink transition-colors hover:border-gold hover:text-gold-deep"
+                >
+                  {primaryPhone.display}
+                </a>
+              )}
             </div>
 
             {relatedServices.length > 0 && (

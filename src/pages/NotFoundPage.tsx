@@ -25,7 +25,7 @@ export default function NotFoundPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               to="/"
-              className="rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-6 py-3 text-sm font-bold text-ink-deep shadow-gold"
+              className="rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-6 py-3 text-sm font-bold text-ink-deep shadow-gold"
             >
               صفحهٔ اصلی
             </Link>

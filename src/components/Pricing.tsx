@@ -2,7 +2,7 @@ import Reveal from "./Reveal";
 import SectionHeader from "./SectionHeader";
 import { CheckIcon } from "./Icons";
 import { cn } from "../utils/cn";
-import { consultationFee, pricingPlans } from "../config/pricing";
+import { FEE_PENDING_MESSAGE, consultationFee, feeVerified, pricingPlans } from "../config/pricing";
 import { Link } from "../lib/router";
 
 export default function Pricing() {
@@ -22,10 +22,18 @@ export default function Pricing() {
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
         <SectionHeader
           eyebrow="تعرفهٔ شفاف"
-          title="هزینه‌ای که از همان ابتدا روشن است"
-          description="هر مسیر از مشاورهٔ اولیه آغاز می‌شود. تعرفه‌ها شفاف و بدون هزینهٔ پنهان اعلام می‌شوند."
+          title={feeVerified ? "هزینه‌ای که از همان ابتدا روشن است" : "هزینه‌ها چگونه تعیین می‌شوند"}
+          description="هر مسیر از گفت‌وگوی اولیه آغاز می‌شود. مبلغ پیش از شروع کار به‌صورت مکتوب اعلام می‌شود و هزینهٔ پنهانی وجود ندارد."
           titleId="pricing-title"
         />
+
+        {!feeVerified && (
+          <Reveal>
+            <p className="mx-auto mt-6 max-w-3xl rounded-2xl border border-gold/30 bg-gold/10 px-5 py-4 text-center text-[12.5px] leading-7 text-ink/80">
+              {FEE_PENDING_MESSAGE}
+            </p>
+          </Reveal>
+        )}
 
         <div className="mt-14 grid items-stretch gap-6 md:grid-cols-3 lg:mt-16 lg:gap-7">
           {plans.map((plan, index) => (
@@ -39,7 +47,7 @@ export default function Pricing() {
                 )}
               >
                 {plan.badge && (
-                  <span className="absolute -top-4 right-1/2 translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-l from-gold-light to-gold-deep px-5 py-1.5 text-[12px] font-extrabold text-ink-deep shadow-gold">
+                  <span className="absolute -top-4 right-1/2 translate-x-1/2 whitespace-nowrap rounded-full bg-gradient-to-l from-gold-light to-gold px-5 py-1.5 text-[12px] font-extrabold text-ink-deep shadow-gold">
                     ✦ {plan.badge}
                   </span>
                 )}
@@ -108,7 +116,7 @@ export default function Pricing() {
                   className={cn(
                     "mt-8 inline-flex items-center justify-center rounded-2xl px-6 py-3.5 text-sm font-bold transition-all duration-300 hover:-translate-y-0.5",
                     plan.featured
-                      ? "bg-gradient-to-l from-gold-light via-gold to-gold-deep text-ink-deep shadow-gold hover:shadow-[0_18px_44px_-10px_rgba(184,145,90,0.6)]"
+                      ? "bg-gradient-to-l from-gold-light via-gold-light to-gold text-ink-deep shadow-gold hover:shadow-[0_18px_44px_-10px_rgba(184,145,90,0.6)]"
                       : "border-2 border-ink/15 text-ink hover:border-gold hover:bg-gold/10 hover:text-gold-deep"
                   )}
                 >
@@ -121,8 +129,8 @@ export default function Pricing() {
 
         <Reveal delay={250}>
           <p className="mt-10 text-center text-[12.5px] font-medium leading-7 text-ink/70">
-            {consultationFee.note} تعرفهٔ نهایی و شرایط وکالت پس از بررسی پرونده به‌صورت مکتوب اعلام
-            می‌شود.
+            {feeVerified ? `${consultationFee.note} ` : ""}شرایط دقیق و حق‌الوکاله پس از بررسی
+            مدارک، پیش از شروع کار و به‌صورت مکتوب اعلام می‌شود.
           </p>
         </Reveal>
       </div>

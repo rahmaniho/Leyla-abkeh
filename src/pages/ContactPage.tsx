@@ -2,11 +2,14 @@ import PageHero from "../components/PageHero";
 import ConsultationForm from "../components/ConsultationForm";
 import { ClockIcon, MapPinIcon, PhoneIcon, WhatsAppIcon } from "../components/Icons";
 import {
+  CONTACT_DETAILS_PENDING_MESSAGE,
+  PHONE_PENDING_MESSAGE,
   activeSocials,
   officePhone,
   openingHoursFa,
   primaryPhone,
   siteConfig,
+  verification,
   whatsappUrl,
 } from "../config/site";
 import { buildAttorneySchema, buildBreadcrumbSchema, pageUrl, type PageMeta } from "../lib/seo";
@@ -18,8 +21,8 @@ const breadcrumbs = [
 ];
 
 export const meta: PageMeta = {
-  title: "تماس با دفتر وکالت در قزوین | آدرس، تلفن و ساعات کاری | لیلا آبکه",
-  description: `راه‌های تماس با دفتر وکالت ${siteConfig.lawyer.name} در ${siteConfig.site.city}: تلفن، واتساپ، نشانی دفتر، ساعات کاری و فرم درخواست مشاورهٔ آنلاین.`,
+  title: "تماس با دفتر وکالت در قزوین | نشانی، ساعات کاری و فرم مشاوره | لیلا آبکه",
+  description: `راه‌های ارتباط با دفتر وکالت ${siteConfig.lawyer.name} در ${siteConfig.site.city}: ثبت درخواست مشاورهٔ آنلاین، نشانی دفتر و ساعات کاری.`,
   path: "/contact",
   type: "website",
   breadcrumbs,
@@ -55,21 +58,46 @@ export default function ContactPage() {
             <h2 className="text-xl font-extrabold text-ink sm:text-2xl">اطلاعات تماس</h2>
 
             <div className="mt-6 space-y-4">
-              <a
-                href={primaryPhone.href}
-                aria-label={primaryPhone.ariaLabel}
-                className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-white/75 p-5 transition-colors hover:border-gold/45 hover:bg-white"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
-                  <PhoneIcon className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block text-[12.5px] font-medium text-ink/70">تلفن همراه دفتر</span>
-                  <span dir="ltr" className="mt-1 block text-base font-extrabold tracking-wider text-ink">
-                    {primaryPhone.display}
+              {primaryPhone ? (
+                <a
+                  href={primaryPhone.href}
+                  aria-label={primaryPhone.ariaLabel}
+                  className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-white/75 p-5 transition-colors hover:border-gold/45 hover:bg-white"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
+                    <PhoneIcon className="h-5 w-5" />
                   </span>
-                </span>
-              </a>
+                  <span>
+                    <span className="block text-[12.5px] font-medium text-ink/70">
+                      تلفن همراه دفتر
+                    </span>
+                    <span
+                      dir="ltr"
+                      className="mt-1 block text-base font-extrabold tracking-wider text-ink"
+                    >
+                      {primaryPhone.display}
+                    </span>
+                  </span>
+                </a>
+              ) : (
+                <div className="flex items-start gap-4 rounded-2xl border border-gold/35 bg-gold/8 p-5">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
+                    <PhoneIcon className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <span className="block text-[12.5px] font-bold text-ink">
+                      تلفن دفتر: در حال تأیید نهایی
+                    </span>
+                    <p className="mt-1.5 text-[12.5px] leading-6 text-ink/75">{PHONE_PENDING_MESSAGE}</p>
+                    <Link
+                      to="/contact#consultation-form"
+                      className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-bold text-gold-deep underline decoration-gold/40 underline-offset-4 hover:text-ink"
+                    >
+                      ثبت درخواست تماس
+                    </Link>
+                  </div>
+                </div>
+              )}
 
               {officePhone && (
                 <a
@@ -88,22 +116,25 @@ export default function ContactPage() {
                 </a>
               )}
 
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-white/75 p-5 transition-colors hover:border-gold/45 hover:bg-white"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
-                  <WhatsAppIcon className="h-5 w-5" />
-                </span>
-                <span>
-                  <span className="block text-[12.5px] font-medium text-ink/70">واتساپ</span>
-                  <span className="mt-1 block text-base font-extrabold text-ink">
-                    ارسال پیام در واتساپ
+              {whatsappUrl && (
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-start gap-4 rounded-2xl border border-ink/10 bg-white/75 p-5 transition-colors hover:border-gold/45 hover:bg-white"
+                >
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-deep">
+                    <WhatsAppIcon className="h-5 w-5" />
                   </span>
-                </span>
-              </a>
+                  <span>
+                    <span className="block text-[12.5px] font-medium text-ink/70">واتساپ</span>
+                    <span className="mt-1 block text-base font-extrabold text-ink">
+                      ارسال پیام در واتساپ
+                      <span className="sr-only">(باز شدن در پنجرهٔ جدید)</span>
+                    </span>
+                  </span>
+                </a>
+              )}
 
               <div className="rounded-2xl border border-ink/10 bg-white/75 p-5">
                 <div className="flex items-start gap-4">
@@ -145,6 +176,12 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {(verification.address || verification.hours) && (
+              <p className="mt-6 rounded-2xl border border-ink/12 bg-sand/70 p-4 text-[12px] leading-6 text-ink/70">
+                {CONTACT_DETAILS_PENDING_MESSAGE}
+              </p>
+            )}
+
             {activeSocials.length > 1 && (
               <div className="mt-8">
                 <h2 className="text-[14px] font-extrabold text-ink">شبکه‌های اجتماعی</h2>
@@ -177,7 +214,7 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="bg-ink rounded-[2rem] p-4 sm:p-6">
+          <div id="consultation-form" className="scroll-mt-28 rounded-[2rem] bg-ink p-4 sm:p-6">
             <ConsultationForm />
           </div>
         </div>

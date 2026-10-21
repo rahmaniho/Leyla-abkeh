@@ -16,13 +16,26 @@ describe("صفحهٔ اصلی", () => {
     expect(screen.getAllByText(siteConfig.lawyer.name).length).toBeGreaterThan(0);
   });
 
-  it("لینک تماس با شمارهٔ صحیح و aria-label دارد", () => {
-    renderAt("/");
-    const links = screen.getAllByRole("link", { name: primaryPhone.ariaLabel });
-    expect(links.length).toBeGreaterThan(0);
-    for (const link of links) {
-      expect(link).toHaveAttribute("href", `tel:${siteConfig.contact.phoneE164}`);
+  it("تا تأیید شماره، هیچ پیوند تلفنی با شمارهٔ نمونه در صفحه نیست", () => {
+    const { unmount } = renderAt("/");
+
+    // شمارهٔ نمونه هرگز نباید به‌عنوان شمارهٔ واقعی دفتر منتشر شود
+    expect(primaryPhone).toBeNull();
+    expect(document.body.innerHTML).not.toContain("0912");
+    expect(document.body.innerHTML).not.toContain(siteConfig.contact.phoneE164);
+
+    for (const link of Array.from(document.querySelectorAll("a[href^='tel:']"))) {
+      expect(link.getAttribute("href")).not.toContain(siteConfig.contact.phoneE164);
     }
+    for (const link of Array.from(document.querySelectorAll("a[href*='wa.me']"))) {
+      expect(link.getAttribute("href")).not.toContain("989121234567");
+    }
+    expect(
+      Array.from(document.querySelectorAll("a[href]")).some((link) =>
+        link.getAttribute("href")?.includes("/contact")
+      )
+    ).toBe(true);
+    unmount();
   });
 
   it("لینک پرش به محتوای اصلی وجود دارد", () => {
@@ -62,11 +75,16 @@ describe("ناوبری موبایل", () => {
     expect(menu).not.toHaveAttribute("inert");
   });
 
-  it("با کلید Escape بسته می‌شود", () => {
+  it("با کلید Escape بسته می‌شود و فوکوس به دکمهٔ منو برمی‌گردد", () => {
     renderAt("/");
-    fireEvent.click(screen.getByRole("button", { name: "باز کردن منوی ناوبری" }));
+    const toggle = screen.getByRole("button", { name: "باز کردن منوی ناوبری" });
+    fireEvent.click(toggle);
     fireEvent.keyDown(document, { key: "Escape" });
-    expect(screen.getByRole("button", { name: "باز کردن منوی ناوبری" })).toBeInTheDocument();
+
+    const reopened = screen.getByRole("button", { name: "باز کردن منوی ناوبری" });
+    expect(reopened).toBeInTheDocument();
+    expect(document.activeElement).toBe(reopened);
+    expect(reopened).toHaveAttribute("aria-expanded", "false");
   });
 });
 
@@ -190,7 +208,30 @@ describe("صفحهٔ تماس و فرم مشاوره", () => {
     expect(screen.queryByText("درخواست شما ثبت شد")).toBeNull();
     expect(screen.getByLabelText("نام و نام خانوادگی")).toHaveValue("سارا محمدی");
     expect(screen.getByLabelText("شماره تماس")).toHaveValue("۰۹۱۲۱۲۳۴۵۶۷");
-    expect(screen.getByRole("link", { name: /تماس تلفنی با دفتر/ })).toBeInTheDocument();
+    // تا تأیید شمارهٔ واقعی، مسیر جایگزین متنی نمایش داده می‌شود (بدون لینک تلفنی جعلی)
+    expect(screen.queryByRole("link", { name: /تماس تلفنی با دفتر/ })).toBeNull();
+    expect(screen.getByText(/شمارهٔ تلفن دفتر در حال/)).toBeInTheDocument();
+  });
+
+  it("اگر مسیر تابع وجود نداشته باشد (استقرار ایستا) پیام «فعال نیست» نشان می‌دهد", async () => {
+    (globalThis.fetch as ReturnType<typeof vi.fn>).mockResolvedValue(
+      new Response("<!doctype html><title>404</title>", {
+        status: 404,
+        headers: { "content-type": "text/html" },
+      })
+    );
+
+    renderAt("/contact");
+    fillForm();
+    vi.setSystemTime(new Date(Date.now() + 5000));
+    fireEvent.submit(screen.getByRole("form", { name: "فرم درخواست مشاوره" }));
+
+    expect(
+      await screen.findByText(/ثبت آنلاین درخواست در این نسخهٔ سایت فعال نیست/, {}, { timeout: 3000 })
+    ).toBeInTheDocument();
+    expect(screen.queryByText("درخواست شما ثبت شد")).toBeNull();
+    // اطلاعات فرم نباید از دست برود
+    expect(screen.getByLabelText("نام و نام خانوادگی")).toHaveValue("سارا محمدی");
   });
 
   it("در حین ارسال، دکمه غیرفعال می‌شود (جلوگیری از ارسال تکراری)", async () => {
@@ -223,9 +264,11 @@ describe("صفحات محتوایی", () => {
     expect(screen.getAllByRole("button", { expanded: false }).length).toBeGreaterThan(0);
   });
 
-  it("صفحهٔ تعرفه‌ها مبلغ را از منبع مرکزی نشان می‌دهد", () => {
+  it("صفحهٔ تعرفه‌ها تا تأیید دفتر هیچ رقم تأییدنشده‌ای نشان نمی‌دهد", () => {
     renderAt("/pricing");
-    expect(screen.getAllByText(/۹۸۰٬۰۰۰/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/۹۸۰٬۰۰۰/)).toBeNull();
+    expect(screen.getAllByText(/اعلام پیش از جلسه/).length).toBeGreaterThan(0);
+    expect(screen.queryByText(/مشاورهٔ اولیهٔ تلفنی رایگان/)).toBeNull();
   });
 
   it("صفحهٔ مقالات، مقاله‌ها را فهرست می‌کند", () => {

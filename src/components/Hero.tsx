@@ -9,6 +9,7 @@ import {
   ShieldIcon,
 } from "./Icons";
 import { Link } from "../lib/router";
+import { track } from "../lib/analytics";
 import {
   HOURS_SUMMARY,
   officePhone,
@@ -16,10 +17,11 @@ import {
   siteConfig,
 } from "../config/site";
 
+/** نشان‌های اعتماد فقط شامل گزاره‌های قابل اثبات (بدون ادعای مدرک تأییدنشده) */
 const TRUST_BADGES = [
-  { icon: ScaleIcon, text: `عضو ${siteConfig.lawyer.barAssociation}` },
-  { icon: ShieldIcon, text: "ارزیابی صادقانهٔ پرونده" },
-  { icon: LockIcon, text: "محرمانگی اطلاعات موکل" },
+  { icon: ShieldIcon, text: "ارزیابی صادقانه، بدون وعدهٔ نتیجه" },
+  { icon: LockIcon, text: "رازداری حرفه‌ای اطلاعات موکل" },
+  { icon: ScaleIcon, text: "توضیح شفاف هر مرحلهٔ پرونده" },
 ];
 
 export default function Hero() {
@@ -71,7 +73,8 @@ export default function Hero() {
             <div className="mt-8 flex flex-col gap-3.5 sm:flex-row sm:items-center">
               <Link
                 to="/contact"
-                className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-7 py-3.5 text-base font-bold text-ink-deep shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-12px_rgba(184,145,90,0.65)]"
+                onClick={() => track("cta_click", { location: "hero", target: "/contact" })}
+                className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-7 py-3.5 text-base font-bold text-ink-deep shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-12px_rgba(184,145,90,0.65)]"
               >
                 درخواست مشاوره
                 <svg
@@ -87,20 +90,36 @@ export default function Hero() {
                   <path d="M19 12H5m6-6-6 6 6 6" />
                 </svg>
               </Link>
-              <a
-                href={primaryPhone.href}
-                aria-label={primaryPhone.ariaLabel}
-                className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-white/10"
-              >
-                <PhoneIcon className="h-5 w-5 text-gold-light" />
-                <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] font-medium text-white/60">تماس مستقیم</span>
-                  <span dir="ltr" className="tracking-wider">
-                    {primaryPhone.display}
+              {primaryPhone ? (
+                <a
+                  href={primaryPhone.href}
+                  aria-label={primaryPhone.ariaLabel}
+                  className="inline-flex items-center justify-center gap-2.5 rounded-2xl border border-white/15 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-white/10"
+                >
+                  <PhoneIcon className="h-5 w-5 text-gold-light" />
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className="text-[11px] font-medium text-white/60">تماس مستقیم</span>
+                    <span dir="ltr" className="tracking-wider">
+                      {primaryPhone.display}
+                    </span>
                   </span>
-                </span>
-              </a>
+                </a>
+              ) : (
+                <Link
+                  to="/services"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/[0.06] px-7 py-3.5 text-base font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-gold/50 hover:bg-white/10"
+                >
+                  مشاهدهٔ خدمات حقوقی
+                </Link>
+              )}
             </div>
+          </Reveal>
+
+          <Reveal delay={350}>
+            <p className="mt-4 max-w-md text-[12px] leading-6 text-white/55">
+              فرم کوتاه است: نام، شمارهٔ تماس و موضوع کلی پرونده. جزئیات حساس را در جلسه مطرح
+              کنید.
+            </p>
           </Reveal>
 
           <Reveal delay={400}>
@@ -150,7 +169,8 @@ export default function Hero() {
                 <div>
                   <p className="text-lg font-extrabold text-white">{lawyer.name}</p>
                   <p className="mt-0.5 text-[12.5px] text-white/60">
-                    {lawyer.jobTitle} · {lawyer.barAssociation}
+                    {lawyer.jobTitle}
+                    {lawyer.barAssociation ? ` · ${lawyer.barAssociation}` : ""}
                   </p>
                 </div>
 
@@ -161,13 +181,22 @@ export default function Hero() {
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold-light">
                       <PhoneIcon className="h-4 w-4" />
                     </span>
-                    <a
-                      href={primaryPhone.href}
-                      dir="ltr"
-                      className="font-semibold tracking-wider transition-colors hover:text-gold-light"
-                    >
-                      {primaryPhone.display}
-                    </a>
+                    {primaryPhone ? (
+                      <a
+                        href={primaryPhone.href}
+                        dir="ltr"
+                        className="font-semibold tracking-wider transition-colors hover:text-gold-light"
+                      >
+                        {primaryPhone.display}
+                      </a>
+                    ) : (
+                      <Link
+                        to="/contact"
+                        className="font-semibold transition-colors hover:text-gold-light"
+                      >
+                        درخواست تماس
+                      </Link>
+                    )}
                     {officePhone && (
                       <a
                         href={officePhone.href}

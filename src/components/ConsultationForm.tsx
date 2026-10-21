@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
-import { siteConfig } from "../config/site";
+import { primaryPhone, siteConfig } from "../config/site";
 import { serviceTopics } from "../content/services";
 import { validateSubmission } from "../lib/validation";
 import { submitConsultation } from "../lib/consultation";
@@ -8,6 +8,7 @@ import { cn } from "../utils/cn";
 import { CheckIcon, PhoneIcon } from "./Icons";
 import { Link } from "../lib/router";
 import TurnstileWidget from "./TurnstileWidget";
+import { track } from "../lib/analytics";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -37,6 +38,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
   const [reference, setReference] = useState<string | null>(null);
   const [receivedAt, setReceivedAt] = useState<string | null>(null);
   const [turnstileToken, setTurnstileToken] = useState<string>("");
+  const [unavailable, setUnavailable] = useState(false);
   const startedAtRef = useRef<number>(0);
   const formRef = useRef<HTMLFormElement>(null);
   const statusRef = useRef<HTMLDivElement>(null);
@@ -51,7 +53,13 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
     }
   }, [status]);
 
+  const startedRef = useRef(false);
+
   const updateField = (field: keyof FormValues, value: string) => {
+    if (!startedRef.current && field !== "website") {
+      startedRef.current = true;
+      track("form_start", { path: "/contact" });
+    }
     setValues((current) => ({ ...current, [field]: value }));
     setErrors((current) => {
       if (!current[field] && !current.form) return current;
@@ -83,6 +91,9 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
       setErrors(localValidation.errors);
       setServerMessage("");
       setStatus("error");
+      track("form_validation_error", {
+        field: Object.keys(localValidation.errors)[0] ?? "form",
+      });
       focusFirstError(localValidation.errors);
       return;
     }
@@ -102,6 +113,8 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
     setStatus("submitting");
     setErrors({});
     setServerMessage("");
+    setUnavailable(false);
+    track("form_submit", { topic: values.topic });
 
     const result = await submitConsultation({
       name: values.name,
@@ -114,6 +127,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
     });
 
     if (result.ok) {
+      track("form_success", { topic: values.topic });
       setReference(result.reference);
       setReceivedAt(result.receivedAt);
       setStatus("success");
@@ -130,6 +144,14 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
     const fieldErrors = result.errors ?? {};
     setErrors(fieldErrors);
     setServerMessage(result.message);
+    setUnavailable(Boolean(result.unavailable));
+    if (result.unavailable) {
+      track("form_unavailable");
+    } else if (result.retryAfter) {
+      track("form_rate_limited");
+    } else if (Object.keys(fieldErrors).length > 0) {
+      track("form_validation_error", { field: Object.keys(fieldErrors)[0] ?? "form" });
+    }
     setStatus("error");
     if (Object.keys(fieldErrors).length > 0) {
       focusFirstError(fieldErrors);
@@ -158,7 +180,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
         tabIndex={-1}
         ref={statusRef}
       >
-        <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gold-light to-gold-deep text-ink-deep shadow-gold">
+        <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-gold-light to-gold text-ink-deep shadow-gold">
           <CheckIcon className="h-10 w-10" />
         </span>
         <h3 className="mt-7 text-2xl font-black text-white">درخواست شما ثبت شد</h3>
@@ -214,6 +236,17 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
       <p className="mt-2 text-[13px] leading-6 text-white/60">
         فرم را کامل کنید؛ پس از ثبت، برای تعیین نوبت با شما تماس گرفته می‌شود.
       </p>
+
+      {!siteConfig.forms.deliveryAvailable && (
+        <div
+          role="status"
+          className="mt-4 rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 text-[12.5px] leading-6 text-amber-100"
+        >
+          <strong className="font-bold">توجه:</strong> در این نسخهٔ سایت، ثبت آنلاین درخواست
+          فعال نشده است. فرم برای بازبینی نمایش داده می‌شود و ارسال آن انجام نمی‌شود؛ لطفاً از
+          راه‌های تماس دفتر استفاده کنید.
+        </div>
+      )}
 
       <div className="mt-6 space-y-5">
         {/* تلهٔ هرزنامه — از دید کاربر و صفحه‌خوان پنهان است */}
@@ -358,16 +391,27 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
             ref={statusRef}
             tabIndex={-1}
             role="alert"
-            className="rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-[13px] leading-6 text-red-200"
+            className={
+              unavailable
+                ? "rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 text-[13px] leading-6 text-amber-100"
+                : "rounded-xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-[13px] leading-6 text-red-200"
+            }
           >
             <p>{errors.form ?? serverMessage}</p>
-            <a
-              href={`tel:${siteConfig.contact.phoneE164}`}
-              className="mt-2 inline-flex items-center gap-2 font-bold text-red-100 underline decoration-red-300/50 underline-offset-4 hover:text-white"
-            >
-              <PhoneIcon className="h-4 w-4" />
-              تماس تلفنی با دفتر
-            </a>
+            {primaryPhone ? (
+              <a
+                href={primaryPhone.href}
+                className="mt-2 inline-flex items-center gap-2 font-bold text-red-100 underline decoration-red-300/50 underline-offset-4 hover:text-white"
+              >
+                <PhoneIcon className="h-4 w-4" />
+                تماس تلفنی با دفتر
+              </a>
+            ) : (
+              <p className="mt-2 text-[12.5px] leading-6 text-red-100/90">
+                اگر ارسال دوباره هم موفق نشد، لطفاً کمی بعد تلاش کنید؛ شمارهٔ تلفن دفتر در حال
+                تأیید نهایی است و به‌زودی در همین صفحه منتشر می‌شود.
+              </p>
+            )}
           </div>
         )}
 
@@ -375,7 +419,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
           type="submit"
           disabled={status === "submitting"}
           className={cn(
-            "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-6 py-4 text-base font-extrabold text-ink-deep shadow-gold transition-all duration-300",
+            "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-6 py-4 text-base font-extrabold text-ink-deep shadow-gold transition-all duration-300",
             status === "submitting"
               ? "cursor-not-allowed opacity-70"
               : "hover:-translate-y-0.5 hover:shadow-[0_20px_48px_-12px_rgba(184,145,90,0.7)]"
