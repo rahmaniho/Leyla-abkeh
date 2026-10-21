@@ -28,7 +28,7 @@ export const meta: PageMeta = {
       image: absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
       url: pageUrl("/about"),
       worksFor: { "@id": `${siteConfig.site.url}/#attorney` },
-      ...(siteConfig.lawyer.licenseNumber
+      ...(siteConfig.lawyer.licenseNumber && siteConfig.lawyer.licenseNumberLatin
         ? {
             identifier: {
               "@type": "PropertyValue",

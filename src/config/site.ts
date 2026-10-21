@@ -155,8 +155,8 @@ export const siteConfig = {
      * برگردد به‌صورت خودکار از سایت و دادۀ ساختاریافته حذف می‌شود.
      */
     licenseNumber: (verification.licenseNumber ? null : "۲۳۷۰") as string | null,
-    /** همان شماره با ارقام لاتین برای Schema.org */
-    licenseNumberLatin: "2370",
+    /** همان شماره با ارقام لاتین برای Schema.org — هم‌زمان با فیلد بالا فعال/غیرفعال می‌شود */
+    licenseNumberLatin: (verification.licenseNumber ? null : "2370") as string | null,
     /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادۀ ساختاریافته‌ای نمی‌آید. */
     barAssociation: (verification.barAssociation
       ? null

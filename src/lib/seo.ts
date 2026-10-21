@@ -146,7 +146,7 @@ export function buildAttorneySchema(): JsonLd {
           })),
         }
       : {}),
-    ...(lawyer.licenseNumber
+    ...(lawyer.licenseNumber && lawyer.licenseNumberLatin
       ? {
           /** شمارۀ پروانۀ وکالت — فقط وقتی تأیید شده باشد منتشر می‌شود */
           identifier: {
