@@ -2,6 +2,8 @@ import Hero from "../components/Hero";
 import Stats from "../components/Stats";
 import Features from "../components/Features";
 import Services from "../components/Services";
+import Process from "../components/Process";
+import LatestArticles from "../components/LatestArticles";
 import Benefits from "../components/Benefits";
 import Testimonials from "../components/Testimonials";
 import Pricing from "../components/Pricing";
@@ -27,7 +29,9 @@ export default function HomePage() {
       <Stats />
       <Features />
       <Services limit={6} />
+      <Process />
       <Benefits />
+      <LatestArticles />
       <Testimonials />
       <Pricing />
       <FAQ items={SITE_FAQS.slice(0, 4)} moreHref="/faq" />

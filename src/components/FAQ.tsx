@@ -70,7 +70,7 @@ export default function FAQ({
                         className={cn(
                           "flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-all duration-500",
                           isOpen
-                            ? "rotate-180 bg-gradient-to-br from-gold to-gold-deep text-white shadow-gold"
+                            ? "rotate-180 bg-gradient-to-br from-gold-light to-gold text-ink-deep shadow-gold"
                             : "border border-ink/15 bg-white text-ink/70"
                         )}
                         aria-hidden="true"

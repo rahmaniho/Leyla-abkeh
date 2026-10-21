@@ -4,7 +4,7 @@ import { SERVICES, getService } from "../src/content/services";
 import { SITE_FAQS } from "../src/content/faqs";
 import { APPROVED_TESTIMONIALS, TESTIMONIALS } from "../src/content/testimonials";
 import { STATS, VERIFIED_STATS } from "../src/content/stats";
-import { consultationFee, pricingPlans } from "../src/config/pricing";
+import { consultationFee, feeVerified, pricingPlans } from "../src/config/pricing";
 import { PENDING_VERIFICATION } from "../src/config/site";
 
 describe("پارسر Front Matter", () => {
@@ -129,10 +129,13 @@ describe("محتوای حساس و تأییدنشده", () => {
     expect(consultationFee.verified).toBe(false);
   });
 
-  it("مبلغ مشاوره فقط از یک منبع خوانده می‌شود", () => {
+  it("مبلغ تأییدنشدهٔ مشاوره در هیچ متن عمومی منتشر نمی‌شود", () => {
     const feeInPlans = pricingPlans.find((plan) => plan.id === "consultation");
-    expect(feeInPlans?.priceLabel).toContain("۹۸۰");
-    expect(SITE_FAQS.some((faq) => faq.answer.includes("۹۸۰"))).toBe(true);
+    expect(feeVerified).toBe(false);
+    expect(feeInPlans?.priceLabel).not.toContain("۹۸۰");
+    expect(SITE_FAQS.some((faq) => faq.answer.includes("۹۸۰"))).toBe(false);
+    // اگر دفتر مبلغ را تأیید کند، فقط با یک تغییر در `consultationFee.verified` برمی‌گردد
+    expect(consultationFee.amountToman).toBeGreaterThan(0);
   });
 
   it("فهرست موارد نیازمند تأیید خالی نیست و کلید یکتا دارد", () => {

@@ -48,19 +48,29 @@ export default function FinalCTA() {
 
           <Reveal delay={300}>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <a
-                href={primaryPhone.href}
-                aria-label={primaryPhone.ariaLabel}
-                className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-7 py-3.5 text-base font-extrabold text-ink-deep shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-12px_rgba(184,145,90,0.65)]"
-              >
-                <PhoneIcon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
-                <span className="flex flex-col items-start leading-tight">
-                  <span className="text-[11px] font-medium text-ink-deep/70">تماس با دفتر</span>
-                  <span dir="ltr" className="text-[15px] font-black tracking-wider">
-                    {primaryPhone.display}
+              {primaryPhone ? (
+                <a
+                  href={primaryPhone.href}
+                  aria-label={primaryPhone.ariaLabel}
+                  className="group inline-flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-7 py-3.5 text-base font-extrabold text-ink-deep shadow-gold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_50px_-12px_rgba(184,145,90,0.65)]"
+                >
+                  <PhoneIcon className="h-5 w-5 transition-transform duration-300 group-hover:rotate-12" />
+                  <span className="flex flex-col items-start leading-tight">
+                    <span className="text-[11px] font-medium text-ink-deep/70">تماس با دفتر</span>
+                    <span dir="ltr" className="text-[15px] font-black tracking-wider">
+                      {primaryPhone.display}
+                    </span>
                   </span>
-                </span>
-              </a>
+                </a>
+              ) : (
+                <div className="rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-4 text-[12.5px] leading-7 text-white/70">
+                  <span className="flex items-start gap-2.5">
+                    <PhoneIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
+                    شمارهٔ تلفن دفتر پس از تأیید نهایی منتشر می‌شود. برای اینکه با شما تماس گرفته
+                    شود، درخواست مشاوره را از فرم روبه‌رو ثبت کنید.
+                  </span>
+                </div>
+              )}
             </div>
           </Reveal>
 

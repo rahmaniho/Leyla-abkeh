@@ -23,6 +23,7 @@ const SECTIONS = [
     paragraphs: [
       "تنها اطلاعاتی که خودتان در فرم درخواست مشاوره وارد می‌کنید: نام و نام خانوادگی، شمارهٔ تماس، موضوع پرونده و شرح اختیاری موضوع.",
       "این وب‌سایت از ابزار تحلیل رفتار کاربران (Analytics)، پیکسل تبلیغاتی یا کوکی ردیابی استفاده نمی‌کند. برای جلوگیری از ارسال تکراری، یک مقدار زمانی کوتاه‌مدت در حافظهٔ مرورگر شما ذخیره می‌شود که پس از چند ثانیه بی‌اثر است.",
+      "اگر در آینده سنجش بازدید فعال شود، فقط رویدادهای فنی و بی‌نام ثبت می‌شود (مثل «کلیک روی دکمهٔ درخواست مشاوره» یا «خطای اعتبارسنجی در فیلد شماره تماس»). نام، شمارهٔ تماس، متن پیام و هیچ داده‌ای که شما را شناسایی کند ارسال نمی‌شود و ابزار تحلیلی خارجی (مانند Google Analytics) به کار نمی‌رود.",
     ],
   },
   {
@@ -94,13 +95,22 @@ export default function PrivacyPage() {
             <p className="mt-2 text-[13.5px] leading-7 text-ink/75">
               برای هر پرسش یا درخواست مرتبط با اطلاعات خود، با دفتر تماس بگیرید:
             </p>
-            <a
-              href={primaryPhone.href}
-              dir="ltr"
-              className="mt-3 inline-flex items-center gap-2 text-base font-extrabold tracking-wider text-gold-deep"
-            >
-              {primaryPhone.display}
-            </a>
+            {primaryPhone ? (
+              <a
+                href={primaryPhone.href}
+                dir="ltr"
+                className="mt-3 inline-flex items-center gap-2 text-base font-extrabold tracking-wider text-gold-deep"
+              >
+                {primaryPhone.display}
+              </a>
+            ) : (
+              <Link
+                to="/contact"
+                className="mt-3 inline-flex items-center gap-2 text-[13.5px] font-extrabold text-gold-deep underline underline-offset-4"
+              >
+                ثبت درخواست از طریق فرم تماس
+              </Link>
+            )}
             <p className="mt-3 text-[12.5px] leading-7 text-ink/70">
               نشانی: {siteConfig.contact.address.full}
             </p>

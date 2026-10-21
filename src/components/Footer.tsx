@@ -121,13 +121,22 @@ export default function Footer() {
                   <PhoneIcon className="h-4 w-4" />
                 </span>
                 <span className="flex flex-col gap-1">
-                  <a
-                    href={primaryPhone.href}
-                    dir="ltr"
-                    className="pt-1 font-semibold tracking-wider transition-colors hover:text-gold-light"
-                  >
-                    {primaryPhone.display}
-                  </a>
+                  {primaryPhone ? (
+                    <a
+                      href={primaryPhone.href}
+                      dir="ltr"
+                      className="pt-1 font-semibold tracking-wider transition-colors hover:text-gold-light"
+                    >
+                      {primaryPhone.display}
+                    </a>
+                  ) : (
+                    <Link to="/contact" className="pt-1 leading-6 transition-colors hover:text-gold-light">
+                      درخواست تماس از طریق فرم
+                      <span className="mt-1 block text-[11.5px] text-white/45">
+                        شمارهٔ تلفن در حال تأیید نهایی است
+                      </span>
+                    </Link>
+                  )}
                   {officePhone && (
                     <a
                       href={officePhone.href}

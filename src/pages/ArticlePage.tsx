@@ -118,17 +118,19 @@ export default function ArticlePage({ article }: { article: Article }) {
               </p>
               <Link
                 to="/contact"
-                className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-l from-gold-light via-gold to-gold-deep px-5 py-3 text-sm font-bold text-ink-deep shadow-gold"
+                className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-5 py-3 text-sm font-bold text-ink-deep shadow-gold"
               >
                 فرم درخواست مشاوره
               </Link>
-              <a
-                href={primaryPhone.href}
-                dir="ltr"
-                className="mt-2.5 inline-flex w-full items-center justify-center rounded-2xl border border-ink/15 px-5 py-3 text-sm font-bold tracking-wide text-ink transition-colors hover:border-gold hover:text-gold-deep"
-              >
-                <span dir="ltr">{primaryPhone.display}</span>
-              </a>
+              {primaryPhone && (
+                <a
+                  href={primaryPhone.href}
+                  dir="ltr"
+                  className="mt-2.5 inline-flex w-full items-center justify-center rounded-2xl border border-ink/15 px-5 py-3 text-sm font-bold tracking-wide text-ink transition-colors hover:border-gold hover:text-gold-deep"
+                >
+                  <span dir="ltr">{primaryPhone.display}</span>
+                </a>
+              )}
             </div>
 
             {otherArticles.length > 0 && (

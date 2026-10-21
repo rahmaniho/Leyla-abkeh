@@ -3,6 +3,7 @@ import Pricing from "../components/Pricing";
 import FAQ from "../components/FAQ";
 import FinalCTA from "../components/FinalCTA";
 import { SITE_FAQS } from "../content/faqs";
+import { feeVerified } from "../config/pricing";
 import { buildBreadcrumbSchema, buildFaqSchema, type PageMeta } from "../lib/seo";
 
 const breadcrumbs = [
@@ -39,8 +40,8 @@ export default function PricingPage() {
             چه چیزی بر حق‌الوکاله اثر می‌گذارد؟
           </h2>
           <p className="mt-4 max-w-2xl text-[14px] leading-8 text-ink/70">
-            تعرفهٔ مشاوره در جدول بالا مشخص است؛ حق‌الوکالهٔ پرونده پس از بررسی مدارک و در قرارداد
-            وکالت به‌صورت مکتوب تعیین می‌شود. چهار عامل اصلی در این تعیین اثر دارند:
+            حق‌الوکالهٔ پرونده پس از بررسی مدارک و در قرارداد وکالت به‌صورت مکتوب تعیین می‌شود.
+            چهار عامل اصلی در این تعیین اثر دارند:
           </p>
 
           <ul className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -70,8 +71,9 @@ export default function PricingPage() {
           </ul>
 
           <p className="mt-8 rounded-2xl bg-white/60 p-5 text-[13px] leading-8 text-ink/75">
-            مبلغ مشاورهٔ تخصصی که در این صفحه اعلام شده، پیش از شروع کار به‌صورت مکتوب تأیید
-            می‌شود و در صورت قبول وکالت از حق‌الوکاله کسر می‌گردد. هیچ هزینهٔ پنهانی وجود ندارد.
+            {feeVerified
+              ? "مبلغ مشاورهٔ تخصصی اعلام‌شده پیش از شروع کار به‌صورت مکتوب تأیید می‌شود و در صورت قبول وکالت از حق‌الوکاله کسر می‌گردد. هیچ هزینهٔ پنهانی وجود ندارد."
+              : "مبلغ جلسهٔ مشاوره پس از نهایی‌شدن از سوی دفتر اعلام و پیش از برگزاری جلسه به‌صورت مکتوب تأیید می‌شود. اگر وکالت پذیرفته شود، هزینهٔ مشاوره از حق‌الوکاله کسر می‌گردد. هیچ هزینهٔ پنهانی وجود ندارد."}
           </p>
         </div>
       </section>

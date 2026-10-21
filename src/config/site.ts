@@ -25,8 +25,19 @@ function normalizeSiteUrl(value: string | undefined): string {
 /** نشانی عمومی سایت؛ در Netlify با متغیر محیطی VITE_SITE_URL قابل تغییر است. */
 export const SITE_URL = normalizeSiteUrl(import.meta.env?.VITE_SITE_URL);
 
-/** شمارهٔ تماس اصلی — تأییدنشده (الگوی نمونه؛ پیش از انتشار نهایی جایگزین شود). */
+/**
+ * شمارهٔ تماس اصلی.
+ * ⚠️ مقدار فعلی نمونه است و در هیچ صفحه‌ای نمایش داده نمی‌شود؛ چون مورد
+ * `contact.phone` در `verification.json` باقی است. پس از دریافت شمارهٔ واقعی،
+ * همین مقدار را عوض کنید و آن مورد را از فهرست حذف کنید.
+ */
 const PRIMARY_PHONE_E164 = "+989121234567";
+
+/**
+ * مقدار نمونهٔ کارخانه‌ای. اگر این مقدار در سایت بماند، حتی پس از حذف مورد از
+ * فهرست تأیید هم منتشر نمی‌شود؛ تا شمارهٔ واقعی جایگزین نشود.
+ */
+const SAMPLE_PHONE_E164 = "+989121234567";
 /** شمارهٔ ثابت دفتر — تأییدنشده؛ اگر وجود ندارد `null` بگذارید. */
 const OFFICE_PHONE_E164: string | null = null;
 
@@ -42,6 +53,39 @@ export interface PendingVerification {
  */
 
 export const PENDING_VERIFICATION: PendingVerification[] = verificationData as PendingVerification[];
+
+const PENDING_KEYS = new Set(PENDING_VERIFICATION.map((item) => item.key));
+
+/**
+ * آیا این مورد هنوز تأیید نشده است؟
+ * منبع حقیقت، همان `src/config/verification.json` است: هر موردی که در آن فهرست
+ * باشد «تأییدنشده» شمرده می‌شود و از سایت/دادهٔ ساختاریافته حذف می‌ماند.
+ * برای انتشار یک مقدار: مقدار واقعی را در همین فایل بگذارید و مورد مربوط را
+ * از `verification.json` بردارید.
+ */
+export function isPending(key: string): boolean {
+  return PENDING_KEYS.has(key);
+}
+
+/** وضعیت تأیید اطلاعات حساس — هیچ‌کدام به‌صورت پیش‌فرض تأییدشده نیست. */
+export const verification = {
+  /** شمارهٔ تلفن (و پیوند واتساپ ساخته‌شده از آن) */
+  phone: isPending("contact.phone"),
+  /** شمارهٔ ثابت دفتر */
+  officePhone: isPending("contact.officePhone"),
+  /** نشانی دفتر */
+  address: isPending("contact.address"),
+  /** ساعات کاری */
+  hours: isPending("contact.hours"),
+  /** عضویت در کانون وکلا */
+  barAssociation: isPending("lawyer.barAssociation"),
+  /** شمارهٔ پروانه */
+  licenseNumber: isPending("lawyer.licenseNumber"),
+  /** تعرفهٔ مشاوره */
+  pricing: isPending("pricing.consultation"),
+  /** ادعای مشاورهٔ اولیهٔ رایگان */
+  freeConsultation: isPending("pricing.freeConsultation"),
+} as const;
 
 export interface OpeningDay {
   /** نام روز به انگلیسی برای Schema.org */
@@ -107,8 +151,11 @@ export const siteConfig = {
     jobTitle: "وکیل پایه یک دادگستری",
     /** pending: true → نیازمند تأیید (شمارهٔ پروانه منتشر نمی‌شود) */
     licenseNumber: null as string | null,
-    barAssociation: "کانون وکلای دادگستری استان قزوین",
-    barAssociationPending: true,
+    /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادهٔ ساختاریافته‌ای نمی‌آید. */
+    barAssociation: (verification.barAssociation
+      ? null
+      : "کانون وکلای دادگستری استان قزوین") as string | null,
+    barAssociationPending: verification.barAssociation,
     photo: {
       /** تصویر رسمی و ارسالی خود وکیل (نه تصویر نمونه). */
       isPlaceholder: false,
@@ -168,6 +215,13 @@ export const siteConfig = {
     maxMessageLength: 1000,
     minNameLength: 2,
     maxNameLength: 80,
+    /**
+     * آیا این استقرار سرور دریافت درخواست دارد؟
+     * Netlify (با تابع `netlify/functions/consultation.mjs`) → true
+     * GitHub Pages (فقط فایل ایستا) → با `VITE_FORM_MODE=static` در زمان بیلد false می‌شود
+     * تا فرم به‌جای وعدهٔ بی‌عمل، وضعیت واقعی را نشان دهد.
+     */
+    deliveryAvailable: (import.meta.env?.VITE_FORM_MODE ?? "live") !== "static",
   },
 
   /** مسیر پنل مدیریت (فقط برای لینک داخلی/مستندسازی) */
@@ -204,24 +258,58 @@ export function telHref(e164: string): string {
   return `tel:${e164}`;
 }
 
-export const primaryPhone = {
-  e164: siteConfig.contact.phoneE164,
-  display: formatPhoneFa(siteConfig.contact.phoneE164),
-  href: telHref(siteConfig.contact.phoneE164),
-  /** بدون فاصله و با ارقام لاتین، برای aria-label */
-  ariaLabel: `تماس با دفتر وکالت — ${formatPhoneFa(siteConfig.contact.phoneE164)}`,
-};
+export interface PhoneLink {
+  e164: string;
+  display: string;
+  href: string;
+  /** برای aria-label صفحه‌خوان */
+  ariaLabel: string;
+}
 
-export const officePhone = siteConfig.contact.officePhoneE164
-  ? {
-      e164: siteConfig.contact.officePhoneE164,
-      display: formatLandlineFa(siteConfig.contact.officePhoneE164),
-      href: telHref(siteConfig.contact.officePhoneE164),
-    }
-  : null;
+/**
+ * شمارهٔ اصلی فقط زمانی وجود دارد که تأیید شده باشد.
+ * همهٔ کامپوننت‌ها باید حالت `null` را مدیریت کنند؛ در این حالت به‌جای
+ * پیوند تلفنی، «درخواست تماس» از طریق فرم نمایش داده می‌شود.
+ */
+export const primaryPhone: PhoneLink | null =
+  verification.phone || siteConfig.contact.phoneE164 === SAMPLE_PHONE_E164
+  ? null
+  : {
+      e164: siteConfig.contact.phoneE164,
+      display: formatPhoneFa(siteConfig.contact.phoneE164),
+      href: telHref(siteConfig.contact.phoneE164),
+      ariaLabel: `تماس با دفتر وکالت — ${formatPhoneFa(siteConfig.contact.phoneE164)}`,
+    };
 
-/** لینک واتساپ فقط اگر شمارهٔ تأییدشده وجود داشته باشد؛ از همان شمارهٔ اصلی ساخته می‌شود. */
-export const whatsappUrl = `https://wa.me/${siteConfig.contact.phoneE164.replace(/^\+/, "")}`;
+/** متن شفاف برای زمانی که شمارهٔ تلفن تأیید نشده است. */
+export const PHONE_PENDING_MESSAGE =
+  "شمارهٔ تلفن دفتر پس از تأیید نهایی در همین صفحه منتشر می‌شود؛ تا آن زمان از فرم درخواست مشاوره استفاده کنید تا با شما تماس گرفته شود.";
+
+/** متن کوتاه برای دکمه‌ها و نوارها */
+export const PHONE_PENDING_SHORT = "شمارهٔ تلفن در حال تأیید است";
+
+/** پیام تأییدنشدن نشانی/ساعات کاری (نمایش داده می‌شوند اما صحتشان تأیید نشده) */
+export const CONTACT_DETAILS_PENDING_MESSAGE =
+  "نشانی و ساعات کاری این صفحه هنوز تأیید نهایی نشده است؛ پیش از مراجعهٔ حضوری، از طریق فرم هماهنگ کنید.";
+
+export const officePhone: PhoneLink | null =
+  !verification.officePhone && siteConfig.contact.officePhoneE164
+    ? {
+        e164: siteConfig.contact.officePhoneE164,
+        display: formatLandlineFa(siteConfig.contact.officePhoneE164),
+        href: telHref(siteConfig.contact.officePhoneE164),
+        ariaLabel: `تماس با دفتر — ${formatLandlineFa(siteConfig.contact.officePhoneE164)}`,
+      }
+    : null;
+
+/**
+ * لینک واتساپ فقط با شمارهٔ تأییدشده ساخته می‌شود؛ شمارهٔ نمونه نباید به یک
+ * حساب واقعی در واتساپ وصل شود.
+ */
+export const whatsappUrl: string | null =
+  verification.phone || siteConfig.contact.phoneE164 === SAMPLE_PHONE_E164
+  ? null
+  : `https://wa.me/${siteConfig.contact.phoneE164.replace(/^\+/, "")}`;
 
 /** ساعت‌ها با ارقام فارسی برای نمایش */
 export const openingHoursFa = siteConfig.contact.hours.days.map((day) => ({

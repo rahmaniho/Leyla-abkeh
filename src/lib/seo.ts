@@ -1,4 +1,4 @@
-import { SITE_URL, activeSocials, siteConfig } from "../config/site";
+import { SITE_URL, activeSocials, primaryPhone, siteConfig, verification } from "../config/site";
 import { withBase } from "./base";
 
 export interface BreadcrumbItem {
@@ -84,6 +84,16 @@ export function buildAttorneySchema(): JsonLd {
     .filter((social) => social.key !== "whatsapp")
     .map((social) => social.href);
 
+  /**
+   * فقط دادهٔ تأییدشده در Schema می‌آید.
+   * تلفن، نشانی، ساعات کاری و عضویت حرفه‌ای تا زمانی که در
+   * `verification.json` باشند، از خروجی ساختاریافته حذف می‌شوند؛ چون
+   * موتورهای جست‌وجو آن‌ها را به‌عنوان واقعیت منتشر می‌کنند.
+   */
+  const verifiedTelephone = primaryPhone?.e164;
+  const showAddress = !verification.address;
+  const showHours = !verification.hours;
+
   return {
     "@context": "https://schema.org",
     "@type": "Attorney",
@@ -93,30 +103,38 @@ export function buildAttorneySchema(): JsonLd {
     url: SITE_URL,
     image: absoluteUrl(lawyer.photo.basePath + ".jpg"),
     logo: absoluteUrl(siteConfig.brand.mark.png),
-    telephone: contact.phoneE164,
+    ...(verifiedTelephone ? { telephone: verifiedTelephone } : {}),
     founder: {
       "@type": "Person",
       name: lawyer.name,
       jobTitle: lawyer.jobTitle,
     },
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: contact.address.street,
-      addressLocality: contact.address.city,
-      addressRegion: contact.address.region,
-      addressCountry: contact.address.country,
-      ...(contact.postalCode ? { postalCode: contact.postalCode } : {}),
-    },
+    ...(showAddress
+      ? {
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: contact.address.street,
+            addressLocality: contact.address.city,
+            addressRegion: contact.address.region,
+            addressCountry: contact.address.country,
+            ...(contact.postalCode ? { postalCode: contact.postalCode } : {}),
+          },
+        }
+      : {}),
     areaServed: {
       "@type": "City",
       name: "قزوین",
     },
-    openingHoursSpecification: contact.hours.days.map((day) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: `https://schema.org/${day.schemaDay}`,
-      opens: day.opens,
-      closes: day.closes,
-    })),
+    ...(showHours
+      ? {
+          openingHoursSpecification: contact.hours.days.map((day) => ({
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: `https://schema.org/${day.schemaDay}`,
+            opens: day.opens,
+            closes: day.closes,
+          })),
+        }
+      : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
     knowsLanguage: ["fa-IR"],
   };

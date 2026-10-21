@@ -19,6 +19,20 @@ export const consultationFee: ConsultationFee = {
   note: "در صورت قبول وکالت، هزینهٔ مشاوره از حق‌الوکاله کسر می‌شود.",
 };
 
+/**
+ * آیا رقم تعرفه قابل انتشار است؟
+ * تا زمانی که دفتر مبلغ را تأیید نکرده (`verified: false`)، هیچ رقمی در صفحه‌ها،
+ * کارت‌ها یا سوالات متداول نمایش داده نمی‌شود.
+ */
+export const feeVerified = consultationFee.verified;
+
+/** متنی که به‌جای رقم نمایش داده می‌شود */
+export const FEE_PENDING_LABEL = "اعلام پیش از جلسه";
+export const FEE_PENDING_UNIT = "مبلغ با هماهنگی دفتر";
+
+export const FEE_PENDING_MESSAGE =
+  "مبلغ جلسهٔ مشاوره هنوز از سوی دفتر نهایی نشده است؛ تعرفه پیش از برگزاری جلسه به‌صورت مکتوب اعلام می‌شود و هیچ هزینهٔ پنهانی وجود ندارد.";
+
 /** «۹۸۰٬۰۰۰» با ارقام فارسی و جداکنندهٔ هزارگان */
 export function formatToman(amount: number): string {
   const formatted = amount.toLocaleString("en-US").replace(/,/g, "٬");
@@ -41,25 +55,29 @@ export interface PricingPlan {
 export const pricingPlans: PricingPlan[] = [
   {
     id: "free",
-    name: "مشاورهٔ اولیه",
-    priceLabel: "رایگان",
-    unit: "بدون تعهد",
-    description: "یک گفت‌وگوی کوتاه تلفنی برای آشنایی با موضوع و مسیر کلی پرونده",
+    name: feeVerified ? "مشاورهٔ اولیه" : "گفت‌وگوی مقدماتی",
+    priceLabel: feeVerified ? "رایگان" : "با هماهنگی دفتر",
+    unit: feeVerified ? "بدون تعهد" : "بدون تعهد · تلفنی یا آنلاین",
+    description: feeVerified
+      ? "یک گفت‌وگوی کوتاه تلفنی برای آشنایی با موضوع و مسیر کلی پرونده"
+      : "یک گفت‌وگوی کوتاه برای آشنایی با موضوع و مسیر کلی پرونده؛ شرایط دقیق در همان گفت‌وگو روشن می‌شود",
     features: [
       "شناخت کلی موضوع پرونده",
       "راهنمایی دربارهٔ مرجع صالح",
       "پاسخ به پرسش‌های مقدماتی",
       "تعیین نیاز یا نبود نیاز به مشاورهٔ تخصصی",
     ],
-    cta: "درخواست مشاورهٔ اولیه",
+    cta: feeVerified ? "درخواست مشاورهٔ اولیه" : "درخواست گفت‌وگوی مقدماتی",
     featured: false,
   },
   {
     id: "consultation",
     name: "مشاورهٔ تخصصی",
-    priceLabel: formatToman(consultationFee.amountToman),
-    unit: "تومان · هر جلسه",
-    description: `جلسهٔ حضوری یا آنلاین ${consultationFee.sessionMinutes} با بررسی کامل مدارک`,
+    priceLabel: feeVerified ? formatToman(consultationFee.amountToman) : FEE_PENDING_LABEL,
+    unit: feeVerified ? "تومان · هر جلسه" : FEE_PENDING_UNIT,
+    description: feeVerified
+      ? `جلسهٔ حضوری یا آنلاین ${consultationFee.sessionMinutes} با بررسی کامل مدارک`
+      : "جلسهٔ حضوری یا آنلاین با بررسی کامل مدارک، تعیین راهکار و برنامهٔ اقدام",
     features: [
       "تحلیل مدارک و مستندات",
       "تعیین راهکار حقوقی و مرجع صالح",
@@ -69,7 +87,7 @@ export const pricingPlans: PricingPlan[] = [
     ],
     cta: "درخواست مشاورهٔ تخصصی",
     featured: true,
-    badge: "پیشنهاد اکثر موکلان",
+    badge: "پیشنهاد بیشتر مراجعان",
   },
   {
     id: "retainer",
@@ -89,6 +107,6 @@ export const pricingPlans: PricingPlan[] = [
 ];
 
 /** نمایش آمادهٔ تعرفه برای متن‌های توضیحی (سوالات متداول، صفحهٔ تعرفه‌ها) */
-export const consultationFeeText = `مشاورهٔ تخصصی با تعرفهٔ ${formatToman(
-  consultationFee.amountToman
-)} تومان برای هر جلسه برگزار می‌شود`;
+export const consultationFeeText = feeVerified
+  ? `مشاورهٔ تخصصی با تعرفهٔ ${formatToman(consultationFee.amountToman)} تومان برای هر جلسه برگزار می‌شود`
+  : "تعرفهٔ جلسهٔ مشاورهٔ تخصصی پیش از برگزاری جلسه به‌صورت مکتوب اعلام می‌شود";
