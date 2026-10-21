@@ -237,7 +237,10 @@ export const siteConfig = {
     /** لوگوموشن رسمی (بدون صدا، بهینه‌شده برای وب) */
     logoMotion: {
       mp4: "/media/logo-motion.mp4",
+      /** فریم شروع (۰ ثانیه) — پوستر ویدئو، برای شروع بدون پرش */
       poster: "/media/logo-motion-poster.jpg",
+      /** فریم پایان (۶ ثانیه) — لوگوی کامل و روشن؛ برای کاهش حرکت و جایگزین ثابت */
+      endFrame: "/media/logo-motion-end.jpg",
       width: 416,
       height: 752,
       /** توضیح متنی جایگزین برای فناوری‌های کمکی */

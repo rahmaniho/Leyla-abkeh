@@ -129,8 +129,15 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="mx-auto mt-12 w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-ink-deep">
-              <LogoMotion />
+            <div className="mt-16 flex flex-col items-center">
+              <span aria-hidden="true" className="mb-10 h-px w-16 bg-gold/40" />
+              <div className="relative flex w-full justify-center">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-[320px] w-[320px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[80px]"
+                />
+                <LogoMotion className="relative w-full max-w-[280px] sm:max-w-[320px]" />
+              </div>
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
