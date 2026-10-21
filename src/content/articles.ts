@@ -1,4 +1,11 @@
 import { marked } from "marked";
+import {
+  FIGURE_HEIGHT,
+  FIGURE_RATIO,
+  FIGURE_SIZES,
+  FIGURE_WIDTH,
+  responsiveImage,
+} from "../lib/images";
 
 /**
  * سیستم مقالات
@@ -124,6 +131,23 @@ const escapeHtml = (value: string) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
+/** ساخت HTML یک تصویر داخل متن (استفاده در renderer تصویر و پاراگراف) */
+function renderArticleImage(href: string, alt: string, title: string | null): string {
+  const image = responsiveImage(href);
+  const hasVariants = image.sources.length > 0;
+  const caption = title ? `<figcaption>${escapeHtml(title)}</figcaption>` : "";
+
+  const sources = image.sources
+    .map((source) => `<source type="${source.type}" srcset="${source.srcSet}" sizes="${FIGURE_SIZES}">`)
+    .join("");
+
+  const img = `<img src="${image.src}"${
+    hasVariants ? ` srcset="${image.srcSet}" sizes="${FIGURE_SIZES}"` : ""
+  } alt="${escapeHtml(alt)}" width="${FIGURE_WIDTH}" height="${FIGURE_HEIGHT}" loading="lazy" decoding="async" style="aspect-ratio:${FIGURE_RATIO}">`;
+
+  return `<figure class="article-figure"><picture>${sources}${img}</picture>${caption}</figure>`;
+}
+
 marked.use({
   gfm: true,
   breaks: false,
@@ -133,9 +157,34 @@ marked.use({
       const text = typeof token === "string" ? token : String(token?.text ?? "");
       return escapeHtml(text);
     },
+
+    /**
+     * تصویر داخل متن با `<picture>` و نسخه‌های AVIF/WebP و دو اندازه.
+     * اگر مسیر تصویر نسخهٔ چندگانه نداشته باشد (مثلاً بارگذاری از پنل)، یک
+     * `img` ساده تولید می‌شود. `title` به‌عنوان زیرنویس (figcaption) نمایش داده می‌شود.
+     */
+    image({ href, title, text }: { href: string; title?: string | null; text: string }) {
+      return renderArticleImage(href, text ?? "", title ?? null);
+    },
+
+    /**
+     * پاراگرافی که فقط از یک تصویر تشکیل شده است باید به `<figure>` تبدیل شود،
+     * نه `<p><figure>…</figure></p>` (درج عنصر بلوکی داخل پاراگراف نامعتبر است).
+     */
+    paragraph({ tokens }: { tokens: { type: string }[] }) {
+      if (tokens.length === 1 && tokens[0].type === "image") {
+        const image = tokens[0] as unknown as { href: string; title?: string | null; text: string };
+        return renderArticleImage(image.href, image.text ?? "", image.title ?? null);
+      }
+      return false;
+    },
   },
 });
 
+/**
+ * Markdown → HTML امن.
+ * گزینه‌ها اختیاری‌اند تا خروجی برای محتوای بدون تصویر یکسان بماند.
+ */
 export function renderMarkdown(markdown: string): string {
   return marked.parse(markdown, { async: false }) as string;
 }

@@ -1,12 +1,14 @@
 /**
- * تصاویر شاخص مقالات
+ * تصاویر چندقالبی (شاخص و داخل متن)
  * ------------------------------------------------------------------
- * تصاویری که در `public/images/covers` نگه‌داری می‌شوند، در دو اندازه و سه
- * قالب (AVIF/WebP/JPEG) تولید شده‌اند:
+ * هر تصویر در سه قالب (AVIF/WebP/JPEG) و دو اندازه تولید می‌شود تا مرورگر
+ * سبک‌ترین نسخهٔ مناسب را انتخاب کند:
  *
- *   <نام>-cover.jpg       ۱۲۰۰×۶۳۰
- *   <نام>-cover-640.jpg    ۶۴۰×۳۳۶
- *   و همان‌ها با پسوند .webp و .avif
+ *   تصویر شاخص → public/images/covers/<نام>-cover.jpg  (۱۲۰۰×۶۳۰)
+ *                public/images/covers/<نام>-cover-640.jpg (۶۴۰×۳۳۶)
+ *
+ *   تصویر داخل متن → public/images/articles/<نام>-1200.jpg (۱۲۰۰×۶۷۵)
+ *                    public/images/articles/<نام>-640.jpg  (۶۴۰×۳۶۰)
  *
  * اگر تصویری از پنل مدیریت در `/uploads` بارگذاری شود (بدون نسخه‌های
  * چندگانه)، همان فایل اصلی با یک `img` ساده نمایش داده می‌شود؛ بنابراین
@@ -19,36 +21,77 @@ export const COVER_HEIGHT = 630;
 export const COVER_SMALL_WIDTH = 640;
 export const COVER_SMALL_HEIGHT = 336;
 
-/** نسبت تصویر شاخص (برای جلوگیری از پرش چیدمان) */
+/** نسبت تصویر شاخص و تصاویر داخل متن (برای جلوگیری از پرش چیدمان) */
 export const COVER_RATIO = `${COVER_WIDTH} / ${COVER_HEIGHT}`;
+export const FIGURE_WIDTH = 1200;
+export const FIGURE_HEIGHT = 675;
+export const FIGURE_RATIO = `${FIGURE_WIDTH} / ${FIGURE_HEIGHT}`;
 
-const VARIANT_PATTERN = /^\/images\/covers\/[a-z0-9-]+\.jpe?g$/i;
+export interface ResponsiveSource {
+  type: string;
+  srcSet: string;
+}
 
-export interface CoverImage {
+export interface ResponsiveImage {
   /** فایل اصلی (JPEG) */
   src: string;
   /** نسخه‌های چندگانه برای `img` */
   srcSet?: string;
   /** منابع AVIF/WebP برای `<picture>` */
-  sources: { type: string; srcSet: string }[];
+  sources: ResponsiveSource[];
 }
 
-export function coverImage(cover: string): CoverImage {
-  const src = withBase(cover);
-  if (!VARIANT_PATTERN.test(cover)) return { src, sources: [] };
+/** `srcset` سه‌قالبی برای یک «ریشه» بدون پسوند */
+function variants(stem: string, large: string, largeWidth: number, small: string, smallWidth: number) {
+  const pair = (extension: string) =>
+    `${small}.${extension} ${smallWidth}w, ${large}.${extension} ${largeWidth}w`;
 
-  const stem = cover.replace(/\.jpe?g$/i, "");
   return {
-    src,
+    src: `${stem}${large.replace(stem, "")}.jpg`,
+    srcSet: withBaseSrcSet(pair("jpg")),
     sources: [
-      { type: "image/avif", srcSet: withBaseSrcSet(`${stem}-640.avif 640w, ${stem}.avif 1200w`) },
-      { type: "image/webp", srcSet: withBaseSrcSet(`${stem}-640.webp 640w, ${stem}.webp 1200w`) },
+      { type: "image/avif", srcSet: withBaseSrcSet(pair("avif")) },
+      { type: "image/webp", srcSet: withBaseSrcSet(pair("webp")) },
     ],
-    srcSet: withBaseSrcSet(`${stem}-640.jpg 640w, ${stem}.jpg 1200w`),
-  };
+  } satisfies ResponsiveImage;
+}
+
+/** تبدیل مسیر یک تصویر به ساختار `<picture>` (یا `img` ساده اگر نسخه ندارد) */
+export function responsiveImage(path: string): ResponsiveImage {
+  const src = withBase(path);
+
+  // تصویر شاخص: /images/covers/<نام>.jpg + /images/covers/<نام>-640.jpg
+  const cover = /^(\/images\/covers\/[a-z0-9-]+)\.jpe?g$/i.exec(path);
+  if (cover) {
+    const result = variants(cover[1], cover[1], COVER_WIDTH, `${cover[1]}-640`, COVER_SMALL_WIDTH);
+    return { ...result, src };
+  }
+
+  // تصویر داخل متن: /images/articles/<نام>-1200.jpg + /images/articles/<نام>-640.jpg
+  const figure = /^(\/images\/articles\/[a-z0-9-]+?)-1200\.jpe?g$/i.exec(path);
+  if (figure) {
+    const result = variants(
+      `${figure[1]}-1200`,
+      `${figure[1]}-1200`,
+      FIGURE_WIDTH,
+      `${figure[1]}-640`,
+      640
+    );
+    return { ...result, src };
+  }
+
+  // مسیر ناشناخته یا فایل بارگذاری‌شده از پنل
+  return { src, sources: [] };
+}
+
+/** مانند `coverImage` (سازگاری با کد قبلی) */
+export function coverImage(cover: string): ResponsiveImage {
+  return responsiveImage(cover);
 }
 
 /** `sizes` مناسب برای تصویر شاخص در صفحهٔ مقاله */
 export const COVER_SIZES = "(min-width: 1280px) 880px, (min-width: 1024px) 70vw, 100vw";
 /** `sizes` مناسب برای بندانگشتی در فهرست مقالات */
 export const CARD_SIZES = "(min-width: 1024px) 380px, (min-width: 768px) 45vw, 92vw";
+/** `sizes` مناسب برای تصویر تمام‌عرض داخل متن مقاله */
+export const FIGURE_SIZES = "(min-width: 1024px) 820px, 100vw";
