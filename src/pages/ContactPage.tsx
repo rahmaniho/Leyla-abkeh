@@ -9,7 +9,7 @@ import {
   siteConfig,
   whatsappUrl,
 } from "../config/site";
-import { absoluteUrl, buildAttorneySchema, buildBreadcrumbSchema, type PageMeta } from "../lib/seo";
+import { buildAttorneySchema, buildBreadcrumbSchema, pageUrl, type PageMeta } from "../lib/seo";
 import { Link } from "../lib/router";
 
 const breadcrumbs = [
@@ -29,7 +29,7 @@ export const meta: PageMeta = {
     {
       "@context": "https://schema.org",
       "@type": "ContactPage",
-      url: absoluteUrl("/contact"),
+      url: pageUrl("/contact"),
       name: "تماس با دفتر وکالت",
     },
   ],

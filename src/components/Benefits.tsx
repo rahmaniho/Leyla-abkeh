@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import { toFaDigits } from "../lib/format";
 import SectionHeader from "./SectionHeader";
 import { CalendarIcon, DocCheckIcon, EyeIcon, PhoneIcon } from "./Icons";
 
@@ -52,7 +53,7 @@ export default function Benefits() {
                   </span>
                   <span className="h-px flex-1 bg-gradient-to-l from-white/20 to-transparent" aria-hidden="true" />
                   <span className="text-2xl font-black text-white/10 transition-colors duration-500 group-hover:text-gold/40">
-                    {String(i + 1).padStart(2, "۰")}
+                    {toFaDigits(String(i + 1).padStart(2, "0"))}
                   </span>
                 </div>
                 <h3 className="mt-6 text-[17px] font-extrabold text-white">{benefit.title}</h3>

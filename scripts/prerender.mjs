@@ -56,7 +56,7 @@ async function writeRoute(template, routePath, rendered) {
 function buildSitemap(entries, siteUrl) {
   const urls = entries
     .map((entry) => {
-      const loc = `${siteUrl}${entry.path === "/" ? "/" : entry.path}`;
+      const loc = entry.path === "/" ? `${siteUrl}/` : `${siteUrl}${entry.path}/`;
       const lastmod = entry.lastmod ? `\n    <lastmod>${escapeXml(entry.lastmod)}</lastmod>` : "";
       const priority = entry.path === "/" ? "1.0" : entry.priority ?? "0.8";
       return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod}\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;

@@ -25,7 +25,7 @@ npm run dev          # http://localhost:5173
 | --- | --- |
 | `npm run dev` | سرور توسعه |
 | `npm run build` | typecheck + بیلد کلاینت + بیلد SSR + پیش‌رندر + sitemap/robots |
-| `npm run preview` | سرو خروجی `dist` |
+| `npm run preview` | سرو خروجی `dist` با رفتار نزدیک به Netlify (۳۰۱ مسیرهای بدون اسلش، ۴۰۴ واقعی) |
 | `npm run lint` | ESLint (TypeScript + React Hooks + jsx-a11y) |
 | `npm run typecheck` | بررسی نوع‌ها بدون خروجی |
 | `npm run test` | آزمون‌های واحد و یکپارچه (Vitest + Testing Library) |

@@ -3,7 +3,7 @@ import Reveal from "../components/Reveal";
 import SectionHeader from "../components/SectionHeader";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
-import { buildAttorneySchema, absoluteUrl, type PageMeta } from "../lib/seo";
+import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
 
 export const meta: PageMeta = {
   title: "درباره لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
@@ -20,11 +20,11 @@ export const meta: PageMeta = {
     {
       "@context": "https://schema.org",
       "@type": "Person",
-      "@id": `${absoluteUrl("/about")}#person`,
+      "@id": `${pageUrl("/about")}#person`,
       name: siteConfig.lawyer.name,
       jobTitle: siteConfig.lawyer.jobTitle,
       image: absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
-      url: absoluteUrl("/about"),
+      url: pageUrl("/about"),
       worksFor: { "@id": `${siteConfig.site.url}/#attorney` },
       address: {
         "@type": "PostalAddress",

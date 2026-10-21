@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { indexablePaths, resolveRoute, sitemapEntries } from "../src/routes";
-import { absoluteUrl, renderHeadTags, normalizePath } from "../src/lib/seo";
+import { absoluteUrl, pageHref, pageUrl, renderHeadTags, normalizePath } from "../src/lib/seo";
 import { SITE_URL } from "../src/config/site";
 
 const paths = indexablePaths();
@@ -27,9 +27,30 @@ describe("مسیرها", () => {
     expect(normalizePath("/articles/x?utm=1#print")).toBe("/articles/x");
   });
 
-  it("canonical مطلق و بدون اسلش انتهایی است", () => {
+  it("نشانی صفحه با اسلش انتهایی ساخته می‌شود (هم‌راستا با مسیر سرو‌شده در Netlify)", () => {
     expect(absoluteUrl("/")).toBe(`${SITE_URL}/`);
     expect(absoluteUrl("/services")).toBe(`${SITE_URL}/services`);
+    expect(pageUrl("/")).toBe(`${SITE_URL}/`);
+    expect(pageUrl("/services")).toBe(`${SITE_URL}/services/`);
+    expect(pageUrl("/services/")).toBe(`${SITE_URL}/services/`);
+    expect(pageUrl("/articles/x")).toBe(`${SITE_URL}/articles/x/`);
+  });
+
+  it("لینک‌های داخلی به نشانی نهایی اشاره می‌کنند و فایل‌ها و هش‌ها دست‌نخورده می‌مانند", () => {
+    expect(pageHref("/contact")).toBe("/contact/");
+    expect(pageHref("/")).toBe("/");
+    expect(pageHref("/contact#form")).toBe("/contact/#form");
+    expect(pageHref("/images/og-image.jpg")).toBe("/images/og-image.jpg");
+    expect(pageHref("https://example.com/x")).toBe("https://example.com/x");
+    expect(pageHref("#main")).toBe("#main");
+    expect(pageHref("tel:+989121234567")).toBe("tel:+989121234567");
+  });
+
+  it("همهٔ آدرس‌های sitemap اسلش انتهایی دارند", () => {
+    for (const entry of sitemapEntries()) {
+      const url = pageUrl(entry.path);
+      expect(url.endsWith("/"), `آدرس ${entry.path} بدون اسلش است`).toBe(true);
+    }
   });
 });
 

@@ -9,7 +9,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from "react";
-import { normalizePath } from "./seo";
+import { normalizePath, pageHref } from "./seo";
 
 const NAVIGATE_EVENT = "app:navigate";
 
@@ -94,6 +94,8 @@ export function Link({
 }: { to: string; children: ReactNode } & Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href">) {
   const { navigate } = useRouter();
 
+  const href = pageHref(to);
+
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
     onClick?.(event);
     if (event.defaultPrevented) return;
@@ -101,11 +103,11 @@ export function Link({
     if (rest.target && rest.target !== "_self") return;
 
     event.preventDefault();
-    navigate(to);
+    navigate(href);
   };
 
   return (
-    <a href={to} onClick={handleClick} {...rest}>
+    <a href={href} onClick={handleClick} {...rest}>
       {children}
     </a>
   );

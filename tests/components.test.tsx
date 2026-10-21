@@ -85,7 +85,7 @@ describe("صفحات خدمات", () => {
     for (const service of SERVICES) {
       const links = within(main).getAllByRole("link", { name: service.title });
       expect(links.length).toBeGreaterThan(0);
-      expect(links[0]).toHaveAttribute("href", `/services/${service.slug}`);
+      expect(links[0]).toHaveAttribute("href", `/services/${service.slug}/`);
     }
   });
 

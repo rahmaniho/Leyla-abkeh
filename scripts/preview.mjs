@@ -3,6 +3,7 @@
  * ------------------------------------------------------------------
  * - پوشه‌ها با index.html سرو می‌شوند (بدون بازنویسی SPA)
  * - مسیر ناموجود → 404.html با کد وضعیت ۴۰۴
+ * - `/x` در صورت وجود `x/index.html` با ۳۰۱ به `/x/` هدایت می‌شود (رفتار Pretty URLs نتلیفای)
  * - سرو فایل‌های استاتیک با MIME درست
  */
 import { createReadStream } from "node:fs";
@@ -54,7 +55,31 @@ async function resolveFile(urlPath) {
   }
 }
 
+/** آیا مسیر یک پوشهٔ دارای index.html است؟ (برای هدایت ۳۰۱ مانند Netlify) */
+async function isDirectoryWithIndex(urlPath) {
+  const safePath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, "");
+  const candidate = path.join(root, safePath);
+  if (!candidate.startsWith(root)) return false;
+  try {
+    const info = await stat(candidate);
+    if (!info.isDirectory()) return false;
+    const indexFile = path.join(candidate, "index.html");
+    return (await stat(indexFile)).isFile();
+  } catch {
+    return false;
+  }
+}
+
 const server = createServer(async (req, res) => {
+  const [rawPath, query = ""] = (req.url ?? "/").split("?");
+  const querySuffix = query ? `?${query}` : "";
+
+  if (!rawPath.endsWith("/") && !path.extname(rawPath) && (await isDirectoryWithIndex(rawPath))) {
+    res.writeHead(301, { location: `${rawPath}/${querySuffix}` });
+    res.end();
+    return;
+  }
+
   const file = await resolveFile(req.url ?? "/");
 
   if (!file) {

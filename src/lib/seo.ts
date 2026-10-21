@@ -41,6 +41,27 @@ export function normalizePath(rawPath: string): string {
   return withLeading.replace(/\/+$/, "") || "/";
 }
 
+/**
+ * نشانی مطلق صفحه با اسلش انتهایی.
+ * Netlify مسیر پوشه‌ای را از `/x` به `/x/` با کد ۳۰۱ هدایت می‌کند؛ برای اینکه
+ * canonical و لینک‌های داخلی به نشانی نهایی اشاره کنند، اسلش انتهایی حفظ می‌شود.
+ */
+export function pageUrl(path: string): string {
+  const normalized = normalizePath(path);
+  return `${SITE_URL}${normalized === "/" ? "/" : `${normalized}/`}`;
+}
+
+/** مسیر داخلی را به شکل نهایی (با اسلش انتهایی) برمی‌گرداند؛ برای href لینک‌ها */
+export function pageHref(to: string): string {
+  if (!to.startsWith("/")) return to;
+  const [pathPart, rawHash] = to.split("#");
+  if (!pathPart) return to;
+  if (/\.[a-z0-9]{1,6}$/i.test(pathPart)) return to;
+  const normalized = normalizePath(pathPart);
+  const base = normalized === "/" ? "/" : `${normalized}/`;
+  return rawHash ? `${base}#${rawHash}` : base;
+}
+
 export function buildBreadcrumbSchema(items: BreadcrumbItem[]): JsonLd {
   return {
     "@context": "https://schema.org",
@@ -49,7 +70,7 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]): JsonLd {
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: absoluteUrl(item.path),
+      item: pageUrl(item.path),
     })),
   };
 }
@@ -140,7 +161,7 @@ const escapeAttribute = (value: string) =>
  * خروجی مستقیماً داخل HTML قالب تزریق می‌شود.
  */
 export function renderHeadTags(meta: PageMeta): string {
-  const canonical = absoluteUrl(meta.path);
+  const canonical = pageUrl(meta.path);
   const image = absoluteUrl(meta.ogImage ?? DEFAULT_OG_IMAGE);
   const robots = meta.noindex
     ? "noindex, nofollow"
@@ -181,7 +202,7 @@ export function renderHeadTags(meta: PageMeta): string {
 export function applyMetaInBrowser(meta: PageMeta): void {
   if (typeof document === "undefined") return;
 
-  const canonical = absoluteUrl(meta.path);
+  const canonical = pageUrl(meta.path);
   document.title = meta.title;
 
   const setMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {

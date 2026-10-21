@@ -35,6 +35,9 @@
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
     Cross-Origin-Opener-Policy = "same-origin"
     X-XSS-Protection = "0"
+    # HTML مسیرهای پوشه‌ای (مانند /services/) همیشه بازبینی شود؛
+    # قواعد اختصاصی‌تر دارایی‌ها (assets/fonts/images) این مقدار را بازنویسی می‌کنند.
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 # دارایی‌های هش‌دار: کش یک‌ساله
 [[headers]]

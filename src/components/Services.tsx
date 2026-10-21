@@ -1,4 +1,5 @@
 import Reveal from "./Reveal";
+import { toFaDigits } from "../lib/format";
 import SectionHeader from "./SectionHeader";
 import {
   BriefcaseIcon,
@@ -60,7 +61,7 @@ export default function Services({ limit }: { limit?: number }) {
                       className="text-3xl font-black text-ink/10 transition-colors duration-500 group-hover:text-gold/30"
                       aria-hidden="true"
                     >
-                      {String(index + 1).padStart(2, "۰")}
+                      {toFaDigits(String(index + 1).padStart(2, "0"))}
                     </span>
                   </div>
 
