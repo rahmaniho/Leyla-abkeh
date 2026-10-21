@@ -5,6 +5,7 @@ import { ARTICLES, articlePath, type Article } from "../content/articles";
 import { SERVICES, servicePath } from "../content/services";
 import { formatDateFa, toDateAttribute, toFaDigits } from "../lib/format";
 import { primaryPhone } from "../config/site";
+import { COVER_HEIGHT, COVER_RATIO, COVER_SIZES, COVER_WIDTH, coverImage } from "../lib/images";
 
 export default function ArticlePage({ article }: { article: Article }) {
   const breadcrumbs = [
@@ -18,6 +19,8 @@ export default function ArticlePage({ article }: { article: Article }) {
   );
 
   const otherArticles = ARTICLES.filter((item) => item.slug !== article.slug).slice(0, 2);
+
+  const cover = article.cover ? coverImage(article.cover) : null;
 
   return (
     <>
@@ -44,16 +47,24 @@ export default function ArticlePage({ article }: { article: Article }) {
       <section className="bg-cream py-14 lg:py-20">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-14 lg:px-8">
           <article>
-            {article.cover && (
-              <img
-                src={article.cover}
-                alt={article.coverAlt ?? article.title}
-                width={1200}
-                height={630}
-                loading="lazy"
-                decoding="async"
-                className="mb-8 w-full rounded-3xl border border-ink/10 object-cover"
-              />
+            {cover && (
+              <picture>
+                {cover.sources.map((source) => (
+                  <source key={source.type} type={source.type} srcSet={source.srcSet} sizes={COVER_SIZES} />
+                ))}
+                <img
+                  src={cover.src}
+                  srcSet={cover.srcSet}
+                  sizes={cover.srcSet ? COVER_SIZES : undefined}
+                  alt={article.coverAlt ?? article.title}
+                  width={COVER_WIDTH}
+                  height={COVER_HEIGHT}
+                  fetchPriority="high"
+                  decoding="async"
+                  className="mb-8 w-full rounded-3xl border border-ink/10 bg-sand object-cover"
+                  style={{ aspectRatio: COVER_RATIO }}
+                />
+              </picture>
             )}
 
             <div

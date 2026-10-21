@@ -32,6 +32,13 @@ npm run dev          # http://localhost:5173
 | `npm run verify:config` | فهرست اطلاعات نیازمند تأیید مدیر سایت |
 | `npm run verify` | lint + typecheck + test + build |
 
+## تصاویر مقالات
+
+تصاویر شاخص در `public/images/covers` با نام `<نام>-cover.<jpg|webp|avif>` و نسخهٔ کوچک
+`<نام>-cover-640.*` نگه‌داری می‌شوند (۱۲۰۰×۶۳۰ و ۶۴۰×۳۳۶). این نام‌گذاری باعث می‌شود
+`<picture>` و `srcset` خودکار ساخته شود. تصویر بارگذاری‌شده از پنل در `/uploads` هم
+بدون نسخه‌های چندگانه نمایش داده می‌شود.
+
 ## ساختار پروژه
 
 ```

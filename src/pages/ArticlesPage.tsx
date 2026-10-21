@@ -5,6 +5,7 @@ import { ARTICLES, articlePath } from "../content/articles";
 import { formatDateFa, toFaDigits } from "../lib/format";
 import { buildBreadcrumbSchema, type PageMeta } from "../lib/seo";
 import { Link } from "../lib/router";
+import { CARD_SIZES, COVER_HEIGHT, COVER_RATIO, COVER_WIDTH, coverImage } from "../lib/images";
 
 const breadcrumbs = [
   { name: "صفحهٔ اصلی", path: "/" },
@@ -47,37 +48,70 @@ export default function ArticlesPage() {
             </p>
           ) : (
             <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {ARTICLES.map((article, index) => (
-                <li key={article.slug}>
-                  <Reveal delay={index * 100} className="h-full">
-                    <article className="flex h-full flex-col rounded-3xl border border-ink/10 bg-white/75 p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-deep">
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] font-medium text-ink/70">
-                        <time dateTime={article.publishDate}>{formatDateFa(article.publishDate)}</time>
-                        <span aria-hidden="true">·</span>
-                        <span>{toFaDigits(article.readingMinutes)} دقیقه مطالعه</span>
-                      </div>
+              {ARTICLES.map((article, index) => {
+                const cover = article.cover ? coverImage(article.cover) : null;
 
-                      <h2 className="mt-3 text-[16.5px] font-extrabold leading-8 text-ink">
-                        <Link to={articlePath(article.slug)} className="hover:text-gold-deep">
-                          {article.title}
-                        </Link>
-                      </h2>
+                return (
+                  <li key={article.slug}>
+                    <Reveal delay={index * 100} className="h-full">
+                      <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-ink/10 bg-white/75 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-deep">
+                        {cover && (
+                          <picture>
+                            {cover.sources.map((source) => (
+                              <source
+                                key={source.type}
+                                type={source.type}
+                                srcSet={source.srcSet}
+                                sizes={CARD_SIZES}
+                              />
+                            ))}
+                            <img
+                              src={cover.src}
+                              srcSet={cover.srcSet}
+                              sizes={cover.srcSet ? CARD_SIZES : undefined}
+                              alt=""
+                              width={COVER_WIDTH}
+                              height={COVER_HEIGHT}
+                              loading="lazy"
+                              decoding="async"
+                              className="w-full border-b border-ink/10 bg-sand object-cover"
+                              style={{ aspectRatio: COVER_RATIO }}
+                            />
+                          </picture>
+                        )}
 
-                      <p className="mt-3 flex-1 text-[13px] leading-7 text-ink/70">
-                        {article.description}
-                      </p>
+                        <div className="flex flex-1 flex-col p-6">
+                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11.5px] font-medium text-ink/70">
+                            <time dateTime={article.publishDate}>
+                              {formatDateFa(article.publishDate)}
+                            </time>
+                            <span aria-hidden="true">·</span>
+                            <span>{toFaDigits(article.readingMinutes)} دقیقه مطالعه</span>
+                          </div>
 
-                      <Link
-                        to={articlePath(article.slug)}
-                        className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-gold-deep transition-all hover:gap-3 hover:text-ink"
-                      >
-                        خواندن مقاله
-                        <span aria-hidden="true">←</span>
-                      </Link>
-                    </article>
-                  </Reveal>
-                </li>
-              ))}
+                          <h2 className="mt-3 text-[16.5px] font-extrabold leading-8 text-ink">
+                            <Link to={articlePath(article.slug)} className="hover:text-gold-deep">
+                              {article.title}
+                            </Link>
+                          </h2>
+
+                          <p className="mt-3 flex-1 text-[13px] leading-7 text-ink/70">
+                            {article.description}
+                          </p>
+
+                          <Link
+                            to={articlePath(article.slug)}
+                            className="mt-5 inline-flex items-center gap-2 text-[13px] font-bold text-gold-deep transition-all hover:gap-3 hover:text-ink"
+                          >
+                            خواندن مقاله
+                            <span aria-hidden="true">←</span>
+                          </Link>
+                        </div>
+                      </article>
+                    </Reveal>
+                  </li>
+                );
+              })}
             </ul>
           )}
         </div>

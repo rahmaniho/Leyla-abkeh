@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
 import { primaryPhone, siteConfig } from "../src/config/site";
 import { SERVICES } from "../src/content/services";
+import { ARTICLES, articlePath } from "../src/content/articles";
 
 function renderAt(path: string) {
   return render(<App initialPath={path} />);
@@ -230,6 +231,42 @@ describe("صفحات محتوایی", () => {
   it("صفحهٔ مقالات، مقاله‌ها را فهرست می‌کند", () => {
     renderAt("/articles");
     expect(screen.getAllByRole("link", { name: /خواندن مقاله/ }).length).toBeGreaterThan(0);
+  });
+
+  it("کارت هر مقاله تصویر شاخص با نسخهٔ AVIF/WebP و بارگذاری تنبل دارد", () => {
+    renderAt("/articles");
+    const cards = document.querySelectorAll("article picture");
+    expect(cards.length).toBe(ARTICLES.length);
+
+    for (const picture of Array.from(cards)) {
+      const types = Array.from(picture.querySelectorAll("source")).map((source) =>
+        source.getAttribute("type")
+      );
+      expect(types).toEqual(["image/avif", "image/webp"]);
+
+      const image = picture.querySelector("img") as HTMLImageElement;
+      expect(image.getAttribute("src")).toMatch(/^\/images\/covers\/.+\.jpg$/);
+      expect(image.getAttribute("srcset")).toContain("640w");
+      expect(image.getAttribute("loading")).toBe("lazy");
+      expect(image.getAttribute("width")).toBe("1200");
+      expect(image.getAttribute("height")).toBe("630");
+      // تصویر تزئینی است؛ نام مقاله در لینک عنوان آمده است
+      expect(image.getAttribute("alt")).toBe("");
+    }
+  });
+
+  it("صفحهٔ مقاله تصویر شاخص با alt توصیفی و بارگذاری با اولویت بالا دارد", () => {
+    const article = ARTICLES[0];
+    renderAt(articlePath(article.slug));
+
+    const picture = document.querySelector("article picture") as HTMLElement;
+    expect(picture).not.toBeNull();
+
+    const image = picture.querySelector("img") as HTMLImageElement;
+    expect(image.getAttribute("alt")).toBe(article.coverAlt);
+    expect(image.getAttribute("fetchpriority")).toBe("high");
+    expect(image.getAttribute("src")).toBe(article.cover);
+    expect(picture.querySelectorAll("source").length).toBe(2);
   });
 
   it("صفحهٔ حریم خصوصی توضیح جمع‌آوری داده دارد", () => {

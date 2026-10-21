@@ -71,6 +71,7 @@ collections:
         name: cover
         widget: image
         required: false
+        hint: "نسبت ۱۶:۹ و اندازهٔ پیشنهادی ۱۲۰۰×۶۳۰ پیکسل. تصویر در فهرست مقالات، بالای مقاله و اشتراک‌گذاری شبکه‌های اجتماعی استفاده می‌شود."
         media_library:
           config:
             multiple: false
@@ -78,6 +79,7 @@ collections:
         name: coverAlt
         widget: string
         required: false
+        hint: "توضیح کوتاه و توصیفی از تصویر برای Screen reader و سئو. تصویر خالی و بدون متن بنویسید."
       - label: نویسنده
         name: author
         widget: string
