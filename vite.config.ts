@@ -5,8 +5,22 @@ import { defineConfig } from "vite";
 
 const rootDir = path.resolve(import.meta.dirname ?? ".");
 
+/**
+ * مسیر پایهٔ انتشار.
+ * - Netlify / دامنهٔ اختصاصی: خالی → "/"
+ * - GitHub Pages برای مخزن پروژه‌ای: `VITE_BASE_PATH=/Leyla-abkeh/`
+ */
+function normalizeBase(value: string | undefined): string {
+  const trimmed = (value ?? "").trim();
+  if (!trimmed || trimmed === "/") return "/";
+  return `/${trimmed.replace(/^\/+|\/+$/g, "")}/`;
+}
+
+const base = normalizeBase(process.env.VITE_BASE_PATH);
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

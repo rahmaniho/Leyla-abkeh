@@ -4,6 +4,7 @@ import SectionHeader from "../components/SectionHeader";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
 import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
+import { withBase, withBaseSrcSet } from "../lib/base";
 
 export const meta: PageMeta = {
   title: "دربارهٔ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
@@ -71,16 +72,16 @@ export default function AboutPage() {
               <picture>
                 <source
                   type="image/avif"
-                  srcSet="/images/lawyer-560.avif 560w, /images/lawyer.avif 1122w"
+                  srcSet={withBaseSrcSet("/images/lawyer-560.avif 560w, /images/lawyer.avif 1122w")}
                   sizes="(min-width: 1024px) 340px, 90vw"
                 />
                 <source
                   type="image/webp"
-                  srcSet="/images/lawyer-560.webp 560w, /images/lawyer.webp 1122w"
+                  srcSet={withBaseSrcSet("/images/lawyer-560.webp 560w, /images/lawyer.webp 1122w")}
                   sizes="(min-width: 1024px) 340px, 90vw"
                 />
                 <img
-                  src="/images/lawyer.jpg"
+                  src={withBase("/images/lawyer.jpg")}
                   alt={siteConfig.lawyer.photo.alt}
                   width={siteConfig.lawyer.photo.width}
                   height={siteConfig.lawyer.photo.height}

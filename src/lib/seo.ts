@@ -1,4 +1,5 @@
 import { SITE_URL, activeSocials, siteConfig } from "../config/site";
+import { withBase } from "./base";
 
 export interface BreadcrumbItem {
   name: string;
@@ -56,10 +57,11 @@ export function pageHref(to: string): string {
   if (!to.startsWith("/")) return to;
   const [pathPart, rawHash] = to.split("#");
   if (!pathPart) return to;
-  if (/\.[a-z0-9]{1,6}$/i.test(pathPart)) return to;
+  // فایل ایستا (تصویر، فونت، manifest): فقط مسیر پایه اضافه می‌شود
+  if (/\.[a-z0-9]{1,6}$/i.test(pathPart)) return withBase(to);
   const normalized = normalizePath(pathPart);
-  const base = normalized === "/" ? "/" : `${normalized}/`;
-  return rawHash ? `${base}#${rawHash}` : base;
+  const suffix = normalized === "/" ? "/" : `${normalized}/`;
+  return withBase(rawHash ? `${suffix}#${rawHash}` : suffix);
 }
 
 export function buildBreadcrumbSchema(items: BreadcrumbItem[]): JsonLd {
