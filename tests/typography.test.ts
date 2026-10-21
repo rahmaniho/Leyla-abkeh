@@ -68,6 +68,26 @@ describe("پشتهٔ فونت", () => {
   it("فونت پشتیبان برای حروف لاتین و نشانه‌های غایب باقی می‌ماند", () => {
     expect(css).toMatch(/--font-sans:[^;]*"Vazirmatn"/);
   });
+
+  /**
+   * B Nazanin در یک em یکسان کوچک‌تر از بقیهٔ فونت‌ها کشیده می‌شود
+   * (ارتفاع بدنهٔ حروف ≈ ۰٫۵۸۶em در برابر ۰٫۶۷۴em وازیرمتن).
+   * جبران آن با size-adjust انجام می‌شود، نه با تغییر ۱۵۰ کلاس اندازه.
+   */
+  it("B Nazanin با ضریب ۱۱۶٪ (دو پله بزرگ‌تر) رندر می‌شود", () => {
+    const nazanin = css.slice(css.indexOf('font-family: "B Nazanin"'), css.indexOf('font-family: "B Titr"'));
+    expect(nazanin).toMatch(/size-adjust:\s*116%/);
+  });
+
+  it("تیترها و ارقام اندازهٔ خودشان را نگه می‌دارند", () => {
+    const titr = css.slice(css.indexOf('font-family: "B Titr"'), css.indexOf('font-family: "Vazirmatn"'));
+    expect(titr).not.toMatch(/size-adjust/);
+  });
+
+  it("فونت پشتیبان همان ضریب را دارد تا هنگام تعویض فونت پرش اندازه نباشد", () => {
+    const vazir = css.slice(css.indexOf('font-family: "Vazirmatn"'));
+    expect(vazir).toMatch(/size-adjust:\s*116%/);
+  });
 });
 
 describe("سازگاری نویسه‌ها با فونت", () => {
