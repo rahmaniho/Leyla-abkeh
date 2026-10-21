@@ -55,9 +55,9 @@ function unquote(value: string): string {
 const FRONT_MATTER_BOUNDARY = /^---\s*$/;
 
 /**
- * پارسر سادهٔ Front Matter (زیرمجموعهٔ YAML مورد استفادهٔ Decap CMS).
+ * پارسر سادۀ Front Matter (زیرمجموعۀ YAML مورد استفادۀ Decap CMS).
  * پشتیبانی: `key: value`، رشته‌های داخل کوتیشن، بولین و عدد.
- * (به‌جای وابستگی به js-yaml با نسخهٔ آسیب‌پذیر)
+ * (به‌جای وابستگی به js-yaml با نسخۀ آسیب‌پذیر)
  */
 export function parseFrontMatter(raw: string): {
   data: Record<string, FrontMatterValue>;
@@ -160,7 +160,7 @@ marked.use({
 
     /**
      * تصویر داخل متن با `<picture>` و نسخه‌های AVIF/WebP و دو اندازه.
-     * اگر مسیر تصویر نسخهٔ چندگانه نداشته باشد (مثلاً بارگذاری از پنل)، یک
+     * اگر مسیر تصویر نسخۀ چندگانه نداشته باشد (مثلاً بارگذاری از پنل)، یک
      * `img` ساده تولید می‌شود. `title` به‌عنوان زیرنویس (figcaption) نمایش داده می‌شود.
      */
     image({ href, title, text }: { href: string; title?: string | null; text: string }) {
@@ -220,7 +220,7 @@ function slugFromPath(path: string): string {
     .trim();
 }
 
-/** فایل‌های Markdown موجود در پوشهٔ محتوا (زمان بیلد) */
+/** فایل‌های Markdown موجود در پوشۀ محتوا (زمان بیلد) */
 const rawModules = import.meta.glob("./blog/*.md", {
   query: "?raw",
   import: "default",
@@ -261,7 +261,7 @@ function buildArticle(path: string, raw: string): Article {
   };
 }
 
-/** همهٔ مقالات (شامل پیش‌نویس‌ها) — برای آزمون‌ها و پنل مدیریت */
+/** همۀ مقالات (شامل پیش‌نویس‌ها) — برای آزمون‌ها و پنل مدیریت */
 export const ALL_ARTICLES: Article[] = Object.entries(rawModules)
   .map(([path, raw]) => buildArticle(path, raw))
   .filter((article) => article.slug && article.title)

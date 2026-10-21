@@ -1,20 +1,20 @@
 import PageHero from "../components/PageHero";
 import Reveal from "../components/Reveal";
 import SectionHeader from "../components/SectionHeader";
+import LogoMotion from "../components/LogoMotion";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
 import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
 import LawyerPortrait from "../components/LawyerPortrait";
-import { withBase } from "../lib/base";
 
 export const meta: PageMeta = {
-  title: "دربارهٔ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
+  title: "دربارۀ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
   description:
-    "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانهٔ پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
+    "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانۀ پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
   path: "/about",
   type: "website",
   breadcrumbs: [
-    { name: "صفحهٔ اصلی", path: "/" },
+    { name: "صفحۀ اصلی", path: "/" },
     { name: "درباره وکیل", path: "/about" },
   ],
   jsonLd: [
@@ -39,7 +39,7 @@ export const meta: PageMeta = {
 
 const APPROACH = [
   {
-    title: "ارزیابی صادقانه، نه وعدهٔ شیرین",
+    title: "ارزیابی صادقانه، نه وعدۀ شیرین",
     body: "هیچ پرونده‌ای از پیش برنده نیست. پیش از قبول وکالت، نقاط قوت و ضعف پرونده و ریسک‌های آن صریح گفته می‌شود تا تصمیم با آگاهی گرفته شود.",
   },
   {
@@ -48,7 +48,7 @@ const APPROACH = [
   },
   {
     title: "شفافیت هزینه‌ها",
-    body: "حق‌الوکاله و هزینه‌های جانبی از ابتدا مکتوب اعلام می‌شود؛ هزینهٔ پنهانی وجود ندارد.",
+    body: "حق‌الوکاله و هزینه‌های جانبی از ابتدا مکتوب اعلام می‌شود؛ هزینۀ پنهانی وجود ندارد.",
   },
   {
     title: "رازداری حرفه‌ای",
@@ -62,7 +62,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="درباره وکیل"
         title={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle}`}
-        description={`دفتر وکالت و مشاورهٔ حقوقی در ${siteConfig.site.city}؛ با تمرکز بر دعاوی خانواده، کیفری، ملکی و ثبتی، اسناد تجاری، حقوق کار و امور شرکت‌ها.`}
+        description={`دفتر وکالت و مشاورۀ حقوقی در ${siteConfig.site.city}؛ با تمرکز بر دعاوی خانواده، کیفری، ملکی و ثبتی، اسناد تجاری، حقوق کار و امور شرکت‌ها.`}
         breadcrumbs={meta.breadcrumbs}
       />
 
@@ -78,7 +78,7 @@ export default function AboutPage() {
                   <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.barAssociation}</p>
                 ) : (
                   <p className="text-[12.5px] text-ink/70">
-                    دفتر وکالت و مشاورهٔ حقوقی در {siteConfig.site.city}
+                    دفتر وکالت و مشاورۀ حقوقی در {siteConfig.site.city}
                   </p>
                 )}
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
@@ -93,7 +93,7 @@ export default function AboutPage() {
             <div className="mt-4 space-y-4 text-[14px] leading-9 text-ink/80">
               <p>
                 وقتی کسی به وکیل مراجعه می‌کند، معمولاً در یکی از دشوارترین دوره‌های زندگی خود است:
-                اختلاف خانوادگی، پروندهٔ کیفری، معاملهٔ ملکی که به مشکل خورده یا مطالبه‌ای که سال‌ها
+                اختلاف خانوادگی، پروندۀ کیفری، معاملۀ ملکی که به مشکل خورده یا مطالبه‌ای که سال‌ها
                 معطل مانده است. در چنین شرایطی، آنچه بیش از هر چیز کمک می‌کند، یک ارزیابی روشن و
                 یک مسیر مشخص است.
               </p>
@@ -104,8 +104,8 @@ export default function AboutPage() {
                 تخصصی دیگری باشد، پیش از طرح دعوا مشخص می‌شود.
               </p>
               <p>
-                این وب‌سایت با همین نگاه طراحی شده است: اطلاعات عمومی، شفاف و قابل استناد دربارهٔ
-                مسیرهای حقوقی، به‌همراه امکان ثبت درخواست مشاوره. در همهٔ مراحل، محرمانگی اطلاعات
+                این وب‌سایت با همین نگاه طراحی شده است: اطلاعات عمومی، شفاف و قابل استناد دربارۀ
+                مسیرهای حقوقی، به‌همراه امکان ثبت درخواست مشاوره. در همۀ مراحل، محرمانگی اطلاعات
                 موکل رعایت می‌شود.
               </p>
             </div>
@@ -129,30 +129,12 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <div className="mt-12 flex flex-col items-start gap-6 rounded-3xl border border-ink/10 bg-white/60 p-6 sm:flex-row sm:items-center">
-              <picture className="shrink-0">
-                <source type="image/webp" srcSet={withBase(siteConfig.brand.lockup.webp)} />
-                <img
-                  src={withBase(siteConfig.brand.lockup.png)}
-                  alt={siteConfig.brand.alt}
-                  width={siteConfig.brand.lockup.width}
-                  height={siteConfig.brand.lockup.height}
-                  loading="lazy"
-                  decoding="async"
-                  className="h-28 w-auto object-contain"
-                />
-              </picture>
-              <div>
-                <p className="text-[14px] font-extrabold text-ink">نشان دفتر</p>
-                <p className="mt-2 max-w-md text-[12.5px] leading-7 text-ink/70">
-                  نشان دفتر ترکیبی از چهرهٔ زن — نماد دقت و همدلی — و ترازوی عدالت است؛
-                  همان دو اصلی که مبنای کار در پرونده‌های خانوادگی و حقوقی است.
-                </p>
-              </div>
+            <div className="mx-auto mt-12 w-full max-w-sm overflow-hidden rounded-3xl border border-ink/10 bg-ink-deep">
+              <LogoMotion />
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
-              اطلاعات حرفه‌ای تکمیلی (مانند شمارهٔ پروانهٔ وکالت) تنها پس از تأیید و به‌روزرسانی
+              اطلاعات حرفه‌ای تکمیلی (مانند شمارۀ پروانۀ وکالت) تنها پس از تأیید و به‌روزرسانی
               مستندات منتشر می‌شود.
             </p>
           </div>

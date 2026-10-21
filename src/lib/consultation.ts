@@ -5,7 +5,7 @@ export interface ConsultationPayload {
   phone: string;
   topic: string;
   message?: string;
-  /** فیلد تلهٔ هرزنامه؛ باید خالی بماند */
+  /** فیلد تلۀ هرزنامه؛ باید خالی بماند */
   website?: string;
   startedAt?: number;
   turnstileToken?: string;
@@ -24,7 +24,7 @@ export interface ConsultationFailure {
   errors?: Record<string, string>;
   retryAfter?: number;
   /**
-   * سرور دریافت درخواست در این استقرار فعال نیست (نسخهٔ ایستا یا
+   * سرور دریافت درخواست در این استقرار فعال نیست (نسخۀ ایستا یا
    * پیکربندی‌نشده). این حالت از «خطای شبکه» جدا گزارش می‌شود تا پیام
    * به کاربر درست و قابل اقدام باشد.
    */
@@ -40,7 +40,7 @@ const TIMEOUT_MS = 20_000;
  * هیچ کلید محرمانه‌ای در این ماژول وجود ندارد؛ تمام پیکربندی سمت سرور است.
  */
 export const FORM_UNAVAILABLE_MESSAGE =
-  "ثبت آنلاین درخواست در این نسخهٔ سایت فعال نیست. اطلاعات فرم شما ارسال نشد؛ لطفاً از راه‌های تماس دفتر استفاده کنید یا کمی بعد دوباره تلاش کنید.";
+  "ثبت آنلاین درخواست در این نسخۀ سایت فعال نیست. اطلاعات فرم شما ارسال نشد؛ لطفاً از راه‌های تماس دفتر استفاده کنید یا کمی بعد دوباره تلاش کنید.";
 
 export async function submitConsultation(payload: ConsultationPayload): Promise<ConsultationResult> {
   // اگر این استقرار اصلاً سرور دریافت درخواست ندارد، درخواست شبکه‌ای بی‌فایده فرستاده نمی‌شود.

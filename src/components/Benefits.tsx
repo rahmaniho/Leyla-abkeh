@@ -6,7 +6,7 @@ import { CalendarIcon, DocCheckIcon, EyeIcon, PhoneIcon } from "./Icons";
 const BENEFITS = [
   {
     icon: EyeIcon,
-    title: "ارزیابی صادقانهٔ پرونده",
+    title: "ارزیابی صادقانۀ پرونده",
     desc: "پیش از قبول وکالت، شانس موفقیت شما را صریح و بی‌اغراق اعلام می‌کنم تا با چشمان باز تصمیم بگیرید.",
   },
   {
@@ -40,7 +40,7 @@ export default function Benefits() {
           dark
           eyebrow="تفاوت را احساس کنید"
           title="چهار دلیل برای انتخاب این دفتر"
-          description="آنچه یک وکیل خوب را از یک وکیل معمولی جدا می‌کند، فقط دانش نیست؛ نحوهٔ رفتار با موکل است."
+          description="آنچه یک وکیل خوب را از یک وکیل معمولی جدا می‌کند، فقط دانش نیست؛ نحوۀ رفتار با موکل است."
         />
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-4">

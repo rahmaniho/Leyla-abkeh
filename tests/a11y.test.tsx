@@ -21,7 +21,7 @@ const accessibleName = (element: Element): string => {
   return (element.textContent ?? "").trim();
 };
 
-describe("دسترس‌پذیری پایه در همهٔ صفحات", () => {
+describe("دسترس‌پذیری پایه در همۀ صفحات", () => {
   const paths = indexablePaths();
 
   it("هر صفحه دقیقاً یک H1 دارد", () => {
@@ -33,7 +33,7 @@ describe("دسترس‌پذیری پایه در همهٔ صفحات", () => {
     }
   });
 
-  it("همهٔ تصاویر alt دارند", () => {
+  it("همۀ تصاویر alt دارند", () => {
     for (const path of paths) {
       const { unmount } = renderPage(path);
       for (const image of Array.from(document.querySelectorAll("img"))) {
@@ -43,7 +43,7 @@ describe("دسترس‌پذیری پایه در همهٔ صفحات", () => {
     }
   });
 
-  it("همهٔ لینک‌ها نام دسترس‌پذیر دارند", () => {
+  it("همۀ لینک‌ها نام دسترس‌پذیر دارند", () => {
     for (const path of paths) {
       const { unmount } = renderPage(path);
       for (const link of Array.from(document.querySelectorAll("a"))) {
@@ -53,7 +53,7 @@ describe("دسترس‌پذیری پایه در همهٔ صفحات", () => {
     }
   });
 
-  it("همهٔ دکمه‌ها نام دسترس‌پذیر دارند", () => {
+  it("همۀ دکمه‌ها نام دسترس‌پذیر دارند", () => {
     for (const path of paths) {
       const { unmount } = renderPage(path);
       for (const button of Array.from(document.querySelectorAll("button"))) {
@@ -63,16 +63,16 @@ describe("دسترس‌پذیری پایه در همهٔ صفحات", () => {
     }
   });
 
-  it("هیچ شناسهٔ تکراری در صفحه نیست", () => {
+  it("هیچ شناسۀ تکراری در صفحه نیست", () => {
     for (const path of paths) {
       const { unmount } = renderPage(path);
       const ids = Array.from(document.querySelectorAll("[id]")).map((element) => element.id);
-      expect(new Set(ids).size, `شناسهٔ تکراری در ${path}`).toBe(ids.length);
+      expect(new Set(ids).size, `شناسۀ تکراری در ${path}`).toBe(ids.length);
       unmount();
     }
   });
 
-  it("همهٔ فیلدهای فرم برچسب دارند", () => {
+  it("همۀ فیلدهای فرم برچسب دارند", () => {
     const { unmount } = renderPage("/contact");
     const form = document.querySelector("form");
     expect(form).not.toBeNull();

@@ -2,33 +2,49 @@ import { withBase } from "../lib/base";
 import { siteConfig } from "../config/site";
 
 interface BrandLogoProps {
-  /** اندازهٔ مارک در نوار بالا/پاورقی (پیکسل) */
-  size?: number;
+  /** ارتفاع نمایش لوگو در پیکسل (عرض به‌نسبت محاسبه می‌شود) */
+  height?: number;
   className?: string;
+  /** بارگذاری فوری (برای هدر) یا تنبل (برای پاورقی) */
+  priority?: boolean;
 }
 
 /**
- * مارک رسمی دفتر (طلایی، بدون زمینه)
+ * لوگوی کامل رسمی دفتر (طلایی، بدون زمینه)
  * ------------------------------------------------------------------
- * لوگوی ارسالی وکیل روی زمینهٔ مشکی است؛ نسخهٔ PNG/WebP آن با آلفای
- * استخراج‌شده در `public/images/brand/logo-mark.*` نگه‌داری می‌شود تا روی
- * پس‌زمینهٔ سرمه‌ای سایت بدون قاب مربعی دیده شود.
+ * لوگوی ارسالی وکیل به‌صورت کامل نمایش داده می‌شود: نشان، خطاطی «لیلا» و
+ * نام لاتین. فایل‌ها پیش از تولید با حاشیۀ امن ۶٪ ذخیره شده‌اند تا هیچ
+ * لبه‌ای (قوس طلایی سمت راست یا خط پایین نام) بریده نشود.
+ *
+ * `object-contain` + `w-auto` تضمین می‌کند نسبت تصویر حفظ شود و لوگو هرگز
+ * کشیده یا برش نخورد.
  */
-export default function BrandLogo({ size = 44, className = "" }: BrandLogoProps) {
-  const { mark, alt } = siteConfig.brand;
+export default function BrandLogo({
+  height = 48,
+  className = "",
+  priority = false,
+}: BrandLogoProps) {
+  const { lockup, alt } = siteConfig.brand;
+  const width = Math.round((height * lockup.width) / lockup.height);
 
   return (
     <picture className={className}>
-      <source type="image/webp" srcSet={withBase(mark.webp)} />
+      <source
+        type="image/webp"
+        srcSet={`${withBase(lockup.webp)} ${lockup.width}w, ${withBase(lockup.webpLarge)} 700w`}
+        sizes={`${height}px`}
+      />
       <img
-        src={withBase(mark.png)}
+        src={withBase(lockup.png)}
+        srcSet={`${withBase(lockup.png)} ${lockup.width}w, ${withBase(lockup.pngLarge)} 700w`}
+        sizes={`${height}px`}
         alt={alt}
-        width={size}
-        height={Math.round((size * mark.height) / mark.width)}
-        loading="eager"
+        width={width}
+        height={height}
+        loading={priority ? "eager" : "lazy"}
         decoding="async"
-        className="h-auto w-auto object-contain"
-        style={{ width: size }}
+        className="h-auto w-auto max-w-full object-contain"
+        style={{ height }}
       />
     </picture>
   );

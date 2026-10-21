@@ -7,7 +7,7 @@
  * @property {string} [phone]
  * @property {string} [topic]
  * @property {string} [message]
- * @property {string} [website]        فیلد تلهٔ هرزنامه (باید خالی باشد)
+ * @property {string} [website]        فیلد تلۀ هرزنامه (باید خالی باشد)
  * @property {number|string} [startedAt] زمان شروع پر کردن فرم (میلی‌ثانیه)
  *
  * @typedef {{ ok: true, data: SubmissionData } | { ok: false, errors: Record<string,string> }} ValidationResult
@@ -54,9 +54,9 @@ export function normalizeDigits(input) {
 }
 
 /**
- * نرمال‌سازی شمارهٔ تلفن ایران به شکل ملی (۰۹… یا ۰۲۸…).
+ * نرمال‌سازی شمارۀ تلفن ایران به شکل ملی (۰۹… یا ۰۲۸…).
  * @param {string} input
- * @returns {string|null} شمارهٔ نرمال‌شده یا null در صورت نامعتبر بودن
+ * @returns {string|null} شمارۀ نرمال‌شده یا null در صورت نامعتبر بودن
  */
 export function normalizeIranPhone(input) {
   if (typeof input !== "string") return null;
@@ -134,7 +134,7 @@ export function validateSubmission(input, options = {}) {
   const normalizedPhone = normalizeIranPhone(String(input?.phone ?? ""));
 
   if (honeypot) {
-    // تلهٔ هرزنامه؛ پیام خطا عمداً عمومی است.
+    // تلۀ هرزنامه؛ پیام خطا عمداً عمومی است.
     errors.form = "ارسال درخواست ممکن نشد. لطفاً دوباره تلاش کنید.";
   }
 
@@ -147,7 +147,8 @@ export function validateSubmission(input, options = {}) {
   }
 
   if (!normalizedPhone) {
-    errors.phone = "شمارهٔ تماس معتبر نیست. نمونهٔ درست: ۰۹۱۲۱۲۳۴۵۶۷ یا ۰۲۸۳۳۶۶۰۰۰۰";
+    errors.phone =
+      "شمارۀ تماس معتبر نیست؛ شمارۀ موبایل ۱۱ رقمی (۰۹…) یا تلفن ثابت با کد شهر را وارد کنید.";
   }
 
   if (!TOPICS.includes(topic)) {

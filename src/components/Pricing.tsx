@@ -21,9 +21,9 @@ export default function Pricing() {
 
       <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
         <SectionHeader
-          eyebrow="تعرفهٔ شفاف"
+          eyebrow="تعرفۀ شفاف"
           title={feeVerified ? "هزینه‌ای که از همان ابتدا روشن است" : "هزینه‌ها چگونه تعیین می‌شوند"}
-          description="هر مسیر از گفت‌وگوی اولیه آغاز می‌شود. مبلغ پیش از شروع کار به‌صورت مکتوب اعلام می‌شود و هزینهٔ پنهانی وجود ندارد."
+          description="هر مسیر از گفت‌وگوی اولیه آغاز می‌شود. مبلغ پیش از شروع کار به‌صورت مکتوب اعلام می‌شود و هزینۀ پنهانی وجود ندارد."
           titleId="pricing-title"
         />
 

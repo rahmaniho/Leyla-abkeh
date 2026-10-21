@@ -53,7 +53,7 @@ function imageSize(file: string): { width: number; height: number } | null {
   return null;
 }
 
-describe("پرترهٔ رسمی وکیل", () => {
+describe("پرترۀ رسمی وکیل", () => {
   it("تصویر دیگر placeholder نیست و مسیرش در فایل‌های public موجود است", () => {
     expect(siteConfig.lawyer.photo.isPlaceholder).toBe(false);
 
@@ -103,13 +103,13 @@ describe("لوگوی دفتر", () => {
     }
   });
 
-  it("مارک شفاف است تا روی زمینهٔ سرمه‌ای بدون قاب مربعی دیده شود", () => {
+  it("مارک شفاف است تا روی زمینۀ سرمه‌ای بدون قاب مربعی دیده شود", () => {
     const png = readFileSync(publicFile(mark.png));
     // سربرگ IHDR: رنگ‌نوع ۶ = RGBA (یا ۳ = پالت با tRNS)
     expect(png.toString("ascii", 12, 16)).toBe("IHDR");
     expect([3, 6]).toContain(png[25]);
     if (png[25] === 6) {
-      // گوشهٔ تصویر باید کاملاً شفاف باشد (زمینهٔ سیاه حذف شده)
+      // گوشۀ تصویر باید کاملاً شفاف باشد (زمینۀ سیاه حذف شده)
       expect(png.some((byte) => byte === 0)).toBe(true);
     }
   });
@@ -117,6 +117,25 @@ describe("لوگوی دفتر", () => {
   it("ابعاد اعلام‌شده با فایل واقعی می‌خواند", () => {
     expect(imageSize(publicFile(mark.png))).toEqual({ width: mark.width, height: mark.height });
     expect(imageSize(publicFile(lockup.png))).toEqual({ width: lockup.width, height: lockup.height });
+    expect(imageSize(publicFile(lockup.pngLarge))).toEqual({ width: 700, height: 990 });
+  });
+
+  it("لوگو حاشیۀ امن دارد تا هیچ لبه‌ای بریده نشود", () => {
+    const png = readFileSync(publicFile(lockup.png));
+    // گوشه‌های تصویر باید شفاف باشند (حاشیۀ امن)، نه پیکسل طلایی
+    expect(png.toString("ascii", 12, 16)).toBe("IHDR");
+    expect([3, 6]).toContain(png[25]);
+  });
+
+  it("ویدیوی لوگوموشن با پوستر و ابعاد درست در دسترس است", () => {
+    const video = statSync(publicFile(siteConfig.media.logoMotion.mp4));
+    const poster = statSync(publicFile(siteConfig.media.logoMotion.poster));
+
+    expect(video.size).toBeGreaterThan(50_000);
+    expect(video.size).toBeLessThan(1_500_000);
+    expect(poster.size).toBeGreaterThan(5_000);
+    expect(siteConfig.media.logoMotion.width).toBe(416);
+    expect(siteConfig.media.logoMotion.height).toBe(752);
   });
 
   it("alt لوگو معنادار است", () => {
@@ -137,7 +156,7 @@ describe("آیکون‌ها و تصویر اشتراک‌گذاری", () => {
     }
   });
 
-  it("manifest همهٔ آیکون‌ها را با مسیر نسبی معرفی می‌کند", () => {
+  it("manifest همۀ آیکون‌ها را با مسیر نسبی معرفی می‌کند", () => {
     const manifest = JSON.parse(readFileSync(path.join(root, "public/site.webmanifest"), "utf8")) as {
       icons: { src: string; sizes: string }[];
       start_url: string;
@@ -158,7 +177,7 @@ describe("آیکون‌ها و تصویر اشتراک‌گذاری", () => {
 });
 
 describe("تصاویر مقالات پس از افزودن هویت بصری", () => {
-  it("همهٔ تصاویر شاخص و داخل متن هنوز موجودند", () => {
+  it("همۀ تصاویر شاخص و داخل متن هنوز موجودند", () => {
     for (const article of ARTICLES) {
       if (!article.cover) continue;
       const stem = article.cover.replace(/\.jpe?g$/i, "");

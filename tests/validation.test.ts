@@ -12,7 +12,7 @@ const validInput = {
   name: "سارا محمدی",
   phone: "09121234567",
   topic: "دعاوی خانواده",
-  message: "دربارهٔ مهریه سوال دارم.",
+  message: "دربارۀ مهریه سوال دارم.",
   website: "",
   startedAt: 0,
 };
@@ -24,7 +24,7 @@ describe("نرمال‌سازی ارقام", () => {
   });
 });
 
-describe("اعتبارسنجی شمارهٔ ایران", () => {
+describe("اعتبارسنجی شمارۀ ایران", () => {
   it("موبایل با ارقام لاتین را می‌پذیرد", () => {
     expect(normalizeIranPhone("09121234567")).toBe("09121234567");
   });
@@ -33,7 +33,7 @@ describe("اعتبارسنجی شمارهٔ ایران", () => {
     expect(normalizeIranPhone("۰۹۱۲ ۱۲۳ ۴۵۶۷")).toBe("09121234567");
   });
 
-  it("پیش‌شمارهٔ بین‌المللی را به فرم ملی تبدیل می‌کند", () => {
+  it("پیش‌شمارۀ بین‌المللی را به فرم ملی تبدیل می‌کند", () => {
     expect(normalizeIranPhone("+98 912 123 4567")).toBe("09121234567");
     expect(normalizeIranPhone("00989121234567")).toBe("09121234567");
   });
@@ -88,10 +88,10 @@ describe("اعتبارسنجی درخواست مشاوره", () => {
     if (result.ok) expect(result.data.name).not.toContain("<");
   });
 
-  it("شمارهٔ تلفن نامعتبر را با پیام فارسی رد می‌کند", () => {
+  it("شمارۀ تلفن نامعتبر را با پیام فارسی رد می‌کند", () => {
     const result = validateSubmission({ ...validInput, phone: "123" }, { now: 10_000 });
     expect(result.ok).toBe(false);
-    if (!result.ok) expect(result.errors.phone).toContain("شمارهٔ تماس معتبر نیست");
+    if (!result.ok) expect(result.errors.phone).toContain("شمارۀ تماس معتبر نیست");
   });
 
   it("موضوع خارج از فهرست را رد می‌کند", () => {
@@ -109,7 +109,7 @@ describe("اعتبارسنجی درخواست مشاوره", () => {
     if (!result.ok) expect(result.errors.message).toBeTruthy();
   });
 
-  it("تلهٔ هرزنامه (فیلد website) را تشخیص می‌دهد", () => {
+  it("تلۀ هرزنامه (فیلد website) را تشخیص می‌دهد", () => {
     const result = validateSubmission({ ...validInput, website: "http://spam.example" }, { now: 10_000 });
     expect(result.ok).toBe(false);
   });

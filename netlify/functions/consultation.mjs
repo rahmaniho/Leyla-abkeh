@@ -6,7 +6,7 @@ import { LIMITS, validateSubmission } from "./_lib/validation.mjs";
  * ------------------------------------------------------------------
  * - فقط POST
  * - اعتبارسنجی سمت سرور با همان منطق فرم (اعتماد به اعتبارسنجی مرورگر ممنوع)
- * - محدودیت نرخ درخواست بر پایهٔ IP (هش‌شده، در حافظهٔ نمونه)
+ * - محدودیت نرخ درخواست بر پایۀ IP (هش‌شده، در حافظۀ نمونه)
  * - ضد‌هرزنامه: honeypot + زمان پر کردن فرم + (اختیاری) Cloudflare Turnstile
  * - ارسال اطلاع‌رسانی فقط از طریق متغیرهای محیطی سرور؛ هیچ کلیدی در فرانت‌اند نیست
  * - در صورت نبود پیکربندی ارسال، پاسخ موفقیت‌آمیز داده نمی‌شود (۵۰۳)
@@ -78,7 +78,7 @@ async function verifyTurnstile(token, ip) {
 
 function buildMessage(data, meta) {
   return [
-    "📩 درخواست مشاورهٔ جدید از سایت",
+    "📩 درخواست مشاورۀ جدید از سایت",
     "",
     `نام: ${data.name}`,
     `تماس: ${data.phone}`,
@@ -201,7 +201,7 @@ export default async (req) => {
   }).format(new Date(now));
 
   const text = buildMessage(validation.data, { reference, receivedAtLocal });
-  const subject = `درخواست مشاورهٔ جدید — ${validation.data.topic} — ${reference}`;
+  const subject = `درخواست مشاورۀ جدید — ${validation.data.topic} — ${reference}`;
 
   const configured =
     Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) ||
@@ -214,7 +214,7 @@ export default async (req) => {
       ok: false,
       configured: false,
       message:
-        "سامانهٔ ثبت درخواست هنوز پیکربندی نشده است. لطفاً تلفنی با دفتر تماس بگیرید تا درخواست شما ثبت شود.",
+        "سامانۀ ثبت درخواست هنوز پیکربندی نشده است. لطفاً تلفنی با دفتر تماس بگیرید تا درخواست شما ثبت شود.",
     });
   }
 
