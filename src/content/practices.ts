@@ -46,7 +46,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "حضانت فرزند", article: "hezanat-va-molaghat-farzand" },
       { title: "ملاقات فرزند", article: "hezanat-va-molaghat-farzand" },
       { title: "اجرت‌المثل و نحله", article: "ojratol-mesl-va-nahle" },
-      { title: "نفقۀ ایام عده" },
+      { title: "نفقۀ ایام عده", article: "nafaqe-ayam-ede" },
     ],
   },
   {
@@ -57,11 +57,11 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "gharardad-va-motalebat",
     claims: [
       { title: "مطالبۀ وجه", article: "vojoh-motalebe-madarek-va-marahel" },
-      { title: "الزام به ایفای تعهد" },
+      { title: "الزام به ایفای تعهد", article: "elzam-be-ifaye-tahod" },
       { title: "فسخ و انفساخ قرارداد", article: "faskh-va-enfesakh-gharardad" },
       { title: "مطالبۀ خسارت" },
       { title: "وجه التزام و جریمۀ تأخیر" },
-      { title: "ابطال معامله" },
+      { title: "ابطال معامله", article: "ebtal-moamele" },
       { title: "مطالبۀ طلب و بدهی" },
     ],
   },
@@ -104,7 +104,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "chek-va-esnad",
     claims: [
       { title: "وصول چک برگشتی", article: "chek-bargashkhte-masir-haye-ghanooni" },
-      { title: "شکایت کیفری چک" },
+      { title: "شکایت کیفری چک", article: "shkayat-keyfari-chek" },
       { title: "مطالبۀ وجه سفته", article: "safte-motalebe-vojoh-va-vakhvast" },
       { title: "اخذ گواهی عدم پرداخت" },
       { title: "دعوای علیه ظهرنویس و ضامن" },
@@ -153,7 +153,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "دفاع در دادگاه" },
       { title: "کلاهبرداری و خیانت در امانت", article: "kelahbardari-ya-khiyanat-dar-amanat" },
       { title: "ضرب و جرح و تهدید", article: "zarb-jarh-va-tahdid-shkayat" },
-      { title: "اعتراض به رأی کیفری" },
+      { title: "اعتراض به رأی کیفری", article: "eteraz-be-ray-keyfari" },
     ],
   },
 ];
