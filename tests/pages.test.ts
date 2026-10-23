@@ -8,7 +8,7 @@ const root = process.cwd();
 const read = (file: string) => readFileSync(path.join(root, file), "utf8");
 const workflow = read(".github/workflows/pages.yml");
 
-describe("مسیر پایهی انتشار", () => {
+describe("مسیر پایۀ انتشار", () => {
   it("در حالت پیش‌فرض (دامنه/Netlify) پایه خالی است و مسیرها تغییر نمی‌کنند", () => {
     expect(BASE_PATH).toBe("");
     expect(withBase("/images/lawyer.jpg")).toBe("/images/lawyer.jpg");
@@ -19,7 +19,7 @@ describe("مسیر پایهی انتشار", () => {
     expect(pageHref("/services")).toBe("/services/");
   });
 
-  it("با پایهی /Leyla-abkeh/ نشانی‌ها و مسیرها درست تبدیل می‌شوند", () => {
+  it("با پایۀ /Leyla-abkeh/ نشانی‌ها و مسیرها درست تبدیل می‌شوند", () => {
     const base = "/Leyla-abkeh";
     expect(withBasePath("/images/lawyer.jpg", base)).toBe("/Leyla-abkeh/images/lawyer.jpg");
     expect(withBasePath("https://example.com/x", base)).toBe("https://example.com/x");
@@ -31,7 +31,7 @@ describe("مسیر پایهی انتشار", () => {
     expect(stripBaseFrom("/Leyla-abkeh", base)).toBe("/");
     expect(stripBaseFrom("/Leyla-abkeh/", base)).toBe("/");
     expect(stripBaseFrom("/Leyla-abkeh/services/khanevadeh/", base)).toBe("/services/khanevadeh/");
-    // مسیر بیرون از پایه دست‌نخورده می‌ماند (مثلاً ۴۰۴ خارج از دامنهی پروژه)
+    // مسیر بیرون از پایه دست‌نخورده می‌ماند (مثلاً ۴۰۴ خارج از دامنۀ پروژه)
     expect(stripBaseFrom("/other/path", base)).toBe("/other/path");
     // پیشوند ناقص نباید بریده شود
     expect(stripBaseFrom("/Leyla-abkeh-2/x", base)).toBe("/Leyla-abkeh-2/x");

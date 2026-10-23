@@ -39,7 +39,7 @@ export interface Article {
   relatedServices: string[];
   /**
    * پرسش‌های متداول، استخراج‌شده از بخش «سؤالات متداول» خود مقاله.
-   * مبنای FAQPage در دادهی ساختاریافته است و به موتورهای جست‌وجو و
+   * مبنای FAQPage در دادۀ ساختاریافته است و به موتورهای جست‌وجو و
    * دستیارهای هوش مصنوعی (GEO) پاسخ مستقیم می‌دهد.
    */
   faqs: { question: string; answer: string }[];
@@ -61,9 +61,9 @@ function unquote(value: string): string {
 const FRONT_MATTER_BOUNDARY = /^---\s*$/;
 
 /**
- * پارسر سادهی Front Matter (زیرمجموعهی YAML مورد استفادهی Decap CMS).
+ * پارسر سادۀ Front Matter (زیرمجموعۀ YAML مورد استفادۀ Decap CMS).
  * پشتیبانی: `key: value`، رشته‌های داخل کوتیشن، بولین و عدد.
- * (به‌جای وابستگی به js-yaml با نسخهی آسیب‌پذیر)
+ * (به‌جای وابستگی به js-yaml با نسخۀ آسیب‌پذیر)
  */
 export function parseFrontMatter(raw: string): {
   data: Record<string, FrontMatterValue>;
@@ -166,7 +166,7 @@ marked.use({
 
     /**
      * تصویر داخل متن با `<picture>` و نسخه‌های AVIF/WebP و دو اندازه.
-     * اگر مسیر تصویر نسخهی چندگانه نداشته باشد (مثلاً بارگذاری از پنل)، یک
+     * اگر مسیر تصویر نسخۀ چندگانه نداشته باشد (مثلاً بارگذاری از پنل)، یک
      * `img` ساده تولید می‌شود. `title` به‌عنوان زیرنویس (figcaption) نمایش داده می‌شود.
      */
     image({ href, title, text }: { href: string; title?: string | null; text: string }) {
@@ -218,7 +218,7 @@ function toStringArray(value: FrontMatterValue | undefined): string[] {
     .filter(Boolean);
 }
 
-/** حذف نشانه‌های Markdown از متن (برای پاسخ‌های دادهی ساختاریافته) */
+/** حذف نشانه‌های Markdown از متن (برای پاسخ‌های دادۀ ساختاریافته) */
 function stripMarkdown(value: string): string {
   return value
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
@@ -232,7 +232,7 @@ function stripMarkdown(value: string): string {
  * استخراج پرسش و پاسخ از بخش «سؤالات متداول» مقاله.
  * قاعده: هر `###` یک پرسش است و نخستین پاراگراف بعد از آن، پاسخ.
  * این کار باعث می‌شود FAQPage دقیقاً همان چیزی باشد که کاربر می‌بیند؛
- * اگر مقاله بخش پرسش‌ها نداشته باشد، آرایهی خالی برمی‌گردد.
+ * اگر مقاله بخش پرسش‌ها نداشته باشد، آرایۀ خالی برمی‌گردد.
  */
 export function extractFaqs(body: string): { question: string; answer: string }[] {
   const heading = /^##\s+سؤالات متداول\s*$/m.exec(body);
@@ -265,7 +265,7 @@ function slugFromPath(path: string): string {
     .trim();
 }
 
-/** فایل‌های Markdown موجود در پوشهی محتوا (زمان بیلد) */
+/** فایل‌های Markdown موجود در پوشۀ محتوا (زمان بیلد) */
 const rawModules = import.meta.glob("./blog/*.md", {
   query: "?raw",
   import: "default",
@@ -307,7 +307,7 @@ function buildArticle(path: string, raw: string): Article {
   };
 }
 
-/** همهی مقالات (شامل پیش‌نویس‌ها) — برای آزمون‌ها و پنل مدیریت */
+/** همۀ مقالات (شامل پیش‌نویس‌ها) — برای آزمون‌ها و پنل مدیریت */
 export const ALL_ARTICLES: Article[] = Object.entries(rawModules)
   .map(([path, raw]) => buildArticle(path, raw))
   .filter((article) => article.slug && article.title)

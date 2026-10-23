@@ -27,7 +27,7 @@ export default function NotFoundPage() {
               to="/"
               className="rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-6 py-3 text-sm font-bold text-ink-deep shadow-gold"
             >
-              صفحهی اصلی
+              صفحۀ اصلی
             </Link>
             <Link
               to="/services"

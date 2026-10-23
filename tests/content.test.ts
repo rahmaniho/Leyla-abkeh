@@ -34,7 +34,7 @@ describe("پارسر Front Matter", () => {
 });
 
 describe("مقالات", () => {
-  it("همهی مقالات منتشرشده فیلدهای ضروری دارند", () => {
+  it("همۀ مقالات منتشرشده فیلدهای ضروری دارند", () => {
     for (const article of ARTICLES) {
       expect(article.title.length).toBeGreaterThan(5);
       expect(article.description.length).toBeGreaterThan(20);
@@ -78,7 +78,7 @@ describe("خدمات", () => {
     for (const slug of slugs) expect(slug).toMatch(/^[a-z0-9-]+$/);
   });
 
-  it("هر خدمت محتوای کافی برای صفحهی مستقل دارد", () => {
+  it("هر خدمت محتوای کافی برای صفحۀ مستقل دارد", () => {
     for (const service of SERVICES) {
       expect(service.intro.length).toBeGreaterThanOrEqual(2);
       expect(service.sections.length).toBeGreaterThanOrEqual(3);
@@ -102,7 +102,7 @@ describe("خدمات", () => {
     }
   });
 
-  it("عنوان سئو و توضیح متا در محدودهی منطقی هستند", () => {
+  it("عنوان سئو و توضیح متا در محدودۀ منطقی هستند", () => {
     for (const service of SERVICES) {
       expect(service.seoTitle.length).toBeLessThanOrEqual(80);
       expect(service.metaDescription.length).toBeGreaterThan(80);
@@ -125,11 +125,11 @@ describe("محتوای حساس و تأییدنشده", () => {
     expect(STATS.every((stat) => stat.verified === false)).toBe(true);
   });
 
-  it("تعرفهی تأییدنشده به‌عنوان تأییدشده علامت نخورده است", () => {
+  it("تعرفۀ تأییدنشده به‌عنوان تأییدشده علامت نخورده است", () => {
     expect(consultationFee.verified).toBe(false);
   });
 
-  it("مبلغ تأییدنشدهی مشاوره در هیچ متن عمومی منتشر نمی‌شود", () => {
+  it("مبلغ تأییدنشدۀ مشاوره در هیچ متن عمومی منتشر نمی‌شود", () => {
     const feeInPlans = pricingPlans.find((plan) => plan.id === "consultation");
     expect(feeVerified).toBe(false);
     expect(feeInPlans?.priceLabel).not.toContain("۹۸۰");

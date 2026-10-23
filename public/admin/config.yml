@@ -9,7 +9,7 @@
 #   1. Identity → Enable Identity
 #   2. Identity → Services → Git Gateway → Enable
 #   3. Identity → Invite users (افزودن ایمیل مدیر)
-#   4. در صورت استفاده از دامنهی نهایی، مقدار site_url را به‌روزرسانی کنید.
+#   4. در صورت استفاده از دامنۀ نهایی، مقدار site_url را به‌روزرسانی کنید.
 # جزئیات: docs/CMS-SETUP.md
 
 backend:
@@ -67,13 +67,13 @@ collections:
       - label: متن مقاله
         name: body
         widget: markdown
-        hint: "برای افزودن تصویر، از دکمهی تصویر استفاده کنید؛ مسیر تصویرهای آماده: /images/articles/<نام>-1200.jpg. متن داخل فیلد «title» تصویر، به‌صورت زیرنویس نمایش داده می‌شود."
+        hint: "برای افزودن تصویر، از دکمۀ تصویر استفاده کنید؛ مسیر تصویرهای آماده: /images/articles/<نام>-1200.jpg. متن داخل فیلد «title» تصویر، به‌صورت زیرنویس نمایش داده می‌شود."
         buttons: [bold, italic, link, heading-two, heading-three, quote, code, bulleted-list, numbered-list]
       - label: تصویر شاخص
         name: cover
         widget: image
         required: false
-        hint: "نسبت ۱۶:۹ و اندازهی پیشنهادی ۱۲۰۰×۶۳۰ پیکسل. تصویر در فهرست مقالات، بالای مقاله و اشتراک‌گذاری شبکه‌های اجتماعی استفاده می‌شود."
+        hint: "نسبت ۱۶:۹ و اندازۀ پیشنهادی ۱۲۰۰×۶۳۰ پیکسل. تصویر در فهرست مقالات، بالای مقاله و اشتراک‌گذاری شبکه‌های اجتماعی استفاده می‌شود."
         media_library:
           config:
             multiple: false

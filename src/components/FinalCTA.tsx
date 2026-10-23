@@ -25,7 +25,7 @@ export default function FinalCTA() {
                 <span className="animate-ring absolute inline-flex h-full w-full rounded-full bg-gold-light" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
               </span>
-              مشاورهی حضوری، تلفنی و آنلاین
+              مشاورۀ حضوری، تلفنی و آنلاین
             </span>
           </Reveal>
 
@@ -66,7 +66,7 @@ export default function FinalCTA() {
                 <div className="rounded-2xl border border-white/15 bg-white/[0.06] px-5 py-4 text-[12.5px] leading-7 text-white/70">
                   <span className="flex items-start gap-2.5">
                     <PhoneIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
-                    شمارهی تلفن دفتر پس از تأیید نهایی منتشر می‌شود. برای اینکه با شما تماس گرفته
+                    شمارۀ تلفن دفتر پس از تأیید نهایی منتشر می‌شود. برای اینکه با شما تماس گرفته
                     شود، درخواست مشاوره را از فرم روبه‌رو ثبت کنید.
                   </span>
                 </div>

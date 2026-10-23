@@ -93,14 +93,12 @@ describe("پشتهی فونت", () => {
 describe("سازگاری نویسه‌ها و رسم‌الخط فارسی", () => {
   /**
    * قاعدۀ رسم‌الخط این پروژه (docs/PERSIAN-STYLE.md):
-   * کسره‌ی اضافه پس از «ه» با «هی» نوشته می‌شود، نه با همزه:
-   * «پروندهی»، «ماده‌ی»، «جلسه‌ی». شکل‌های «ۀ» (U+06C0) و «هٔ»
-   * (ه + U+0654) هم شکل عربی‌اند و هم در فونت‌های B ممکن است به فونت
-   * پشتیبان بیفتند؛ هر دو ممنوع‌اند.
+   * کسره‌ی اضافه پس از «ه» با «ۀ» (U+06C0) نوشته می‌شود:
+   * «پروندۀ»، «مادۀ»، «جلسۀ». شکل ترکیبی ه + U+0654 ممنوع است، چون
+   * فونت‌های B آن را ندارند و مرورگر ناچار به فونت پشتیبان می‌رود.
    */
   const FORBIDDEN: { name: string; char: string }[] = [
     { name: "همزۀ اضافه روی ه (U+0654)", char: "\u0647\u0654" },
-    { name: "ۀ (U+06C0)", char: "\u06C0" },
     { name: "ی عربی (U+064A)", char: "\u064A" },
     { name: "ک عربی (U+0643)", char: "\u0643" },
     { name: "ة عربی (U+0629)", char: "\u0629" },
@@ -145,15 +143,41 @@ describe("سازگاری نویسه‌ها و رسم‌الخط فارسی", () 
     }
   });
 
-  it("کسره‌ی اضافه با «هی» نوشته شده است، نه با همزه", () => {
+  it("کسره‌ی اضافه با «ۀ» (U+06C0) نوشته شده است", () => {
     const site = readFileSync(path.join(root, "src", "config", "site.ts"), "utf8");
-    expect(site).toContain("شمارهی پروانه");
+    expect(site).toContain("شمارۀ پروانه");
 
     const article = readFileSync(
       path.join(root, "src", "content", "blog", "mehrieh-motalebe-va-ijra.md"),
       "utf8"
     );
-    expect(article).toContain("پروندهی");
-    expect(article).toContain("مادهی");
+    expect(article).toContain("پروندۀ");
+    expect(article).toContain("مادۀ");
+    expect(article).not.toContain("پروندهی");
+  });
+
+  /**
+   * واژه‌هایی که خودشان به «هی» ختم می‌شوند و «ۀ» در آن‌ها غلط است.
+   * هر واژه‌ی تازه‌ای که پیدا شد باید همین‌جا بررسی و (اگر واقعاً «هی» است)
+   * به این فهرست افزوده شود؛ عمداً فهرست سپید است، نه سیاه.
+   */
+  /**
+   * پایان‌هایی که «هی» در آن‌ها بخشی از خودِ واژه است، نه کسره‌ی اضافه:
+   * گواهی/آگاهی/کوتاهی/همراهی/کارگاهی/شفاهی/نظرخواهی (اهی)،
+   * گزارش‌دهی/مقداردهی/بدهی (دهی)، منتهی (تهی).
+   */
+  const NOT_EZAFE = [/اهی$/, /دهی$/, /تهی$/];
+
+  it("جایی «هی» به‌عنوان کسره‌ی اضافه نمانده است", () => {
+    const offenders: string[] = [];
+    for (const file of textFiles) {
+      const content = readFileSync(path.join(root, file), "utf8");
+      for (const raw of content.match(/[\u0600-\u06FF\u200c]+/g) ?? []) {
+        if (!/هی$/.test(raw)) continue; // فقط واژه‌های پایانیافته با «هی»
+        if (NOT_EZAFE.some((suffix) => suffix.test(raw))) continue;
+        offenders.push(`${file}: ${raw}`);
+      }
+    }
+    expect(offenders, `شکل «هی» باید «ۀ» شود: ${offenders.slice(0, 10).join(" | ")}`).toEqual([]);
   });
 });

@@ -43,7 +43,7 @@ export default function Services({ limit }: { limit?: number }) {
         <SectionHeader
           eyebrow="حوزه‌های فعالیت"
           title="در هر مسیر حقوقی، همراه شما هستم"
-          description="از خانواده تا تجارت؛ برای هر مسئلهی حقوقی، مسیر دقیق، شفاف و قابل اجرا پیشنهاد می‌شود."
+          description="از خانواده تا تجارت؛ برای هر مسئلۀ حقوقی، مسیر دقیق، شفاف و قابل اجرا پیشنهاد می‌شود."
           titleId="services-title"
         />
 
@@ -113,7 +113,7 @@ export default function Services({ limit }: { limit?: number }) {
               to="/services"
               className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-white/70 px-6 py-3 text-sm font-bold text-ink transition-colors hover:border-gold hover:text-gold-deep"
             >
-              مشاهدهی همهی حوزه‌های فعالیت
+              مشاهدۀ همۀ حوزه‌های فعالیت
             </Link>
           </div>
         </Reveal>

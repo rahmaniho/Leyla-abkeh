@@ -6,17 +6,17 @@ const FEATURES = [
   {
     icon: ScaleIcon,
     title: "تخصص حقوقی عمیق",
-    desc: "پایه یک دادگستری با تمرکز ویژه بر دعاوی خانواده، کیفری و ملکی؛ ترکیب دانش روز حقوقی با تجربهی عملیِ واقعی.",
+    desc: "پایه یک دادگستری با تمرکز ویژه بر دعاوی خانواده، کیفری و ملکی؛ ترکیب دانش روز حقوقی با تجربۀ عملیِ واقعی.",
   },
   {
     icon: EyeIcon,
     title: "صداقت و شفافیت",
-    desc: "ارزیابی واقع‌بینانهی پرونده در همان نخستین جلسه؛ هیچ وعدهی غیرواقعی نمی‌دهم و مسیر پیشِ رو را شفاف ترسیم می‌کنم.",
+    desc: "ارزیابی واقع‌بینانۀ پرونده در همان نخستین جلسه؛ هیچ وعدۀ غیرواقعی نمی‌دهم و مسیر پیشِ رو را شفاف ترسیم می‌کنم.",
   },
   {
     icon: LockIcon,
     title: "رازداری حرفه‌ای",
-    desc: "اطلاعات شما نزد وکیل، راز حرفه‌ای محسوب می‌شود؛ هیچ جزئیاتی بدون اجازهی شما در هیچ‌جا مطرح نخواهد شد.",
+    desc: "اطلاعات شما نزد وکیل، راز حرفه‌ای محسوب می‌شود؛ هیچ جزئیاتی بدون اجازۀ شما در هیچ‌جا مطرح نخواهد شد.",
   },
   {
     icon: ZapIcon,
@@ -39,7 +39,7 @@ export default function Features() {
           {FEATURES.map((feature, i) => (
             <Reveal key={feature.title} delay={i * 130}>
               <article className="group relative h-full overflow-hidden rounded-3xl border border-white/70 bg-white/55 p-7 shadow-soft backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:border-gold/45 hover:shadow-deep">
-                {/* هالهی طلایی هنگام هاور */}
+                {/* هالۀ طلایی هنگام هاور */}
                 <div
                   className="pointer-events-none absolute -top-16 -left-16 h-40 w-40 rounded-full bg-gold/15 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
                   aria-hidden="true"
