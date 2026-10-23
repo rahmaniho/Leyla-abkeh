@@ -135,9 +135,9 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     claims: [
       { title: "اختلاف شرکا و سهامداران", article: "ekhtelaf-shoraka-va-sahamdaran" },
       { title: "انحلال و تصفیۀ شرکت", article: "enhelal-va-tasfiye-sherkat" },
-      { title: "بازبینی و تنظیم قرارداد تجاری" },
-      { title: "مطالبات تجاری شرکت" },
-      { title: "تغییرات و ثبت شرکت" },
+      { title: "بازبینی و تنظیم قرارداد تجاری", article: "bazbini-va-tanzim-gharardad-tejari" },
+      { title: "مطالبات تجاری شرکت", article: "motalebat-tejari-sherkat" },
+      { title: "تغییرات و ثبت شرکت", article: "taghirat-va-sabt-sherkat" },
       { title: "دعاوی علیه مدیرعامل", article: "davaye-aliye-modir-amel" },
     ],
   },
@@ -149,8 +149,8 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "keyfari",
     claims: [
       { title: "تنظیم شکواییه", article: "tanzim-shekvaiye" },
-      { title: "دفاع در تحقیقات مقدماتی" },
-      { title: "دفاع در دادگاه" },
+      { title: "دفاع در تحقیقات مقدماتی", article: "dafaa-dar-tahghighat-moghaddamati" },
+      { title: "دفاع در دادگاه", article: "dafaa-dar-dadgah" },
       { title: "کلاهبرداری و خیانت در امانت", article: "kelahbardari-ya-khiyanat-dar-amanat" },
       { title: "ضرب و جرح و تهدید", article: "zarb-jarh-va-tahdid-shkayat" },
       { title: "اعتراض به رأی کیفری", article: "eteraz-be-ray-keyfari" },
