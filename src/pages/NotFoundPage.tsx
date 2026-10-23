@@ -1,6 +1,7 @@
 import PageHero from "../components/PageHero";
 import { Link } from "../lib/router";
 import { SERVICES, servicePath } from "../content/services";
+import { ARTICLES, articlePath } from "../content/articles";
 import type { PageMeta } from "../lib/seo";
 
 export const meta: PageMeta = {
@@ -12,6 +13,8 @@ export const meta: PageMeta = {
 };
 
 export default function NotFoundPage() {
+  const recent = ARTICLES.slice(0, 3);
+
   return (
     <>
       <PageHero
@@ -42,6 +45,27 @@ export default function NotFoundPage() {
               تماس با دفتر
             </Link>
           </div>
+
+          <h2 className="mt-10 text-[15px] font-extrabold text-ink">تازه‌ترین مقاله‌ها</h2>
+          <ul className="mt-4 space-y-2">
+            {recent.map((article) => (
+              <li key={article.slug}>
+                <Link
+                  to={articlePath(article.slug)}
+                  className="block rounded-xl border border-ink/10 bg-white/70 px-4 py-3 text-[13.5px] font-semibold text-ink/80 transition-colors hover:border-gold/40 hover:text-gold-deep"
+                >
+                  {article.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[12.5px] text-ink/60">
+            یا در{" "}
+            <Link to="/articles" className="font-bold text-gold-deep underline underline-offset-4">
+              فهرست مقالات
+            </Link>{" "}
+            جست‌وجو کنید.
+          </p>
 
           <h2 className="mt-10 text-[15px] font-extrabold text-ink">حوزه‌های فعالیت</h2>
           <ul className="mt-4 grid gap-2 sm:grid-cols-2">

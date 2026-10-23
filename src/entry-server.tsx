@@ -2,6 +2,8 @@ import { renderToString } from "react-dom/server";
 import App from "./App";
 import { renderHeadTags } from "./lib/seo";
 import { buildLlmsFile, indexablePaths, resolveRoute, sitemapEntries } from "./routes";
+import { buildRssFeed } from "./lib/feed";
+import { siteConfig } from "./config/site";
 import { SITE_URL } from "./config/site";
 
 export interface RenderedPage {
@@ -22,6 +24,14 @@ export function render(path: string): RenderedPage {
     title: route.meta.title,
     noindex: Boolean(route.meta.noindex),
   };
+}
+
+/** فید RSS آمادۀ نوشتن در ریشۀ خروجی */
+export function buildFeedFile(siteUrl: string): string {
+  return buildRssFeed(siteUrl, {
+    name: siteConfig.site.name,
+    description: siteConfig.site.defaultDescription,
+  });
 }
 
 export { buildLlmsFile, indexablePaths, resolveRoute, sitemapEntries, SITE_URL };

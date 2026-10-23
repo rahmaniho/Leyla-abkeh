@@ -31,6 +31,25 @@ export default defineConfig({
     target: "es2020",
     sourcemap: false,
     cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        /**
+         * جداکردن کتابخانه‌های پایه از کد سایت:
+         * مرورگر نسخۀ هش‌دار و تغییرناپذیر هر تکه را جدا کش می‌کند؛ با
+         * انتشار مقالۀ تازه فقط تکهٔ کوچک محتوا دوباره دانلود می‌شود، نه
+         * کل جاوااسکریپت.
+         */
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react") || id.includes("scheduler")) return "react";
+            if (id.includes("marked")) return "markdown";
+            return "vendor";
+          }
+          if (id.includes("/src/content/blog/")) return "articles-content";
+          return undefined;
+        },
+      },
+    },
   },
   // سرورهای توسعه/پیش‌نمایش باید دامنهی پروکسی محیط اجرا را بپذیرند
   // (این تنظیم روی خروجی تولید و Netlify اثری ندارد)

@@ -59,11 +59,16 @@ function buildSitemap(entries, siteUrl) {
       const loc = entry.path === "/" ? `${siteUrl}/` : `${siteUrl}${entry.path}/`;
       const lastmod = entry.lastmod ? `\n    <lastmod>${escapeXml(entry.lastmod)}</lastmod>` : "";
       const priority = entry.path === "/" ? "1.0" : entry.priority ?? "0.8";
-      return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod}\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      const image = entry.image
+        ? `\n    <image:image>\n      <image:loc>${escapeXml(`${siteUrl}${entry.image}`)}</image:loc>\n${
+            entry.imageAlt ? `      <image:title>${escapeXml(entry.imageAlt)}</image:title>\n` : ""
+          }    </image:image>`
+        : "";
+      return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod}${image}\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
     })
     .join("\n");
 
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 }
 
 function buildRobots(siteUrl) {
@@ -79,7 +84,8 @@ function buildRobots(siteUrl) {
 }
 
 async function main() {
-  const { render, indexablePaths, sitemapEntries, buildLlmsFile, SITE_URL } = await import(ssrEntry);
+  const { render, indexablePaths, sitemapEntries, buildLlmsFile, buildFeedFile, SITE_URL } =
+    await import(ssrEntry);
   const template = await readTemplate();
 
   const siteUrl = (process.env.VITE_SITE_URL || process.env.URL || SITE_URL).replace(/\/+$/, "");
@@ -107,6 +113,10 @@ async function main() {
   await writeFile(path.join(distDir, "sitemap.xml"), buildSitemap(entries, siteUrl), "utf8");
   await writeFile(path.join(distDir, "robots.txt"), buildRobots(siteUrl), "utf8");
   console.log(`  ✓ sitemap.xml (${entries.length} آدرس) و robots.txt`);
+
+  // feed.xml: خوراک RSS مقالات برای خبرخوان‌ها
+  await writeFile(path.join(distDir, "feed.xml"), buildFeedFile(siteUrl), "utf8");
+  console.log("  ✓ feed.xml (خوراک RSS مقالات)");
 
   // llms.txt: معرفی سایت و فهرست صفحه‌ها برای دستیارهای هوش مصنوعی (GEO)
   const llms = buildLlmsFile().replaceAll(SITE_URL, siteUrl);

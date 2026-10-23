@@ -12,8 +12,9 @@ import PrivacyPage, { meta as privacyMeta } from "./pages/PrivacyPage";
 import NotFoundPage, { meta as notFoundMeta } from "./pages/NotFoundPage";
 import { ARTICLES, articlePath, getArticle } from "./content/articles";
 import { buildLlmsTxt } from "./lib/llms";
-import { SITE_LAST_UPDATED, SITE_URL } from "./config/site";
+import { SITE_LAST_UPDATED, SITE_URL, siteConfig } from "./config/site";
 import { SERVICES, getService, servicePath } from "./content/services";
+import { COVER_SIZES, coverImage } from "./lib/images";
 import {
   absoluteUrl,
   buildBreadcrumbSchema,
@@ -125,12 +126,21 @@ function articleMeta(slug: string): PageMeta | null {
     dateModified: article.lastReviewed ?? article.publishDate,
     inLanguage: "fa-IR",
     mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl(path) },
-    author: { "@type": "Organization", name: article.author, url: pageUrl("/about") },
+    author: {
+      "@type": "Person",
+      name: siteConfig.lawyer.name,
+      jobTitle: siteConfig.lawyer.jobTitle,
+      url: pageUrl("/about"),
+      worksFor: { "@id": `${pageUrl("/")}#attorney` },
+    },
+    ...(siteConfig.lawyer.licenseNumber
+      ? { license: siteConfig.lawyer.licenseNumber }
+      : {}),
     publisher: { "@id": `${pageUrl("/")}#attorney` },
     isPartOf: { "@type": "Blog", "@id": `${pageUrl("/articles")}#blog`, name: "مقالات حقوقی" },
     articleSection: article.tags[0] ?? "حقوق",
     ...(article.tags.length > 0 ? { keywords: article.tags.join(", ") } : {}),
-    wordCount: article.body.trim().split(/\s+/).filter(Boolean).length,
+    wordCount: article.wordCount,
     timeRequired: `PT${article.readingMinutes}M`,
     isAccessibleForFree: true,
     ...(relatedServices.length > 0
@@ -151,11 +161,25 @@ function articleMeta(slug: string): PageMeta | null {
       : { image: absoluteUrl("/images/og-image.jpg") }),
   };
 
+  /* پیش‌بارگذاری تصویر شاخص: بزرگ‌ترین عنصر بالای صفحۀ مقاله */
+  const cover = article.cover ? coverImage(article.cover) : null;
+  const avifSource = cover?.sources.find((source) => source.type === "image/avif");
+
   return {
     title: withBrand(article.seoTitle ?? article.title),
     description,
     path,
     type: "article",
+    ...(cover
+      ? {
+          preloadImage: {
+            href: article.cover?.replace(/\.jpe?g$/i, ".avif") ?? cover.src,
+            type: "image/avif",
+            srcSet: avifSource?.srcSet,
+            sizes: COVER_SIZES,
+          },
+        }
+      : {}),
     publishedTime: article.publishDate,
     modifiedTime: article.lastReviewed ?? article.publishDate,
     breadcrumbs,
@@ -216,6 +240,9 @@ export interface SitemapEntry {
   path: string;
   lastmod: string;
   priority?: string;
+  /** تصویر شاخص صفحه، برای بخش image در نقشۀ سایت */
+  image?: string;
+  imageAlt?: string;
 }
 
 /** ورودی‌های sitemap با تاریخ آخرین تغییر محتوا */
@@ -235,6 +262,7 @@ export function sitemapEntries(): SitemapEntry[] {
       path: articlePath(article.slug),
       lastmod: (article.lastReviewed ?? article.publishDate).slice(0, 10),
       priority: "0.6",
+      ...(article.cover ? { image: article.cover, imageAlt: article.coverAlt } : {}),
     })),
   ];
 }

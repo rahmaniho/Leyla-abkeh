@@ -22,6 +22,17 @@ export interface PageMeta {
   breadcrumbs?: BreadcrumbItem[];
   /** دادۀ ساختاریافتۀ اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
   jsonLd?: JsonLd[];
+  /**
+   * تصویر بزرگ بالای صفحه (تصویر شاخص) برای `preload`.
+   * پیش‌بارگذاری، زمان نمایش بزرگ‌ترین عنصر صفحه (LCP) را کوتاه می‌کند؛
+   * `type` و `imagesrcset` باعث می‌شود مرورگر نسخۀ پشتیبانی‌شده را انتخاب کند.
+   */
+  preloadImage?: {
+    href: string;
+    type?: string;
+    srcSet?: string;
+    sizes?: string;
+  };
 }
 
 export type JsonLd = Record<string, unknown> & { "@context": string; "@type": string | string[] };
@@ -233,7 +244,27 @@ export function renderHeadTags(meta: PageMeta): string {
     `<meta name="twitter:title" content="${escapeAttribute(meta.title)}" />`,
     `<meta name="twitter:description" content="${escapeAttribute(meta.description)}" />`,
     `<meta name="twitter:image" content="${escapeAttribute(image)}" />`,
+    `<link rel="alternate" type="application/rss+xml" title="مقالات حقوقی لیلا آبکه" href="${escapeAttribute(`${SITE_URL}/feed.xml`)}" />`,
   ];
+
+  if (meta.preloadImage) {
+    const { href, type, srcSet, sizes } = meta.preloadImage;
+    /* نشانی‌ها در `imagesrcset` هم مطلق می‌شوند تا مستقل از مسیر صفحه معتبر بمانند */
+    const absoluteSrcSet = srcSet
+      ?.split(",")
+      .map((candidate) => {
+        const [url, descriptor] = candidate.trim().split(/\s+/, 2);
+        return `${absoluteUrl(url)}${descriptor ? ` ${descriptor}` : ""}`;
+      })
+      .join(", ");
+    tags.push(
+      `<link rel="preload" as="image" href="${escapeAttribute(absoluteUrl(href))}"${
+        type ? ` type="${escapeAttribute(type)}"` : ""
+      }${absoluteSrcSet ? ` imagesrcset="${escapeAttribute(absoluteSrcSet)}"` : ""}${
+        sizes ? ` imagesizes="${escapeAttribute(sizes)}"` : ""
+      } />`
+    );
+  }
 
   if (meta.publishedTime) {
     tags.push(`<meta property="article:published_time" content="${meta.publishedTime}" />`);
