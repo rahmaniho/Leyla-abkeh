@@ -16,7 +16,7 @@ import process from "node:process";
 const root = path.resolve(process.cwd(), "dist");
 const port = Number(process.env.PORT ?? 4173);
 const host = process.env.HOST ?? "0.0.0.0";
-/** مسیر پایهٔ اختیاری؛ خالی یعنی ریشه (Netlify) */
+/** مسیر پایۀ اختیاری؛ خالی یعنی ریشه (Netlify) */
 const base = (process.env.PREVIEW_BASE ?? "").replace(/\/+$/, "");
 
 const MIME = {
@@ -62,7 +62,7 @@ async function resolveFile(urlPath) {
   }
 }
 
-/** آیا مسیر یک پوشهٔ دارای index.html است؟ (برای هدایت ۳۰۱ مانند Netlify) */
+/** آیا مسیر یک پوشۀ دارای index.html است؟ (برای هدایت ۳۰۱ مانند Netlify) */
 async function isDirectoryWithIndex(urlPath) {
   const safePath = path.normalize(decodeURIComponent(urlPath)).replace(/^(\.\.[/\\])+/, "");
   const candidate = path.join(root, safePath);

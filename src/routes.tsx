@@ -11,7 +11,8 @@ import ArticlePage from "./pages/ArticlePage";
 import PrivacyPage, { meta as privacyMeta } from "./pages/PrivacyPage";
 import NotFoundPage, { meta as notFoundMeta } from "./pages/NotFoundPage";
 import { ARTICLES, articlePath, getArticle } from "./content/articles";
-import { SITE_LAST_UPDATED } from "./config/site";
+import { buildLlmsTxt } from "./lib/llms";
+import { SITE_LAST_UPDATED, SITE_URL } from "./config/site";
 import { SERVICES, getService, servicePath } from "./content/services";
 import {
   absoluteUrl,
@@ -103,6 +104,52 @@ function articleMeta(slug: string): PageMeta | null {
   ];
 
   const description = article.metaDescription ?? toMetaDescription(article.description);
+  const relatedServices = SERVICES.filter((service) => article.relatedServices.includes(service.slug));
+
+  /*
+   * دادۀ ساختاریافتۀ مقاله، برای سئوی کلاسیک و برای موتورهای پاسخ‌دهنده (GEO):
+   *  • `articleSection`/`keywords` به موتور کمک می‌کند مقاله را به موضوع درست
+   *    نسبت دهد؛
+   *  • `about` مقاله را به همان موجودیت خدمتِ سایت وصل می‌کند (نه یک متن
+   *    بی‌مرجع)؛
+   *  • `speakable` بخش‌های قابل خواندن را مشخص می‌کند؛
+   *  • `FAQPage` از بخش «سؤالات متداول» همین متن ساخته می‌شود، بنابراین
+   *    پرسش‌های مارک‌آپ دقیقاً همان چیزی است که کاربر می‌بیند.
+   */
+  const articleSchema: JsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description,
+    datePublished: article.publishDate,
+    dateModified: article.lastReviewed ?? article.publishDate,
+    inLanguage: "fa-IR",
+    mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl(path) },
+    author: { "@type": "Organization", name: article.author, url: pageUrl("/about") },
+    publisher: { "@id": `${pageUrl("/")}#attorney` },
+    isPartOf: { "@type": "Blog", "@id": `${pageUrl("/articles")}#blog`, name: "مقالات حقوقی" },
+    articleSection: article.tags[0] ?? "حقوق",
+    ...(article.tags.length > 0 ? { keywords: article.tags.join(", ") } : {}),
+    wordCount: article.body.trim().split(/\s+/).filter(Boolean).length,
+    timeRequired: `PT${article.readingMinutes}M`,
+    isAccessibleForFree: true,
+    ...(relatedServices.length > 0
+      ? {
+          about: relatedServices.map((service) => ({
+            "@type": "Service",
+            name: service.title,
+            url: pageUrl(servicePath(service.slug)),
+          })),
+        }
+      : {}),
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [".article-prose h2", ".article-prose p"],
+    },
+    ...(article.cover
+      ? { image: { "@type": "ImageObject", url: absoluteUrl(article.cover), width: 1200, height: 630 } }
+      : { image: absoluteUrl("/images/og-image.jpg") }),
+  };
 
   return {
     title: withBrand(article.seoTitle ?? article.title),
@@ -115,21 +162,8 @@ function articleMeta(slug: string): PageMeta | null {
     ogImage: article.cover,
     ogImageAlt: article.coverAlt,
     jsonLd: [
-      {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        headline: article.title,
-        description,
-        datePublished: article.publishDate,
-        dateModified: article.lastReviewed ?? article.publishDate,
-        inLanguage: "fa-IR",
-        mainEntityOfPage: { "@type": "WebPage", "@id": pageUrl(path) },
-        author: { "@type": "Organization", name: article.author },
-        publisher: { "@id": `${pageUrl("/")}#attorney` },
-        ...(article.cover
-          ? { image: absoluteUrl(article.cover) }
-          : { image: absoluteUrl("/images/og-image.jpg") }),
-      },
+      articleSchema,
+      ...(article.faqs.length > 0 ? [buildFaqSchema(article.faqs)] : []),
       buildBreadcrumbSchema(breadcrumbs),
     ],
   };
@@ -203,6 +237,19 @@ export function sitemapEntries(): SitemapEntry[] {
       priority: "0.6",
     })),
   ];
+}
+
+/**
+ * متن `llms.txt` برای دستیارهای هوش مصنوعی.
+ * عنوان و توضیح هر صفحه از همان متای همان صفحه گرفته می‌شود تا با تغییر
+ * محتوا، این فایل هم خودکار به‌روز شود.
+ */
+export function buildLlmsFile(): string {
+  const entries = indexablePaths().map((path) => {
+    const meta = resolveRoute(path).meta;
+    return { path, title: meta.title, description: meta.description };
+  });
+  return buildLlmsTxt(entries, SITE_URL);
 }
 
 export { STATIC_ROUTES };

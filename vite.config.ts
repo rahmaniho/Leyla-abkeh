@@ -6,8 +6,8 @@ import { defineConfig } from "vite";
 const rootDir = path.resolve(import.meta.dirname ?? ".");
 
 /**
- * مسیر پایهٔ انتشار.
- * - Netlify / دامنهٔ اختصاصی: خالی → "/"
+ * مسیر پایۀ انتشار.
+ * - Netlify / دامنۀ اختصاصی: خالی → "/"
  * - GitHub Pages برای مخزن پروژه‌ای: `VITE_BASE_PATH=/Leyla-abkeh/`
  */
 function normalizeBase(value: string | undefined): string {
@@ -32,7 +32,7 @@ export default defineConfig({
     sourcemap: false,
     cssCodeSplit: false,
   },
-  // سرورهای توسعه/پیش‌نمایش باید دامنهٔ پروکسی محیط اجرا را بپذیرند
+  // سرورهای توسعه/پیش‌نمایش باید دامنۀ پروکسی محیط اجرا را بپذیرند
   // (این تنظیم روی خروجی تولید و Netlify اثری ندارد)
   server: {
     port: 5173,

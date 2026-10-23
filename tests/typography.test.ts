@@ -7,11 +7,11 @@ import { describe, expect, it } from "vitest";
  * ------------------------------------------------------------------
  * این آزمون‌ها از سه چیز محافظت می‌کنند:
  * ۱. فایل‌های فونت واقعاً در مخزن و قابل سرو باشند (self-host، بدون CDN).
- * ۲. پشتهٔ فونت درست تعریف شده باشد: متن با نازنین، تیتر با تیتر،
+ * ۲. پشتۀ فونت درست تعریف شده باشد: متن با نازنین، تیتر با تیتر،
  *    و ارقام (فارسی/عربی/لاتین) با فونت تیتر.
- * ۳. همزهٔ اضافه (ه + U+0654) دوباره به متن‌ها برنگردد؛ فونت‌های B این
+ * ۳. همزۀ اضافه (ه + U+0654) دوباره به متن‌ها برنگردد؛ فونت‌های B این
  *    نویسه را ندارند و مرورگر مجبور می‌شود آن را از فونت دیگری بردارد که
- *    نتیجه‌اش همزهٔ جدا‌افتاده و ناهم‌خوان است. شکل درستِ ذخیره‌شده «ۀ» است.
+ *    نتیجه‌اش همزۀ جدا‌افتاده و ناهم‌خوان است. شکل درستِ ذخیره‌شده «ۀ» است.
  */
 
 const root = process.cwd();
@@ -19,7 +19,7 @@ const publicFile = (urlPath: string) => path.join(root, "public", urlPath.replac
 const css = readFileSync(path.join(root, "src", "index.css"), "utf8");
 const html = readFileSync(path.join(root, "index.html"), "utf8");
 
-/** طول دادهٔ فونت را از سربرگ WOFF/WOFF2 می‌خواند */
+/** طول دادۀ فونت را از سربرگ WOFF/WOFF2 می‌خواند */
 function woffSignature(file: string): string {
   const buffer = readFileSync(file);
   return buffer.toString("ascii", 0, 4);
@@ -48,7 +48,7 @@ describe("فونت‌های محلی", () => {
   });
 });
 
-describe("پشتهٔ فونت", () => {
+describe("پشتۀ فونت", () => {
   it("B Nazanin برای متن و B Titr برای تیترها تعریف شده است", () => {
     expect(css).toMatch(/font-family:\s*"B Nazanin"/);
     expect(css).toMatch(/font-family:\s*"B Titr"/);
@@ -70,8 +70,8 @@ describe("پشتهٔ فونت", () => {
   });
 
   /**
-   * B Nazanin در یک em یکسان کوچک‌تر از بقیهٔ فونت‌ها کشیده می‌شود
-   * (ارتفاع بدنهٔ حروف ≈ ۰٫۵۸۶em در برابر ۰٫۶۷۴em وازیرمتن).
+   * B Nazanin در یک em یکسان کوچک‌تر از بقیۀ فونت‌ها کشیده می‌شود
+   * (ارتفاع بدنۀ حروف ≈ ۰٫۵۸۶em در برابر ۰٫۶۷۴em وازیرمتن).
    * جبران آن با size-adjust انجام می‌شود، نه با تغییر ۱۵۰ کلاس اندازه.
    */
   it("B Nazanin با ضریب ۱۱۶٪ (دو پله بزرگ‌تر) رندر می‌شود", () => {
@@ -79,7 +79,7 @@ describe("پشتهٔ فونت", () => {
     expect(nazanin).toMatch(/size-adjust:\s*116%/);
   });
 
-  it("تیترها و ارقام اندازهٔ خودشان را نگه می‌دارند", () => {
+  it("تیترها و ارقام اندازۀ خودشان را نگه می‌دارند", () => {
     const titr = css.slice(css.indexOf('font-family: "B Titr"'), css.indexOf('font-family: "Vazirmatn"'));
     expect(titr).not.toMatch(/size-adjust/);
   });
@@ -91,7 +91,7 @@ describe("پشتهٔ فونت", () => {
 });
 
 describe("سازگاری نویسه‌ها با فونت", () => {
-  /** همهٔ فایل‌های متنی پروژه (بدون اسناد تاریخی) */
+  /** همۀ فایل‌های متنی پروژه (بدون اسناد تاریخی) */
   const textFiles = (() => {
     const out: string[] = [];
     const walk = (dir: string) => {
@@ -106,7 +106,7 @@ describe("سازگاری نویسه‌ها با فونت", () => {
     return out;
   })();
 
-  it(`هیچ‌کدام از ${textFiles.length} فایل متنی همزهٔ اضافهٔ ترکیبی (U+0654) ندارد`, () => {
+  it(`هیچ‌کدام از ${textFiles.length} فایل متنی همزۀ اضافۀ ترکیبی (U+0654) ندارد`, () => {
     const offenders = textFiles.filter((file) => {
       const content = readFileSync(path.join(root, file), "utf8");
       return content.includes("\u0647\u0654") || content.includes("\u06d5\u0654");

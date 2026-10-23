@@ -3,7 +3,7 @@ import Reveal from "../components/Reveal";
 import FinalCTA from "../components/FinalCTA";
 import { ARTICLES, articlePath } from "../content/articles";
 import { formatDateFa, toFaDigits } from "../lib/format";
-import { buildBreadcrumbSchema, type PageMeta } from "../lib/seo";
+import { buildBreadcrumbSchema, pageUrl, type PageMeta } from "../lib/seo";
 import { Link } from "../lib/router";
 import { CARD_SIZES, COVER_HEIGHT, COVER_RATIO, COVER_WIDTH, coverImage } from "../lib/images";
 
@@ -26,6 +26,33 @@ export const meta: PageMeta = {
       "@type": "CollectionPage",
       name: "مقالات حقوقی",
       inLanguage: "fa-IR",
+      isPartOf: { "@id": `${pageUrl("/articles")}#blog` },
+    },
+    /*
+     * موجودیت Blog و فهرست مقالات:
+     * مقاله‌ها با `isPartOf` به همین گره ارجاع می‌دهند. ItemList هم به
+     * موتورهای جست‌وجو و دستیارهای هوش مصنوعی می‌گوید این صفحه یک فهرست
+     * مرتب است، نه چند لینک پراکنده.
+     */
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "@id": `${pageUrl("/articles")}#blog`,
+      name: "مقالات حقوقی دفتر وکالت لیلا آبکه",
+      inLanguage: "fa-IR",
+      publisher: { "@id": `${pageUrl("/")}#attorney` },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "فهرست مقالات حقوقی",
+      numberOfItems: ARTICLES.length,
+      itemListElement: ARTICLES.map((article, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: pageUrl(articlePath(article.slug)),
+        name: article.title,
+      })),
     },
   ],
 };

@@ -51,7 +51,7 @@ Object.defineProperty(globalThis, "IntersectionObserver", {
   value: IntersectionObserverMock,
 });
 
-/** ابزار آزمون: شبیه‌سازی ورود/خروج همهٔ بخش‌های مشاهده‌شده از قاب دید */
+/** ابزار آزمون: شبیه‌سازی ورود/خروج همۀ بخش‌های مشاهده‌شده از قاب دید */
 Object.defineProperty(globalThis, "__intersect", {
   writable: true,
   configurable: true,

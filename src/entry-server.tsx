@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server";
 import App from "./App";
 import { renderHeadTags } from "./lib/seo";
-import { indexablePaths, resolveRoute, sitemapEntries } from "./routes";
+import { buildLlmsFile, indexablePaths, resolveRoute, sitemapEntries } from "./routes";
 import { SITE_URL } from "./config/site";
 
 export interface RenderedPage {
@@ -24,4 +24,4 @@ export function render(path: string): RenderedPage {
   };
 }
 
-export { indexablePaths, resolveRoute, sitemapEntries, SITE_URL };
+export { buildLlmsFile, indexablePaths, resolveRoute, sitemapEntries, SITE_URL };

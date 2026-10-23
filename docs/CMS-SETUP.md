@@ -8,7 +8,7 @@
 1. Netlify → Site configuration → **Identity** → Enable Identity.
 2. Identity → **Services** → Git Gateway → Enable.
 3. Identity → **Invite users** → ایمیل مدیر را وارد کنید و دعوت را بپذیرید.
-4. در `public/admin/config.yml` مقدار `site_url` و `display_url` را با دامنهٔ نهایی جایگزین کنید.
+4. در `public/admin/config.yml` مقدار `site_url` و `display_url` را با دامنۀ نهایی جایگزین کنید.
 
 پس از این مراحل: ورود به `/admin/` → ورود با ایمیل/رمز → ویرایش محتوا.
 
@@ -19,13 +19,13 @@
 
 | مورد | مقدار | بررسی |
 | --- | --- | --- |
-| پوشهٔ مقالات | `src/content/blog` | همان پوشه‌ای که `src/content/articles.ts` با `import.meta.glob` می‌خواند |
+| پوشۀ مقالات | `src/content/blog` | همان پوشه‌ای که `src/content/articles.ts` با `import.meta.glob` می‌خواند |
 | مسیر تصاویر | `public/uploads` | Vite آن را به `dist/uploads` کپی می‌کند و با `/uploads/...` سرو می‌شود |
 | نشانی عمومی تصویر | `/uploads` | مطابق `public_folder` |
 | فرمت | Markdown با Front Matter | با پارسر داخلی (`parseFrontMatter`) خوانده می‌شود |
 | نشانی مقاله | `/articles/<slug>` | از فیلد `slug` یا نام فایل |
 
-> **مهم:** اگر پوشهٔ محتوا یا مسیر تصاویر را تغییر دادید، باید هم `config.yml` و هم
+> **مهم:** اگر پوشۀ محتوا یا مسیر تصاویر را تغییر دادید، باید هم `config.yml` و هم
 > `src/content/articles.ts` (برای محتوا) یا `vite.config.ts` (برای تصاویر) هم‌زمان به‌روزرسانی شوند.
 
 ## ۳. فیلدهای هر مقاله
@@ -49,7 +49,7 @@
 ## ۴. گردش‌کار انتشار
 
 `publish_mode: editorial_workflow` فعال است: پیش‌نویس → «در حال بازبینی» → انتشار.
-هر انتشار یک کامیت در شاخهٔ `main` ایجاد می‌کند و Netlify به‌طور خودکار بیلد و deploy می‌کند.
+هر انتشار یک کامیت در شاخۀ `main` ایجاد می‌کند و Netlify به‌طور خودکار بیلد و deploy می‌کند.
 تا پایان بیلد، تغییرات در سایت دیده نمی‌شوند (معمولاً کمتر از دو دقیقه).
 
 ## ۵. محدودیت‌ها و نکات
