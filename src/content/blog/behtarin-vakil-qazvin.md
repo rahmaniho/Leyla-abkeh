@@ -156,7 +156,7 @@ draft: false
 - [الزام به تنظیم سند رسمی](/articles/elzam-be-tanzim-sanad-rasmi)
 - [چک برگشتی: مسیرهای قانونی وصول](/articles/chek-bargashkhte-masir-haye-ghanooni)
 - [اخراج از کار و بیمۀ بیکاری](/articles/ekhraj-az-kar-va-bime-bikari)
-- [مطالعۀ نفقه و شکایت ترک انفاق](/articles/nafaqe-motalebe-va-tark-enfaq)
+- [مطالبۀ نفقه و شکایت ترک انفاق](/articles/nafaqe-motalebe-va-tark-enfaq)
 - [گواهی انحصار وراثت: مدارک و مراحل](/articles/enhesar-varasat-madarek-va-marahel)
 - [خلع ید و تصرف عدوانی](/articles/khole-yad-va-tasarrof-odvani)
 - [پیش‌فروش ساختمان و الزام سند رسمی](/articles/pishforosh-sakhteman-sand-rasmi)

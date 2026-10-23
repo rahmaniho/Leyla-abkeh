@@ -105,5 +105,5 @@ draft: false
 ## همچنین ببینید
 
 - [طلاق یک‌طرفه: مسیر قانونی و مدارک](/articles/talagh-yek-tarafe-masir-ghanooni)
-- [مطالعۀ نفقه و شکایت ترک انفاق](/articles/nafaqe-motalebe-va-tark-enfaq)
+- [مطالبۀ نفقه و شکایت ترک انفاق](/articles/nafaqe-motalebe-va-tark-enfaq)
 - [طلاق توافقی: مدارک و مراحل](/articles/talagh-tavafoghi-madarek-va-marahel)
