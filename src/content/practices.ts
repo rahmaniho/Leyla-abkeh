@@ -166,3 +166,34 @@ export const PRACTICE_CLAIM_COUNT = PRACTICE_GROUPS.reduce(
   (total, group) => total + group.claims.length,
   0
 );
+
+/**
+ * نگاشت هر مقاله به گروه دعاوی خود.
+ * یک مقاله ممکن است در چند عنوان نقشه تکرار شده باشد (مثلاً حضانت و ملاقات)؛
+ * برای دسته‌بندی، نخستین گروه از نقشه که به آن ارجاع داده، ملاک است.
+ */
+export const ARTICLE_GROUP_ID: Map<string, string> = (() => {
+  const map = new Map<string, string>();
+  for (const group of PRACTICE_GROUPS) {
+    for (const claim of group.claims) {
+      if (claim.article && !map.has(claim.article)) map.set(claim.article, group.id);
+    }
+  }
+  return map;
+})();
+
+/** گروه دعاوی بر پایۀ شناسه */
+export const PRACTICE_BY_ID: Map<string, PracticeGroup> = new Map(
+  PRACTICE_GROUPS.map((group) => [group.id, group])
+);
+
+/** عنوان دعوایی که به این مقاله ارجاع می‌دهد (برای نمایش در فهرست مقالات) */
+export const ARTICLE_CLAIM_TITLE: Map<string, string> = (() => {
+  const map = new Map<string, string>();
+  for (const group of PRACTICE_GROUPS) {
+    for (const claim of group.claims) {
+      if (claim.article && !map.has(claim.article)) map.set(claim.article, claim.title);
+    }
+  }
+  return map;
+})();

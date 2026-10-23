@@ -43,6 +43,17 @@ export interface Article {
    * دستیارهای هوش مصنوعی (GEO) پاسخ مستقیم می‌دهد.
    */
   faqs: { question: string; answer: string }[];
+  /** سرتیترهای سطح دو، برای فهرست مطالب و لنگرها */
+  headings: ArticleHeading[];
+  /** شمار واژه‌های متن، برای دادۀ ساختاریافته */
+  wordCount: number;
+}
+
+export interface ArticleHeading {
+  /** شناسۀ لنگر، پایدار و یکتا در همان مقاله */
+  id: string;
+  /** متن سرتیتر، بدون نشانه‌های Markdown */
+  text: string;
 }
 
 type FrontMatterValue = string | boolean | number | string[];
@@ -257,6 +268,31 @@ export function extractFaqs(body: string): { question: string; answer: string }[
   return faqs;
 }
 
+/**
+ * سرتیترهای `##` به ترتیب متن، هر یک با شناسۀ لنگر پایدار.
+ * شناسه‌ها عددی‌اند (`section-1`, `section-2`, …) تا با تغییر متن سرتیتر
+ * نشکنند و در نشانی صفحه هم خوانا بمانند.
+ */
+export function extractHeadings(body: string): ArticleHeading[] {
+  const headings: ArticleHeading[] = [];
+  for (const line of body.split("\n")) {
+    const match = /^##\s+(.+?)\s*$/.exec(line);
+    if (!match) continue;
+    const text = stripMarkdown(match[1]);
+    if (!text) continue;
+    headings.push({ id: `section-${headings.length + 1}`, text });
+  }
+  return headings;
+}
+
+/** افزودن شناسۀ لنگر به سرتیترهای HTML، به همان ترتیب متن */
+function addHeadingIds(html: string, headings: ArticleHeading[]): string {
+  let index = 0;
+  return html.replace(/<h2>/g, () =>
+    index < headings.length ? `<h2 id="${headings[index++].id}">` : "<h2>"
+  );
+}
+
 function slugFromPath(path: string): string {
   const file = path.split("/").pop() ?? path;
   return file
@@ -272,6 +308,9 @@ const rawModules = import.meta.glob("./blog/*.md", {
   eager: true,
 }) as Record<string, string>;
 
+/** HTML رندرشدۀ هر مقاله؛ پس از نخستین نمایش نگه داشته می‌شود */
+const htmlCache = new Map<string, string>();
+
 function buildArticle(path: string, raw: string): Article {
   const { data, body } = parseFrontMatter(raw);
   const fallbackDate = "1970-01-01T00:00:00.000Z";
@@ -285,13 +324,25 @@ function buildArticle(path: string, raw: string): Article {
     typeof data.date === "string" ? toIsoDate(data.date, fallbackDate) : fallbackDate
   );
   const lastReviewedRaw = typeof data.lastReviewed === "string" ? data.lastReviewed : undefined;
+  const headings = extractHeadings(body);
 
   return {
     slug,
     title,
     description,
     body,
-    html: renderMarkdown(body),
+    headings,
+    wordCount: body.trim().split(/\s+/).filter(Boolean).length,
+    /*
+     * HTML فقط هنگام نمایش ساخته می‌شود، نه در بارگذاری ماژول.
+     * پیش از این، هر بار ورود به صفحه (حتی صفحۀ اصلی) مارک‌داون هر ۵۰ مقاله
+     * با `marked` رندر می‌شد؛ این کار روی موبایل هزینۀ CPU بی‌مصرف داشت.
+     * اکنون رندر اولین بار در لحظۀ استفاده انجام و نتیجه نگه داشته می‌شود.
+     */
+    get html() {
+      if (!htmlCache.has(slug)) htmlCache.set(slug, addHeadingIds(renderMarkdown(body), headings));
+      return htmlCache.get(slug) as string;
+    },
     author: typeof data.author === "string" && data.author.trim() ? data.author : "دفتر وکالت",
     publishDate,
     lastReviewed: lastReviewedRaw ? toIsoDate(lastReviewedRaw, publishDate) : undefined,

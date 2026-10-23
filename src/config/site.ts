@@ -14,7 +14,7 @@ import verificationData from "./verification.json";
 const FALLBACK_SITE_URL = "https://leyla-abkeh.netlify.app";
 
 /** تاریخ آخرین بازبینی محتوای صفحات ثابت (برای sitemap و نمایش) */
-export const SITE_LAST_UPDATED = "2026-10-21";
+export const SITE_LAST_UPDATED = "2026-10-23";
 
 function normalizeSiteUrl(value: string | undefined): string {
   if (!value) return FALLBACK_SITE_URL;
