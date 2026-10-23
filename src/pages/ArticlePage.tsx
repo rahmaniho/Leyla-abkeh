@@ -15,6 +15,7 @@ import {
   coverImage,
 } from "../lib/images";
 import { adjacentArticles, relatedArticles } from "../lib/related";
+import { pageUrl } from "../lib/seo";
 
 /** نوار پیشرفت مطالعۀ مقاله — فقط پس از اسکرول کاربر efe دارد */
 function ReadingProgress() {
@@ -90,7 +91,7 @@ function ShareRow({ article }: { article: Article }) {
   const copy = async () => {
     if (typeof window === "undefined") return;
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(pageUrl(`/articles/${article.slug}`));
       setCopied(true);
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -98,8 +99,14 @@ function ShareRow({ article }: { article: Article }) {
     }
   };
 
+  /*
+   * نشانی اشتراک‌گذاری از canonical ساخته می‌شود، نه از `window`؛ در
+   * پیش‌رندر مرورگری نیست و اگر به `window` تکیه کنیم، پیوند واتساپ در HTML
+   * خروجی بی‌نشانی می‌ماند و پس از hydration هم دوباره ساخته نمی‌شود.
+   */
+  const canonical = pageUrl(`/articles/${article.slug}`);
   const shareText = `${article.title} — ${siteConfig.site.name}`;
-  const whatsapp = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${typeof window === "undefined" ? "" : window.location.href}`)}`;
+  const whatsapp = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${canonical}`)}`;
 
   return (
     <div className="mt-12 flex flex-wrap items-center gap-3 rounded-2xl border border-ink/10 bg-white/70 p-4">
