@@ -76,7 +76,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "تخلیۀ ید و تخلیۀ ملک", article: "ejare-maskan-tamdid-va-takhliye" },
       { title: "خلع ید", article: "khole-yad-va-tasarrof-odvani" },
       { title: "رفع تصرف عدوانی", article: "khole-yad-va-tasarrof-odvani" },
-      { title: "ممانعت از حق و مزاحمت" },
+      { title: "ممانعت از حق و مزاحمت", article: "momanet-az-hagh-va-mozahmat" },
       { title: "تقسیم مال مشاع", article: "tagsim-va-afraz-mal-mosha" },
       { title: "الزام به تفکیک و پایان‌کار" },
     ],
@@ -105,7 +105,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     claims: [
       { title: "وصول چک برگشتی", article: "chek-bargashkhte-masir-haye-ghanooni" },
       { title: "شکایت کیفری چک" },
-      { title: "مطالبۀ وجه سفته" },
+      { title: "مطالبۀ وجه سفته", article: "safte-motalebe-vojoh-va-vakhvast" },
       { title: "اخذ گواهی عدم پرداخت" },
       { title: "دعوای علیه ظهرنویس و ضامن" },
       { title: "ابطال اجراییه" },
@@ -119,7 +119,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "hoghoogh-kar",
     claims: [
       { title: "مطالبۀ حقوق و مزایا" },
-      { title: "سنوات و عیدی" },
+      { title: "سنوات و عیدی", article: "sanavat-va-eidi-motalebe" },
       { title: "شکایت اخراج از کار", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "بیمۀ بیکاری", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "خسارت حادثۀ ناشی از کار" },
@@ -134,7 +134,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "sherkat-ha",
     claims: [
       { title: "اختلاف شرکا و سهامداران" },
-      { title: "انحلال و تصفیۀ شرکت" },
+      { title: "انحلال و تصفیۀ شرکت", article: "enhelal-va-tasfiye-sherkat" },
       { title: "بازبینی و تنظیم قرارداد تجاری" },
       { title: "مطالبات تجاری شرکت" },
       { title: "تغییرات و ثبت شرکت" },
