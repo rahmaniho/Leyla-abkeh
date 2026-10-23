@@ -82,6 +82,6 @@ draft: false
 
 ## همچنین ببینید
 
-- [مطالعۀ نفقه پس از جدایی](/articles/nafaqe-motalebe-va-tark-enfaq)
+- [مطالبۀ نفقه پس از جدایی](/articles/nafaqe-motalebe-va-tark-enfaq)
 
 برای بررسی موضوع خود می‌توانید [درخواست مشاوره](/contact) ثبت کنید یا صفحۀ [دعاوی خانواده](/services/khanevadeh) را ببینید.

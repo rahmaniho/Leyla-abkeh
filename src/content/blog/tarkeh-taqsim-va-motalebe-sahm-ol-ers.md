@@ -106,3 +106,4 @@ draft: false
 - [گواهی انحصار وراثت: مدارک و مراحل](/articles/enhesar-varasat-madarek-va-marahel)
 - [تقسیم و افراز مال مشاع](/articles/tagsim-va-afraz-mal-mosha)
 - [الزام به تنظیم سند رسمی](/articles/elzam-be-tanzim-sanad-rasmi)
+- [اثبات و رد وصیت](/articles/esbat-va-rad-vasiat)

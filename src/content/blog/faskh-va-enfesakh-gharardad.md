@@ -103,3 +103,4 @@ draft: false
 - [مطالبۀ وجه: از اظهارنامه تا اجرا](/articles/vojoh-motalebe-madarek-va-marahel)
 - [الزام به تنظیم سند رسمی](/articles/elzam-be-tanzim-sanad-rasmi)
 - [چک برگشتی: مسیرهای قانونی وصول](/articles/chek-bargashkhte-masir-haye-ghanooni)
+- [ابطال معامله](/articles/ebtal-moamele)
