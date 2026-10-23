@@ -1,3 +1,4 @@
+import { Link } from "../lib/router";
 import PageHero from "../components/PageHero";
 import Reveal from "../components/Reveal";
 import SectionHeader from "../components/SectionHeader";
@@ -25,7 +26,14 @@ export const meta: PageMeta = {
       "@id": `${pageUrl("/about")}#person`,
       name: siteConfig.lawyer.name,
       jobTitle: siteConfig.lawyer.jobTitle,
-      image: absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
+      // تصویر اصلی + تصاویر رسمی دفتر: این‌ها همان فایل‌هایی هستند که در
+      // مقالۀ «انتخاب وکیل در قزوین» هم منتشر شده‌اند، تا موتور جست‌وجو
+      // (به‌ویژه جست‌وجوی تصویر) این عکس‌ها را به نام وکیل نسبت دهد.
+      image: [
+        absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
+        absoluteUrl("/images/covers/leyla-abkeh-vakil-qazvin-cover.jpg"),
+        absoluteUrl("/images/articles/leyla-abkeh-vakil-qazvin-1200.jpg"),
+      ],
       url: pageUrl("/about"),
       worksFor: { "@id": `${siteConfig.site.url}/#attorney` },
       ...(siteConfig.lawyer.licenseNumber && siteConfig.lawyer.licenseNumberLatin
@@ -159,6 +167,17 @@ export default function AboutPage() {
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
               عضویت در کانون وکلا پس از تأیید دفتر در همین صفحه منتشر می‌شود.
+            </p>
+
+            <p className="mt-4 text-[12.5px] leading-7 text-ink/70">
+              اگر در حال انتخاب وکیل هستید، راهنمای{" "}
+              <Link
+                to="/articles/behtarin-vakil-qazvin"
+                className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+              >
+                معیارهای انتخاب وکیل در قزوین
+              </Link>{" "}
+              توضیح می‌دهد در جلسۀ اول چه پرسش‌هایی را مطرح کنید.
             </p>
           </div>
         </div>
