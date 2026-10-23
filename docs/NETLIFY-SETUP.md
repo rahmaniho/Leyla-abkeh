@@ -18,11 +18,11 @@
 
 | متغیر | ضروری | کاربرد |
 | --- | --- | --- |
-| `VITE_SITE_URL` | توصیه‌شده | دامنۀ نهایی سایت (canonical، sitemap، OG). بدون اسلش انتهایی. |
+| `VITE_SITE_URL` | توصیه‌شده | دامنهی نهایی سایت (canonical، sitemap، OG). بدون اسلش انتهایی. |
 | `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | یکی از کانال‌ها الزامی | ارسال اعلان درخواست مشاوره به تلگرام |
 | `RESEND_API_KEY` + `CONSULTATION_NOTIFY_EMAIL` + `CONSULTATION_FROM_EMAIL` | جایگزین تلگرام | ارسال ایمیل درخواست |
 | `CONSULTATION_WEBHOOK_URL` (+ `CONSULTATION_WEBHOOK_SECRET`) | اختیاری | ارسال به CRM/اتوماسیون |
-| `VITE_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | اختیاری | ضد‌هرزنامۀ Cloudflare Turnstile |
+| `VITE_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | اختیاری | ضد‌هرزنامهی Cloudflare Turnstile |
 
 **مهم:** تا زمانی که حداقل یکی از کانال‌های ارسال (تلگرام، ایمیل یا وب‌هوک) تنظیم نشود،
 فرم مشاوره پیام موفقیت نمی‌دهد و پاسخ `503` با پیام «سامانه پیکربندی نشده است» برمی‌گرداند.
@@ -56,8 +56,8 @@ Netlify برای مسیرهای ناموجود، `404.html` را با کد وض�
 - محدودیت حجم بدنه: ۱۰ کیلوبایت
 - ثبت لاگ فقط شامل کد پیگیری و وضعیت ارسال است (بدون اطلاعات شخصی)
 
-**محدودیت شناخته‌شده:** محدودیت نرخ در حافظۀ نمونۀ تابع نگهداری می‌شود. در مقیاس بالا
-(چند نمونۀ هم‌زمان) ممکن است دقیق نباشد. برای محدودیت قطعی، از Netlify Blobs/Redis استفاده کنید.
+**محدودیت شناخته‌شده:** محدودیت نرخ در حافظهی نمونهی تابع نگهداری می‌شود. در مقیاس بالا
+(چند نمونهی هم‌زمان) ممکن است دقیق نباشد. برای محدودیت قطعی، از Netlify Blobs/Redis استفاده کنید.
 
 ### آزمون پس از استقرار
 
@@ -73,7 +73,7 @@ curl -i -X POST https://<domain>/api/consultation \
 
 در `netlify.toml` تنظیم شده است:
 
-- `Content-Security-Policy` (بدون اسکریپت درون‌خطی، بدون دامنۀ خارجی در حالت پیش‌فرض)
+- `Content-Security-Policy` (بدون اسکریپت درون‌خطی، بدون دامنهی خارجی در حالت پیش‌فرض)
 - `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy`
 - `Cache-Control` تفکیک‌شده برای `assets`، `fonts`، `images` و HTML
 - `X-Robots-Tag: noindex` برای `/admin/*`
@@ -91,14 +91,14 @@ curl -i -X POST https://<domain>/api/consultation \
 ## ۶. دامنه و سئو
 
 1. دامنه را در Netlify (Domain management) متصل کنید.
-2. `VITE_SITE_URL` را به دامنۀ نهایی تغییر دهید و مجدداً deploy کنید
-   تا canonical، OG و sitemap با دامنۀ درست ساخته شوند.
+2. `VITE_SITE_URL` را به دامنهی نهایی تغییر دهید و مجدداً deploy کنید
+   تا canonical، OG و sitemap با دامنهی درست ساخته شوند.
 3. `sitemap.xml` را در Google Search Console ثبت کنید.
-4. پس از استقرار، `/robots.txt` و یک صفحۀ نمونه را بررسی کنید.
+4. پس از استقرار، `/robots.txt` و یک صفحهی نمونه را بررسی کنید.
 
 ## ۷. فهرست بررسی پس از انتشار
 
-- [ ] صفحۀ اصلی، خدمات، تماس و مقالات با تصویر و فونت درست نمایش داده می‌شوند
+- [ ] صفحهی اصلی، خدمات، تماس و مقالات با تصویر و فونت درست نمایش داده می‌شوند
 - [ ] فرم مشاوره واقعاً درخواست را به دفتر می‌رساند (با یک درخواست آزمایشی)
 - [ ] پیام خطا در حالت نبود پیکربندی نمایش داده می‌شود (اختیاری: با حذف موقت متغیرها)
 - [ ] `/admin/` باز می‌شود و ورود با Netlify Identity انجام می‌شود

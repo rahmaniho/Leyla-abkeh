@@ -10,7 +10,7 @@ import { primaryPhone } from "../config/site";
 
 export default function ServicePage({ service }: { service: Service }) {
   const breadcrumbs = [
-    { name: "صفحۀ اصلی", path: "/" },
+    { name: "صفحهی اصلی", path: "/" },
     { name: "خدمات حقوقی", path: "/services" },
     { name: service.title, path: servicePath(service.slug) },
   ];
@@ -51,7 +51,7 @@ export default function ServicePage({ service }: { service: Service }) {
               to="/about"
               className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 px-6 py-3 text-sm font-bold text-white/90 transition-colors hover:border-gold/50 hover:text-gold-light"
             >
-              دربارۀ وکیل
+              دربارهی وکیل
             </Link>
           )}
         </div>
@@ -104,7 +104,7 @@ export default function ServicePage({ service }: { service: Service }) {
 
             <section className="mt-14" aria-labelledby="service-faq-title">
               <h2 id="service-faq-title" className="text-xl font-extrabold text-ink sm:text-2xl">
-                پرسش‌های متداول دربارۀ {service.title}
+                پرسش‌های متداول دربارهی {service.title}
               </h2>
               <div className="mt-6 space-y-4">
                 {service.faqs.map((faq) => (
@@ -155,14 +155,14 @@ export default function ServicePage({ service }: { service: Service }) {
               آخرین به‌روزرسانی این صفحه:{" "}
               <time dateTime={toDateAttribute(service.updated)}>{formatDateFa(service.updated)}</time>
               <span aria-hidden="true">·</span>
-              این محتوا جنبۀ اطلاع‌رسانی عمومی دارد و جایگزین مشاورۀ حقوقی دربارۀ پروندۀ مشخص
+              این محتوا جنبهی اطلاع‌رسانی عمومی دارد و جایگزین مشاورهی حقوقی دربارهی پروندهی مشخص
               نیست.
             </p>
           </div>
 
           <aside className="space-y-6" aria-label="اقدام‌های پیشنهادی">
             <div className="rounded-3xl border border-ink/10 bg-white/75 p-6 shadow-soft">
-              <h2 className="text-base font-extrabold text-ink">موضوع پروندۀ شما در این حوزه است؟</h2>
+              <h2 className="text-base font-extrabold text-ink">موضوع پروندهی شما در این حوزه است؟</h2>
               <p className="mt-2 text-[13px] leading-7 text-ink/70">
                 برای بررسی اولیه و تعیین مسیر، درخواست مشاوره ثبت کنید
                 {primaryPhone ? " یا تلفنی تماس بگیرید." : "؛ پس از بررسی، برای تعیین وقت با شما تماس گرفته می‌شود."}

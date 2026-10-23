@@ -7,11 +7,11 @@ import { describe, expect, it } from "vitest";
  * ------------------------------------------------------------------
  * این آزمون‌ها از سه چیز محافظت می‌کنند:
  * ۱. فایل‌های فونت واقعاً در مخزن و قابل سرو باشند (self-host، بدون CDN).
- * ۲. پشتۀ فونت درست تعریف شده باشد: متن با نازنین، تیتر با تیتر،
+ * ۲. پشتهی فونت درست تعریف شده باشد: متن با نازنین، تیتر با تیتر،
  *    و ارقام (فارسی/عربی/لاتین) با فونت تیتر.
- * ۳. همزۀ اضافه (ه + U+0654) دوباره به متن‌ها برنگردد؛ فونت‌های B این
+ * ۳. همزهی اضافه (ه + U+0654) دوباره به متن‌ها برنگردد؛ فونت‌های B این
  *    نویسه را ندارند و مرورگر مجبور می‌شود آن را از فونت دیگری بردارد که
- *    نتیجه‌اش همزۀ جدا‌افتاده و ناهم‌خوان است. شکل درستِ ذخیره‌شده «ۀ» است.
+ *    نتیجه‌اش همزهی جدا‌افتاده و ناهم‌خوان است. شکل درستِ ذخیره‌شده «هی» است.
  */
 
 const root = process.cwd();
@@ -19,7 +19,7 @@ const publicFile = (urlPath: string) => path.join(root, "public", urlPath.replac
 const css = readFileSync(path.join(root, "src", "index.css"), "utf8");
 const html = readFileSync(path.join(root, "index.html"), "utf8");
 
-/** طول دادۀ فونت را از سربرگ WOFF/WOFF2 می‌خواند */
+/** طول دادهی فونت را از سربرگ WOFF/WOFF2 می‌خواند */
 function woffSignature(file: string): string {
   const buffer = readFileSync(file);
   return buffer.toString("ascii", 0, 4);
@@ -48,7 +48,7 @@ describe("فونت‌های محلی", () => {
   });
 });
 
-describe("پشتۀ فونت", () => {
+describe("پشتهی فونت", () => {
   it("B Nazanin برای متن و B Titr برای تیترها تعریف شده است", () => {
     expect(css).toMatch(/font-family:\s*"B Nazanin"/);
     expect(css).toMatch(/font-family:\s*"B Titr"/);
@@ -70,8 +70,8 @@ describe("پشتۀ فونت", () => {
   });
 
   /**
-   * B Nazanin در یک em یکسان کوچک‌تر از بقیۀ فونت‌ها کشیده می‌شود
-   * (ارتفاع بدنۀ حروف ≈ ۰٫۵۸۶em در برابر ۰٫۶۷۴em وازیرمتن).
+   * B Nazanin در یک em یکسان کوچک‌تر از بقیهی فونت‌ها کشیده می‌شود
+   * (ارتفاع بدنهی حروف ≈ ۰٫۵۸۶em در برابر ۰٫۶۷۴em وازیرمتن).
    * جبران آن با size-adjust انجام می‌شود، نه با تغییر ۱۵۰ کلاس اندازه.
    */
   it("B Nazanin با ضریب ۱۱۶٪ (دو پله بزرگ‌تر) رندر می‌شود", () => {
@@ -79,7 +79,7 @@ describe("پشتۀ فونت", () => {
     expect(nazanin).toMatch(/size-adjust:\s*116%/);
   });
 
-  it("تیترها و ارقام اندازۀ خودشان را نگه می‌دارند", () => {
+  it("تیترها و ارقام اندازهی خودشان را نگه می‌دارند", () => {
     const titr = css.slice(css.indexOf('font-family: "B Titr"'), css.indexOf('font-family: "Vazirmatn"'));
     expect(titr).not.toMatch(/size-adjust/);
   });
@@ -90,32 +90,70 @@ describe("پشتۀ فونت", () => {
   });
 });
 
-describe("سازگاری نویسه‌ها با فونت", () => {
-  /** همۀ فایل‌های متنی پروژه (بدون اسناد تاریخی) */
+describe("سازگاری نویسه‌ها و رسم‌الخط فارسی", () => {
+  /**
+   * قاعدۀ رسم‌الخط این پروژه (docs/PERSIAN-STYLE.md):
+   * کسره‌ی اضافه پس از «ه» با «هی» نوشته می‌شود، نه با همزه:
+   * «پروندهی»، «ماده‌ی»، «جلسه‌ی». شکل‌های «ۀ» (U+06C0) و «هٔ»
+   * (ه + U+0654) هم شکل عربی‌اند و هم در فونت‌های B ممکن است به فونت
+   * پشتیبان بیفتند؛ هر دو ممنوع‌اند.
+   */
+  const FORBIDDEN: { name: string; char: string }[] = [
+    { name: "همزۀ اضافه روی ه (U+0654)", char: "\u0647\u0654" },
+    { name: "ۀ (U+06C0)", char: "\u06C0" },
+    { name: "ی عربی (U+064A)", char: "\u064A" },
+    { name: "ک عربی (U+0643)", char: "\u0643" },
+    { name: "ة عربی (U+0629)", char: "\u0629" },
+    { name: "ی مقصوره (U+0649)", char: "\u0649" },
+  ];
+
+  /** همۀ فایل‌های متنی سایت، از جمله محتوای Markdown مقالات */
   const textFiles = (() => {
     const out: string[] = [];
     const walk = (dir: string) => {
       for (const entry of readdirSync(path.join(root, dir), { withFileTypes: true })) {
         const rel = path.join(dir, entry.name);
         if (entry.isDirectory()) walk(rel);
-        else if (/\.(tsx?|mjs|html)$/.test(entry.name)) out.push(rel);
+        else if (/\.(tsx?|mjs|html|md|vtt|yml)$/.test(entry.name)) out.push(rel);
       }
     };
-    for (const dir of ["src", "netlify"]) walk(dir);
+    for (const dir of ["src", "netlify", "public"]) walk(dir);
     out.push("index.html");
     return out;
   })();
 
-  it(`هیچ‌کدام از ${textFiles.length} فایل متنی همزۀ اضافۀ ترکیبی (U+0654) ندارد`, () => {
+  it(`هیچ‌یک از ${textFiles.length} فایل متنی سایت نویسه‌ی عربی یا همزۀ اضافه ندارد`, () => {
     const offenders = textFiles.filter((file) => {
       const content = readFileSync(path.join(root, file), "utf8");
-      return content.includes("\u0647\u0654") || content.includes("\u06d5\u0654");
+      return FORBIDDEN.some((item) => content.includes(item.char));
     });
 
-    expect(offenders, `فایل‌های دارای ه + U+0654: ${offenders.join(", ")}`).toEqual([]);
+    expect(offenders, `فایل‌های دارای نویسه‌ی ممنوع: ${offenders.join(", ")}`).toEqual([]);
   });
 
-  it("شکل درست «ۀ» در متن‌های سایت به کار رفته است", () => {
-    expect(readFileSync(path.join(root, "src", "config", "site.ts"), "utf8")).toContain("شمارۀ");
+  it("محتوای مقالات هم پاک است (همان قاعده، جداگانه سنجیده می‌شود)", () => {
+    const articles = readdirSync(path.join(root, "src", "content", "blog")).filter((file) =>
+      file.endsWith(".md")
+    );
+    expect(articles.length).toBeGreaterThan(0);
+
+    for (const file of articles) {
+      const content = readFileSync(path.join(root, "src", "content", "blog", file), "utf8");
+      for (const item of FORBIDDEN) {
+        expect(content.includes(item.char), `${file} دارای ${item.name} است`).toBe(false);
+      }
+    }
+  });
+
+  it("کسره‌ی اضافه با «هی» نوشته شده است، نه با همزه", () => {
+    const site = readFileSync(path.join(root, "src", "config", "site.ts"), "utf8");
+    expect(site).toContain("شمارهی پروانه");
+
+    const article = readFileSync(
+      path.join(root, "src", "content", "blog", "mehrieh-motalebe-va-ijra.md"),
+      "utf8"
+    );
+    expect(article).toContain("پروندهی");
+    expect(article).toContain("مادهی");
   });
 });

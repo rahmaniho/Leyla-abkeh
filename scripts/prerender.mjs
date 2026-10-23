@@ -97,7 +97,7 @@ async function main() {
     }
   }
 
-  // صفحۀ ۴۰۴ (Netlify برای مسیرهای ناموجود، dist/404.html را با کد ۴۰۴ سرو می‌کند)
+  // صفحهی ۴۰۴ (Netlify برای مسیرهای ناموجود، dist/404.html را با کد ۴۰۴ سرو می‌کند)
   const notFound = render("/404");
   const notFoundPage = buildPage(template, notFound);
   await writeFile(path.join(distDir, "404.html"), notFoundPage, "utf8");

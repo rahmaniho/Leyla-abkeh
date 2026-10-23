@@ -14,7 +14,7 @@ interface FAQProps {
   titleId?: string;
   /** اگر true باشد، اولین سوال باز است */
   openFirst?: boolean;
-  /** لینک «همۀ پرسش‌ها» در پایان بخش */
+  /** لینک «همهی پرسش‌ها» در پایان بخش */
   moreHref?: string;
   moreLabel?: string;
 }
@@ -27,7 +27,7 @@ export default function FAQ({
   titleId = "faq-title",
   openFirst = true,
   moreHref,
-  moreLabel = "مشاهدۀ همۀ پرسش‌های متداول",
+  moreLabel = "مشاهدهی همهی پرسش‌های متداول",
 }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number>(openFirst ? 0 : -1);
 

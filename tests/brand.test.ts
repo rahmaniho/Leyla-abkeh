@@ -53,7 +53,7 @@ function imageSize(file: string): { width: number; height: number } | null {
   return null;
 }
 
-describe("پرترۀ رسمی وکیل", () => {
+describe("پرترهی رسمی وکیل", () => {
   it("تصویر دیگر placeholder نیست و مسیرش در فایل‌های public موجود است", () => {
     expect(siteConfig.lawyer.photo.isPlaceholder).toBe(false);
 
@@ -103,13 +103,13 @@ describe("لوگوی دفتر", () => {
     }
   });
 
-  it("مارک شفاف است تا روی زمینۀ سرمه‌ای بدون قاب مربعی دیده شود", () => {
+  it("مارک شفاف است تا روی زمینهی سرمه‌ای بدون قاب مربعی دیده شود", () => {
     const png = readFileSync(publicFile(mark.png));
     // سربرگ IHDR: رنگ‌نوع ۶ = RGBA (یا ۳ = پالت با tRNS)
     expect(png.toString("ascii", 12, 16)).toBe("IHDR");
     expect([3, 6]).toContain(png[25]);
     if (png[25] === 6) {
-      // گوشۀ تصویر باید کاملاً شفاف باشد (زمینۀ سیاه حذف شده)
+      // گوشهی تصویر باید کاملاً شفاف باشد (زمینهی سیاه حذف شده)
       expect(png.some((byte) => byte === 0)).toBe(true);
     }
   });
@@ -120,9 +120,9 @@ describe("لوگوی دفتر", () => {
     expect(imageSize(publicFile(lockup.pngLarge))).toEqual({ width: 700, height: 990 });
   });
 
-  it("لوگو حاشیۀ امن دارد تا هیچ لبه‌ای بریده نشود", () => {
+  it("لوگو حاشیهی امن دارد تا هیچ لبه‌ای بریده نشود", () => {
     const png = readFileSync(publicFile(lockup.png));
-    // گوشه‌های تصویر باید شفاف باشند (حاشیۀ امن)، نه پیکسل طلایی
+    // گوشه‌های تصویر باید شفاف باشند (حاشیهی امن)، نه پیکسل طلایی
     expect(png.toString("ascii", 12, 16)).toBe("IHDR");
     expect([3, 6]).toContain(png[25]);
   });
@@ -156,7 +156,7 @@ describe("آیکون‌ها و تصویر اشتراک‌گذاری", () => {
     }
   });
 
-  it("manifest همۀ آیکون‌ها را با مسیر نسبی معرفی می‌کند", () => {
+  it("manifest همهی آیکون‌ها را با مسیر نسبی معرفی می‌کند", () => {
     const manifest = JSON.parse(readFileSync(path.join(root, "public/site.webmanifest"), "utf8")) as {
       icons: { src: string; sizes: string }[];
       start_url: string;
@@ -177,7 +177,7 @@ describe("آیکون‌ها و تصویر اشتراک‌گذاری", () => {
 });
 
 describe("تصاویر مقالات پس از افزودن هویت بصری", () => {
-  it("همۀ تصاویر شاخص و داخل متن هنوز موجودند", () => {
+  it("همهی تصاویر شاخص و داخل متن هنوز موجودند", () => {
     for (const article of ARTICLES) {
       if (!article.cover) continue;
       const stem = article.cover.replace(/\.jpe?g$/i, "");

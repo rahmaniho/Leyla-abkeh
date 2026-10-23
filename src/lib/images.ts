@@ -2,7 +2,7 @@
  * تصاویر چندقالبی (شاخص و داخل متن)
  * ------------------------------------------------------------------
  * هر تصویر در سه قالب (AVIF/WebP/JPEG) و دو اندازه تولید می‌شود تا مرورگر
- * سبک‌ترین نسخۀ مناسب را انتخاب کند:
+ * سبک‌ترین نسخهی مناسب را انتخاب کند:
  *
  *   تصویر شاخص → public/images/covers/<نام>-cover.jpg  (۱۲۰۰×۶۳۰)
  *                public/images/covers/<نام>-cover-640.jpg (۶۴۰×۳۳۶)
@@ -89,7 +89,7 @@ export function coverImage(cover: string): ResponsiveImage {
   return responsiveImage(cover);
 }
 
-/** `sizes` مناسب برای تصویر شاخص در صفحۀ مقاله */
+/** `sizes` مناسب برای تصویر شاخص در صفحهی مقاله */
 export const COVER_SIZES = "(min-width: 1280px) 880px, (min-width: 1024px) 70vw, 100vw";
 /** `sizes` مناسب برای بندانگشتی در فهرست مقالات */
 export const CARD_SIZES = "(min-width: 1024px) 380px, (min-width: 768px) 45vw, 92vw";

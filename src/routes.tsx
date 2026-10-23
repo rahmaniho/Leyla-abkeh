@@ -60,7 +60,7 @@ function serviceMeta(slug: string): PageMeta | null {
 
   const path = servicePath(service.slug);
   const breadcrumbs = [
-    { name: "صفحۀ اصلی", path: "/" },
+    { name: "صفحهی اصلی", path: "/" },
     { name: "خدمات حقوقی", path: "/services" },
     { name: service.title, path },
   ];
@@ -98,7 +98,7 @@ function articleMeta(slug: string): PageMeta | null {
 
   const path = articlePath(article.slug);
   const breadcrumbs = [
-    { name: "صفحۀ اصلی", path: "/" },
+    { name: "صفحهی اصلی", path: "/" },
     { name: "مقالات", path: "/articles" },
     { name: article.title, path },
   ];
@@ -107,7 +107,7 @@ function articleMeta(slug: string): PageMeta | null {
   const relatedServices = SERVICES.filter((service) => article.relatedServices.includes(service.slug));
 
   /*
-   * دادۀ ساختاریافتۀ مقاله، برای سئوی کلاسیک و برای موتورهای پاسخ‌دهنده (GEO):
+   * دادهی ساختاریافتهی مقاله، برای سئوی کلاسیک و برای موتورهای پاسخ‌دهنده (GEO):
    *  • `articleSection`/`keywords` به موتور کمک می‌کند مقاله را به موضوع درست
    *    نسبت دهد؛
    *  • `about` مقاله را به همان موجودیت خدمتِ سایت وصل می‌کند (نه یک متن
@@ -169,7 +169,7 @@ function articleMeta(slug: string): PageMeta | null {
   };
 }
 
-/** تطبیق مسیر با صفحۀ مربوطه */
+/** تطبیق مسیر با صفحهی مربوطه */
 export function resolveRoute(rawPath: string): RouteMatch {
   const path = normalizePath(rawPath);
 

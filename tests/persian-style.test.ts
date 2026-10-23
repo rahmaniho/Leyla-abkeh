@@ -1,0 +1,129 @@
+import { describe, expect, it } from "vitest";
+import { ARTICLES } from "../src/content/articles";
+
+/**
+ * آزمون زبان و رسم‌الخط مقالات
+ * ------------------------------------------------------------------
+ * مقالات این سایت برای مخاطب فارسی‌زبان نوشته می‌شوند؛ نه برای «اداری‌نویسی».
+ * این آزمون‌ها سه چیز را تضمین می‌کنند:
+ *   ۱. نویسه‌های عربی (ي، ك، ة، ى) و همزهٔ اضافه (ۀ / هٔ) به متن برنگردند؛
+ *   ۲. عبارت‌های اداری‌عربی («می‌باشد»، «می‌گردد»، «لذا»، «بدین‌وسیله»…) وارد نشوند؛
+ *   ۳. نشانه‌گذاری فارسی درست بماند: فاصلهٔ اضافه، ویرگول لاتین، فاصله قبل از نشانه.
+ * قاعده‌ها در `docs/PERSIAN-STYLE.md` توضیح داده شده‌اند.
+ */
+
+/** واژه‌هایی که در نثر اداری فارسی جای فارسی روان را گرفته‌اند */
+const ARABIC_BUREAUCRATIC = [
+  "می‌باشد",
+  "می‌باشند",
+  "می‌گردد",
+  "می‌گردند",
+  "گردید",
+  "گردیده",
+  "لذا",
+  "لکن",
+  "علی‌ایحال",
+  "بدین‌وسیله",
+  "بدین‌جهت",
+  "مبادرت",
+  "اینجانب",
+  "فیمابین",
+  "علیهذا",
+  "متعاقباً",
+  "حاصله",
+  "مورخ",
+  "به عمل آید",
+  "به عمل آمد",
+  "صورت پذیرفت",
+  "اقدام به عمل",
+  "در راستای",
+  "در خصوص",
+  "در رابطه با",
+  "لازم به ذکر",
+  "قابل ذکر است",
+];
+
+/** متن بدون کدهای Markdown که در قضاوت زبانی نباید دخالت کنند */
+function prose(body: string): string {
+  return body
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ") // تصویر
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1") // پیوند
+    .replace(/^#{1,6}\s+/gm, "") // سرفصل
+    .replace(/^\s*\d+\.\s+/gm, "") // شمارهٔ فهرست
+    .replace(/^\s*[-*]\s+/gm, "") // نشانهٔ فهرست
+    .replace(/[>*_`]/g, "");
+}
+
+describe("رسم‌الخط فارسی در مقالات", () => {
+  it("هیچ مقاله‌ای نویسهٔ عربی یا همزهٔ اضافه ندارد", () => {
+    const forbidden = [
+      { char: "\u0647\u0654", name: "هٔ (ه + همزه)" },
+      { char: "\u06C0", name: "ۀ" },
+      { char: "\u064A", name: "ي عربی" },
+      { char: "\u0643", name: "ك عربی" },
+      { char: "\u0629", name: "ة" },
+      { char: "\u0649", name: "ى" },
+    ];
+
+    for (const article of ARTICLES) {
+      for (const item of forbidden) {
+        expect(article.body.includes(item.char), `${article.slug}: ${item.name}`).toBe(false);
+      }
+    }
+  });
+
+  it("نثر مقالات از واژه‌های اداری‌عربی پاک است", () => {
+    for (const article of ARTICLES) {
+      const text = prose(article.body);
+      for (const word of ARABIC_BUREAUCRATIC) {
+        // تطبیق واژهٔ کامل؛ وگرنه «می‌گردد» داخل «برمی‌گردد» هم پیدا می‌شود
+        const pattern = new RegExp(
+          `(?<![\u0600-\u06FF\u200c])${word}(?![\u0600-\u06FF\u200c])`
+        );
+        expect(pattern.test(text), `${article.slug} شامل «${word}» است`).toBe(false);
+      }
+    }
+  });
+
+  it("نشانه‌گذاری فارسی است: بدون ویرگول و نقطه‌ویرگول لاتین، بدون فاصلهٔ پیش از نشانه", () => {
+    for (const article of ARTICLES) {
+      const text = prose(article.body);
+      expect(text.includes(","), `${article.slug}: ویرگول لاتین`).toBe(false);
+      expect(text.includes(";"), `${article.slug}: نقطه‌ویرگول لاتین`).toBe(false);
+      expect(text.includes("?"), `${article.slug}: علامت سؤال لاتین`).toBe(false);
+      expect(/ [،؛:.!؟]/.test(text), `${article.slug}: فاصله پیش از نشانه`).toBe(false);
+      expect(/ {2,}/.test(text), `${article.slug}: فاصلهٔ تکراری`).toBe(false);
+    }
+  });
+
+  it("در متن مقاله رقم لاتین به کار نمی‌رود (فقط مسیر تصویر و شمارهٔ فهرست مجاز است)", () => {
+    for (const article of ARTICLES) {
+      const text = prose(article.body);
+      const latinDigits = text.match(/[0-9]+/g) ?? [];
+      expect(latinDigits, `${article.slug}: ${latinDigits.join(", ")}`).toEqual([]);
+    }
+  });
+
+  it("هر مقاله دست‌کم یک بار کسرهٔ اضافه را با «هی» نوشته است", () => {
+    for (const article of ARTICLES) {
+      expect(/[\u0600-\u06FF]هی/.test(article.body), `${article.slug} شکل «هی» ندارد`).toBe(true);
+    }
+  });
+
+  it("عبارت‌های کلیدی جست‌وجو در متن دیده می‌شوند، نه در جایی پنهان", () => {
+    const slug = "behtarin-vakil-qazvin";
+    const article = ARTICLES.find((item) => item.slug === slug);
+    expect(article, "مقالهٔ انتخاب وکیل یافت نشد").toBeDefined();
+
+    const visible = prose(article!.body);
+    for (const phrase of [
+      "بهترین وکیل قزوین",
+      "وکیل زن",
+      "بهترین وکیل مهریه",
+      "بهترین وکیل کیفری",
+      "انواع دعاوی",
+    ]) {
+      expect(visible.includes(phrase), `عبارت «${phrase}» در متن دیده نمی‌شود`).toBe(true);
+    }
+  });
+});

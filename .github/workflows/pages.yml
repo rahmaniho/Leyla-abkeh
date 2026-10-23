@@ -2,11 +2,11 @@
 # انتشار خودکار روی GitHub Pages
 # ------------------------------------------------------------------
 # سایت استاتیک است (پیش‌رندر زمان بیلد)، بنابراین روی Pages هم بدون سرور
-# کار می‌کند. دو نکتۀ مهم برای زیرمسیر مخزن:
-#   1) VITE_BASE_PATH = /<repo>/        → همۀ دارایی‌ها و لینک‌ها
+# کار می‌کند. دو نکتهی مهم برای زیرمسیر مخزن:
+#   1) VITE_BASE_PATH = /<repo>/        → همهی دارایی‌ها و لینک‌ها
 #   2) VITE_SITE_URL  = https://<owner>.github.io/<repo>
 #      (برای canonical، og:url و sitemap)
-# اگر بعداً روی دامنۀ اختصاصی یا Netlify منتشر شد، این متغیرها لازم نیستند.
+# اگر بعداً روی دامنهی اختصاصی یا Netlify منتشر شد، این متغیرها لازم نیستند.
 #
 # پیش‌نیاز یک‌باره: Settings → Pages → Build and deployment → Source = GitHub Actions
 # ------------------------------------------------------------------
@@ -47,7 +47,7 @@ jobs:
           npm run typecheck
           npm run test
 
-      - name: بیلد با مسیر پایۀ مخزن
+      - name: بیلد با مسیر پایهی مخزن
         env:
           VITE_BASE_PATH: /${{ github.event.repository.name }}/
           VITE_SITE_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}

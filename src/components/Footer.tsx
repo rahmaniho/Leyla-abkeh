@@ -43,7 +43,7 @@ export default function Footer() {
             <Link
               to="/"
               className="flex items-center gap-3"
-              aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحۀ اصلی`}
+              aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحهی اصلی`}
             >
               <BrandLogo height={78} />
               <span className="flex flex-col leading-tight">
@@ -54,7 +54,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="mt-5 max-w-xs text-[13px] leading-7 text-white/60">
-              دفتر وکالت و مشاورۀ حقوقی در {siteConfig.site.city}؛ همراهی در دعاوی خانواده،
+              دفتر وکالت و مشاورهی حقوقی در {siteConfig.site.city}؛ همراهی در دعاوی خانواده،
               کیفری، ملکی، اسناد تجاری، حقوق کار و امور شرکت‌ها.
             </p>
             {activeSocials.length > 0 && (
@@ -82,7 +82,7 @@ export default function Footer() {
           <nav aria-label="لینک‌های سریع">
             <h2 className="text-[14px] font-extrabold text-white">دسترسی سریع</h2>
             <ul className="mt-5 space-y-3">
-              {[{ href: "/", label: "صفحۀ اصلی" }, ...NAV_ITEMS, ...FOOTER_LEGAL_LINKS].map(
+              {[{ href: "/", label: "صفحهی اصلی" }, ...NAV_ITEMS, ...FOOTER_LEGAL_LINKS].map(
                 (link) => (
                   <li key={link.href}>
                     <Link
@@ -135,7 +135,7 @@ export default function Footer() {
                     <Link to="/contact" className="pt-1 leading-6 transition-colors hover:text-gold-light">
                       درخواست تماس از طریق فرم
                       <span className="mt-1 block text-[11.5px] text-white/45">
-                        شمارۀ تلفن در حال تأیید نهایی است
+                        شمارهی تلفن در حال تأیید نهایی است
                       </span>
                     </Link>
                   )}
@@ -189,7 +189,7 @@ export default function Footer() {
             © {year} {siteConfig.lawyer.name} — تمامی حقوق محفوظ است.
           </p>
           <p className="text-[12px] text-white/50">
-            محتوای این سایت جنبۀ اطلاع‌رسانی عمومی دارد و جایگزین مشاورۀ حقوقی نیست.
+            محتوای این سایت جنبهی اطلاع‌رسانی عمومی دارد و جایگزین مشاورهی حقوقی نیست.
           </p>
         </div>
       </div>

@@ -12,7 +12,7 @@ const strict = process.argv.includes("--strict");
 const items = JSON.parse(await readFile(file, "utf8"));
 
 if (items.length === 0) {
-  console.log("✓ همۀ اطلاعات سایت تأیید شده‌اند.");
+  console.log("✓ همهی اطلاعات سایت تأیید شده‌اند.");
   process.exit(0);
 }
 

@@ -20,7 +20,7 @@ export default function Testimonials() {
       <div className="mx-auto max-w-7xl px-5 lg:px-8">
         <SectionHeader
           eyebrow="نظرات موکلان"
-          title="آنچه موکلان از تجربۀ خود می‌گویند"
+          title="آنچه موکلان از تجربهی خود می‌گویند"
           description="این نظرات با رضایت صریح صاحبان آن‌ها منتشر شده‌اند."
           titleId="testimonials-title"
         />

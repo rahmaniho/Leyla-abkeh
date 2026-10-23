@@ -14,7 +14,7 @@ const verification = JSON.parse(read("src/config/verification.json")) as {
 }[];
 
 describe("پیکربندی استقرار Netlify", () => {
-  it("دستور بیلد، پوشۀ انتشار و نسخۀ Node درست است", () => {
+  it("دستور بیلد، پوشهی انتشار و نسخهی Node درست است", () => {
     expect(netlifyToml).toContain('command = "npm run build"');
     expect(netlifyToml).toContain('publish = "dist"');
     expect(netlifyToml).toMatch(/NODE_VERSION\s*=\s*"22"/);

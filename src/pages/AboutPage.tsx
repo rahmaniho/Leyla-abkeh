@@ -9,13 +9,13 @@ import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib
 import LawyerPortrait from "../components/LawyerPortrait";
 
 export const meta: PageMeta = {
-  title: "دربارۀ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
+  title: "دربارهی لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
   description:
-    "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانۀ پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
+    "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانهی پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
   path: "/about",
   type: "website",
   breadcrumbs: [
-    { name: "صفحۀ اصلی", path: "/" },
+    { name: "صفحهی اصلی", path: "/" },
     { name: "درباره وکیل", path: "/about" },
   ],
   jsonLd: [
@@ -27,7 +27,7 @@ export const meta: PageMeta = {
       name: siteConfig.lawyer.name,
       jobTitle: siteConfig.lawyer.jobTitle,
       // تصویر اصلی + تصاویر رسمی دفتر: این‌ها همان فایل‌هایی هستند که در
-      // مقالۀ «انتخاب وکیل در قزوین» هم منتشر شده‌اند، تا موتور جست‌وجو
+      // مقالهی «انتخاب وکیل در قزوین» هم منتشر شده‌اند، تا موتور جست‌وجو
       // (به‌ویژه جست‌وجوی تصویر) این عکس‌ها را به نام وکیل نسبت دهد.
       image: [
         absoluteUrl(`${siteConfig.lawyer.photo.basePath}.jpg`),
@@ -40,7 +40,7 @@ export const meta: PageMeta = {
         ? {
             identifier: {
               "@type": "PropertyValue",
-              propertyID: "شمارۀ پروانۀ وکالت",
+              propertyID: "شمارهی پروانهی وکالت",
               value: siteConfig.lawyer.licenseNumberLatin,
             },
           }
@@ -56,7 +56,7 @@ export const meta: PageMeta = {
 
 const APPROACH = [
   {
-    title: "ارزیابی صادقانه، نه وعدۀ شیرین",
+    title: "ارزیابی صادقانه، نه وعدهی شیرین",
     body: "هیچ پرونده‌ای از پیش برنده نیست. پیش از قبول وکالت، نقاط قوت و ضعف پرونده و ریسک‌های آن صریح گفته می‌شود تا تصمیم با آگاهی گرفته شود.",
   },
   {
@@ -65,7 +65,7 @@ const APPROACH = [
   },
   {
     title: "شفافیت هزینه‌ها",
-    body: "حق‌الوکاله و هزینه‌های جانبی از ابتدا مکتوب اعلام می‌شود؛ هزینۀ پنهانی وجود ندارد.",
+    body: "حق‌الوکاله و هزینه‌های جانبی از ابتدا مکتوب اعلام می‌شود؛ هزینهی پنهانی وجود ندارد.",
   },
   {
     title: "رازداری حرفه‌ای",
@@ -79,7 +79,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="درباره وکیل"
         title={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle}`}
-        description={`دفتر وکالت و مشاورۀ حقوقی در ${siteConfig.site.city}؛ با تمرکز بر دعاوی خانواده، کیفری، ملکی و ثبتی، اسناد تجاری، حقوق کار و امور شرکت‌ها.`}
+        description={`دفتر وکالت و مشاورهی حقوقی در ${siteConfig.site.city}؛ با تمرکز بر دعاوی خانواده، کیفری، ملکی و ثبتی، اسناد تجاری، حقوق کار و امور شرکت‌ها.`}
         breadcrumbs={meta.breadcrumbs}
       />
 
@@ -95,13 +95,13 @@ export default function AboutPage() {
                   <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.barAssociation}</p>
                 ) : (
                   <p className="text-[12.5px] text-ink/70">
-                    دفتر وکالت و مشاورۀ حقوقی در {siteConfig.site.city}
+                    دفتر وکالت و مشاورهی حقوقی در {siteConfig.site.city}
                   </p>
                 )}
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
                 {siteConfig.lawyer.licenseNumber && (
                   <p className="text-[12.5px] text-ink/70">
-                    شمارۀ پروانۀ وکالت:{" "}
+                    شمارهی پروانهی وکالت:{" "}
                     <span className="font-extrabold text-ink/90">
                       {siteConfig.lawyer.licenseNumber}
                     </span>
@@ -118,7 +118,7 @@ export default function AboutPage() {
             <div className="mt-4 space-y-4 text-[14px] leading-9 text-ink/80">
               <p>
                 وقتی کسی به وکیل مراجعه می‌کند، معمولاً در یکی از دشوارترین دوره‌های زندگی خود است:
-                اختلاف خانوادگی، پروندۀ کیفری، معاملۀ ملکی که به مشکل خورده یا مطالبه‌ای که سال‌ها
+                اختلاف خانوادگی، پروندهی کیفری، معاملهی ملکی که به مشکل خورده یا مطالبه‌ای که سال‌ها
                 معطل مانده است. در چنین شرایطی، آنچه بیش از هر چیز کمک می‌کند، یک ارزیابی روشن و
                 یک مسیر مشخص است.
               </p>
@@ -129,8 +129,8 @@ export default function AboutPage() {
                 تخصصی دیگری باشد، پیش از طرح دعوا مشخص می‌شود.
               </p>
               <p>
-                این وب‌سایت با همین نگاه طراحی شده است: اطلاعات عمومی، شفاف و قابل استناد دربارۀ
-                مسیرهای حقوقی، به‌همراه امکان ثبت درخواست مشاوره. در همۀ مراحل، محرمانگی اطلاعات
+                این وب‌سایت با همین نگاه طراحی شده است: اطلاعات عمومی، شفاف و قابل استناد دربارهی
+                مسیرهای حقوقی، به‌همراه امکان ثبت درخواست مشاوره. در همهی مراحل، محرمانگی اطلاعات
                 موکل رعایت می‌شود.
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function AboutPage() {
               >
                 معیارهای انتخاب وکیل در قزوین
               </Link>{" "}
-              توضیح می‌دهد در جلسۀ اول چه پرسش‌هایی را مطرح کنید.
+              توضیح می‌دهد در جلسهی اول چه پرسش‌هایی را مطرح کنید.
             </p>
           </div>
         </div>

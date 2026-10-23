@@ -20,7 +20,7 @@ export interface PageMeta {
   publishedTime?: string;
   modifiedTime?: string;
   breadcrumbs?: BreadcrumbItem[];
-  /** دادۀ ساختاریافتۀ اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
+  /** دادهی ساختاریافتهی اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
   jsonLd?: JsonLd[];
 }
 
@@ -85,7 +85,7 @@ export function buildAttorneySchema(): JsonLd {
     .map((social) => social.href);
 
   /**
-   * فقط دادۀ تأییدشده در Schema می‌آید.
+   * فقط دادهی تأییدشده در Schema می‌آید.
    * تلفن، نشانی، ساعات کاری و عضویت حرفه‌ای تا زمانی که در
    * `verification.json` باشند، از خروجی ساختاریافته حذف می‌شوند؛ چون
    * موتورهای جست‌وجو آن‌ها را به‌عنوان واقعیت منتشر می‌کنند.
@@ -148,10 +148,10 @@ export function buildAttorneySchema(): JsonLd {
       : {}),
     ...(lawyer.licenseNumber && lawyer.licenseNumberLatin
       ? {
-          /** شمارۀ پروانۀ وکالت — فقط وقتی تأیید شده باشد منتشر می‌شود */
+          /** شمارهی پروانهی وکالت — فقط وقتی تأیید شده باشد منتشر می‌شود */
           identifier: {
             "@type": "PropertyValue",
-            propertyID: "شمارۀ پروانۀ وکالت",
+            propertyID: "شمارهی پروانهی وکالت",
             value: lawyer.licenseNumberLatin,
           },
           hasCredential: {
