@@ -104,7 +104,7 @@ describe("صفحۀ اصلی", () => {
       );
     }
 
-    // گروه‌هایی که مقالهٔ توضیحی دارند، به همان مقاله پیوند می‌دهند
+    // گروه‌هایی که مقالۀ توضیحی دارند، به همان مقاله پیوند می‌دهند
     const linked = PRACTICE_GROUPS.flatMap((group) =>
       group.claims.filter((claim) => claim.article).map((claim) => claim.article as string)
     );
@@ -114,7 +114,7 @@ describe("صفحۀ اصلی", () => {
         Array.from(main.querySelectorAll("a")).some(
           (anchor) => anchor.getAttribute("href") === `/articles/${article}/`
         ),
-        `پیوند مقالهٔ ${article} در نقشه پیدا نشد`
+        `پیوند مقالۀ ${article} در نقشه پیدا نشد`
       ).toBe(true);
     }
 
