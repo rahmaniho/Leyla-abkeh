@@ -3,11 +3,13 @@ import { toFaDigits } from "../lib/format";
 import SectionHeader from "./SectionHeader";
 import {
   BriefcaseIcon,
+  ContractIcon,
   DocCheckIcon,
   FamilyIcon,
   GavelIcon,
   HardHatIcon,
   HomeIcon,
+  TreeIcon,
 } from "./Icons";
 import { SERVICES, servicePath, type ServiceIconKey } from "../content/services";
 import { Link } from "../lib/router";
@@ -19,6 +21,8 @@ const ICONS: Record<ServiceIconKey, typeof FamilyIcon> = {
   doc: DocCheckIcon,
   hardhat: HardHatIcon,
   briefcase: BriefcaseIcon,
+  tree: TreeIcon,
+  contract: ContractIcon,
 };
 
 export default function Services({ limit }: { limit?: number }) {

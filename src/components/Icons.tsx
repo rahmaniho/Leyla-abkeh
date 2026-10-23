@@ -111,6 +111,29 @@ export function BriefcaseIcon({ className }: IconProps) {
   );
 }
 
+export function TreeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <rect x="9" y="3" width="6" height="5" rx="1.5" />
+      <rect x="3" y="16" width="6" height="5" rx="1.5" />
+      <rect x="15" y="16" width="6" height="5" rx="1.5" />
+      <path d="M12 8v4M6 16v-2.5h12V16" />
+    </svg>
+  );
+}
+
+export function ContractIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <path d="M6 3h8l4 4v6" />
+      <path d="M14 3v4h4" />
+      <path d="M6 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6" />
+      <path d="M8 8h4M8 11.5h4M8 15h2.5" />
+      <path d="m14.5 20.5 5.6-5.6a1.6 1.6 0 0 0-2.3-2.3l-5.6 5.6-.5 2.8 2.8-.5z" />
+    </svg>
+  );
+}
+
 export function PhoneIcon({ className }: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">

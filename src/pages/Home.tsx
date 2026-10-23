@@ -2,6 +2,7 @@ import Hero from "../components/Hero";
 import Stats from "../components/Stats";
 import Features from "../components/Features";
 import Services from "../components/Services";
+import LegalTopics from "../components/LegalTopics";
 import Process from "../components/Process";
 import LatestArticles from "../components/LatestArticles";
 import Benefits from "../components/Benefits";
@@ -28,7 +29,8 @@ export default function HomePage() {
       <Hero />
       <Stats />
       <Features />
-      <Services limit={6} />
+      <Services limit={8} />
+      <LegalTopics />
       <Process />
       <Benefits />
       <LatestArticles />

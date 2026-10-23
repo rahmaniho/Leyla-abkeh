@@ -4,6 +4,7 @@ import App from "../src/App";
 import { primaryPhone, siteConfig } from "../src/config/site";
 import { SERVICES } from "../src/content/services";
 import { ARTICLES, articlePath } from "../src/content/articles";
+import { PRACTICE_GROUPS } from "../src/content/practices";
 
 function renderAt(path: string) {
   return render(<App initialPath={path} />);
@@ -84,6 +85,52 @@ describe("صفحۀ اصلی", () => {
     expect(screen.queryByText("پروندۀ موفق")).toBeNull();
     expect(screen.queryByText("آنچه موکلان از تجربۀ خود می‌گویند")).toBeNull();
     expect(screen.queryByText(/بیش از ۱۲ سال/)).toBeNull();
+  });
+
+  it("نقشۀ انواع دعاوی حقوقی را نشان می‌دهد و به صفحه‌های خدمت لینک می‌دهد", () => {
+    const { unmount } = renderAt("/");
+    const main = document.getElementById("main") as HTMLElement;
+
+    expect(
+      within(main).getByRole("heading", { name: "انواع دعاوی حقوقی، دسته‌بندی‌شده" })
+    ).toBeInTheDocument();
+
+    for (const group of PRACTICE_GROUPS) {
+      const links = within(main)
+        .getAllByRole("link", { name: group.title })
+        .map((link) => link.getAttribute("href"));
+      expect(links, `پیوند خدمت ${group.service} در نقشه نیست`).toContain(
+        `/services/${group.service}/`
+      );
+    }
+
+    // گروه‌هایی که مقالهٔ توضیحی دارند، به همان مقاله پیوند می‌دهند
+    const linked = PRACTICE_GROUPS.flatMap((group) =>
+      group.claims.filter((claim) => claim.article).map((claim) => claim.article as string)
+    );
+    expect(linked.length).toBeGreaterThan(0);
+    for (const article of linked) {
+      expect(
+        Array.from(main.querySelectorAll("a")).some(
+          (anchor) => anchor.getAttribute("href") === `/articles/${article}/`
+        ),
+        `پیوند مقالهٔ ${article} در نقشه پیدا نشد`
+      ).toBe(true);
+    }
+
+    unmount();
+  });
+
+  it("همۀ حوزه‌های فعالیت روی صفحۀ اصلی دیده می‌شوند", () => {
+    const { unmount } = renderAt("/");
+    const main = document.getElementById("main") as HTMLElement;
+    for (const service of SERVICES) {
+      expect(
+        within(main).getAllByRole("link", { name: service.title }).length,
+        `حوزۀ ${service.slug} در صفحه اصلی نیست`
+      ).toBeGreaterThan(0);
+    }
+    unmount();
   });
 
   it("فرم ارسال واقعی دارد و پیام موفقیت کاذب نشان نمی‌دهد", () => {
