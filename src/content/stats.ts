@@ -6,7 +6,7 @@
  * مستند بودند و از انتشار خارج شدند.
  *
  * برای فعال‌سازی: مقدار `verified` را فقط پس از تأیید مستند `true` کنید.
- * بخش آمار در صفحهی اصلی تنها زمانی رندر می‌شود که حداقل یک مورد تأییدشده باشد.
+ * بخش آمار در صفحۀ اصلی تنها زمانی رندر می‌شود که حداقل یک مورد تأییدشده باشد.
  */
 
 export interface StatItem {
@@ -16,7 +16,7 @@ export interface StatItem {
   suffix?: string;
   label: string;
   description: string;
-  /** منبع/مستند تأیید (شمارهی پرونده، گزارش رسمی، …) */
+  /** منبع/مستند تأیید (شمارۀ پرونده، گزارش رسمی، …) */
   source?: string;
   verified: boolean;
 }
@@ -26,7 +26,7 @@ export const STATS: StatItem[] = [
     id: "cases",
     value: 850,
     suffix: "+",
-    label: "پروندهی موفق",
+    label: "پروندۀ موفق",
     description: "در دعاوی گوناگون قضایی",
     verified: false,
   },
@@ -43,7 +43,7 @@ export const STATS: StatItem[] = [
     value: 12,
     suffix: "+",
     label: "سال تجربه",
-    description: "وکالت و مشاورهی حقوقی",
+    description: "وکالت و مشاورۀ حقوقی",
     verified: false,
   },
   {

@@ -7,7 +7,7 @@ import { siteConfig } from "../src/config/site";
  * آزمون لوگوموشن
  * ------------------------------------------------------------------
  * این آزمون‌ها رفتار واقعی کامپوننت را قفل می‌کنند:
- * - فقط یک نمونه در کل سایت، و فقط در صفحهی «درباره»
+ * - فقط یک نمونه در کل سایت، و فقط در صفحۀ «درباره»
  * - بدون بارگذاری زودهنگام (بدون src و با preload="none")
  * - پخش فقط با ورود به قاب دید؛ توقف با خروج از آن
  * - احترام کامل به prefers-reduced-motion (بدون بارگذاری ویدئو)
@@ -54,7 +54,7 @@ afterEach(() => {
 });
 
 describe("محل و تعداد پخش", () => {
-  it("فقط در صفحهی «درباره» و فقط یک نمونه ویدئو وجود دارد", () => {
+  it("فقط در صفحۀ «درباره» و فقط یک نمونه ویدئو وجود دارد", () => {
     const about = renderAt("/about");
     expect(document.querySelectorAll("video")).toHaveLength(1);
     about.unmount();
@@ -148,7 +148,7 @@ describe("دسترس‌پذیری و حرکت", () => {
     expect(video.getAttribute("poster")).toBe(logoMotion.endFrame);
     expect(video.hasAttribute("src")).toBe(false);
     expect(play).not.toHaveBeenCalled();
-    // دکمهی پخش برای کاربری که حرکت کمتر می‌خواهد نمایش داده نمی‌شود
+    // دکمۀ پخش برای کاربری که حرکت کمتر می‌خواهد نمایش داده نمی‌شود
     expect(screen.queryByRole("button", { name: /لوگوموشن/ })).toBeNull();
     unmount();
   });
@@ -175,7 +175,7 @@ describe("دسترس‌پذیری و حرکت", () => {
 });
 
 describe("حالت‌های خطا", () => {
-  it("اگر پخش خودکار مسدود شود، فریم نهایی و دکمهی پخش می‌ماند", async () => {
+  it("اگر پخش خودکار مسدود شود، فریم نهایی و دکمۀ پخش می‌ماند", async () => {
     play.mockImplementation(() => Promise.reject(new Error("NotAllowedError")));
 
     const { unmount } = renderAt("/about");
@@ -200,12 +200,12 @@ describe("حالت‌های خطا", () => {
     unmount();
   });
 
-  it("پس از پایان ویدئو، دکمهی «پخش دوباره» می‌آید و از ابتدا پخش می‌کند", () => {
+  it("پس از پایان ویدئو، دکمۀ «پخش دوباره» می‌آید و از ابتدا پخش می‌کند", () => {
     const { unmount } = renderAt("/about");
     const video = getVideo()!;
 
     fireEvent.ended(video);
-    const replay = screen.getByRole("button", { name: "پخش دوبارهی لوگوموشن" });
+    const replay = screen.getByRole("button", { name: "پخش دوبارۀ لوگوموشن" });
 
     paused = true;
     fireEvent.click(replay);

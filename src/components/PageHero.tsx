@@ -10,7 +10,7 @@ interface PageHeroProps {
   children?: ReactNode;
 }
 
-/** سربرگ تیرهی صفحات داخلی — هم‌خوان با هویت بصری سرمه‌ای/طلایی */
+/** سربرگ تیرۀ صفحات داخلی — هم‌خوان با هویت بصری سرمه‌ای/طلایی */
 export default function PageHero({ eyebrow, title, description, breadcrumbs, children }: PageHeroProps) {
   return (
     <section className="relative overflow-hidden bg-ink pt-28 pb-14 lg:pt-36 lg:pb-20">

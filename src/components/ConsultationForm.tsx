@@ -98,7 +98,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
       return;
     }
 
-    // جلوگیری از ارسال تکراری در فاصلهی کوتاه (سمت کاربر)
+    // جلوگیری از ارسال تکراری در فاصلۀ کوتاه (سمت کاربر)
     try {
       const last = Number(window.localStorage.getItem(STORAGE_KEY) ?? 0);
       if (last && Date.now() - last < DUPLICATE_WINDOW_MS) {
@@ -185,7 +185,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
         </span>
         <h3 className="mt-7 text-2xl font-black text-white">درخواست شما ثبت شد</h3>
         <p className="mt-4 max-w-sm text-[14px] leading-8 text-white/70">
-          درخواست شما در سامانهی دفتر ثبت و به اطلاع وکیل رسید. برای هماهنگی نوبت با شما تماس
+          درخواست شما در سامانۀ دفتر ثبت و به اطلاع وکیل رسید. برای هماهنگی نوبت با شما تماس
           گرفته می‌شود.
         </p>
 
@@ -242,14 +242,14 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
           role="status"
           className="mt-4 rounded-xl border border-amber-300/40 bg-amber-400/10 px-4 py-3 text-[12.5px] leading-6 text-amber-100"
         >
-          <strong className="font-bold">توجه:</strong> در این نسخهی سایت، ثبت آنلاین درخواست
+          <strong className="font-bold">توجه:</strong> در این نسخۀ سایت، ثبت آنلاین درخواست
           فعال نشده است. فرم برای بازبینی نمایش داده می‌شود و ارسال آن انجام نمی‌شود؛ لطفاً از
           راه‌های تماس دفتر استفاده کنید.
         </div>
       )}
 
       <div className="mt-6 space-y-5">
-        {/* تلهی هرزنامه — از دید کاربر و صفحه‌خوان پنهان است */}
+        {/* تلۀ هرزنامه — از دید کاربر و صفحه‌خوان پنهان است */}
         <div className="hidden" aria-hidden="true">
           <label htmlFor={`${baseId}-website`}>وب‌سایت</label>
           <input
@@ -317,7 +317,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
             </p>
           ) : (
             <p id={`${baseId}-phone-hint`} className="mt-1.5 text-[11.5px] text-white/60">
-              شمارهی موبایل یا تلفن ثابت ایران؛ با ارقام فارسی یا لاتین.
+              شمارۀ موبایل یا تلفن ثابت ایران؛ با ارقام فارسی یا لاتین.
             </p>
           )}
         </div>
@@ -379,7 +379,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
             </p>
           ) : (
             <p className="mt-1.5 text-[11.5px] text-white/60">
-              برای حفظ محرمانگی، جزئیات حساس پرونده را در فرم ننویسید؛ در جلسهی مشاوره مطرح کنید.
+              برای حفظ محرمانگی، جزئیات حساس پرونده را در فرم ننویسید؛ در جلسۀ مشاوره مطرح کنید.
             </p>
           )}
         </div>
@@ -408,7 +408,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
               </a>
             ) : (
               <p className="mt-2 text-[12.5px] leading-6 text-red-100/90">
-                اگر ارسال دوباره هم موفق نشد، لطفاً کمی بعد تلاش کنید؛ شمارهی تلفن دفتر در حال
+                اگر ارسال دوباره هم موفق نشد، لطفاً کمی بعد تلاش کنید؛ شمارۀ تلفن دفتر در حال
                 تأیید نهایی است و به‌زودی در همین صفحه منتشر می‌شود.
               </p>
             )}

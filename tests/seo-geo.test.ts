@@ -9,7 +9,7 @@ import { SITE_URL } from "../src/config/site";
  * «جئو» (GEO) یعنی بهینه‌سازی برای موتورهای پاسخ‌دهنده و دستیارهای هوش
  * مصنوعی. سه چیز در این پروژه آن را پوشش می‌دهد:
  *   ۱. بخش پرسش‌های متداول در خود متن + FAQPage دقیقاً هم‌خوان با آن؛
- *   ۲. دادهی ساختاریافتهی کامل‌تر مقاله (موضوع، کلیدواژه، موجودیت خدمت)؛
+ *   ۲. دادۀ ساختاریافتۀ کامل‌تر مقاله (موضوع، کلیدواژه، موجودیت خدمت)؛
  *   ۳. فایل `llms.txt` با معرفی نهاد و فهرست صفحه‌ها.
  * این آزمون‌ها از هم‌خوانی این سه لایه با محتوای واقعی محافظت می‌کنند.
  */
@@ -17,13 +17,13 @@ import { SITE_URL } from "../src/config/site";
 const articles = ARTICLES;
 
 describe("پرسش‌های متداول مقالات", () => {
-  it("هر مقالهی منتشرشده دست‌کم سه پرسش متداول دارد", () => {
+  it("هر مقالۀ منتشرشده دست‌کم سه پرسش متداول دارد", () => {
     for (const article of articles) {
-      expect(article.faqs.length, `مقالهی ${article.slug} پرسش متداول ندارد`).toBeGreaterThanOrEqual(3);
+      expect(article.faqs.length, `مقالۀ ${article.slug} پرسش متداول ندارد`).toBeGreaterThanOrEqual(3);
     }
   });
 
-  it("پرسش و پاسخ‌ها خالی نیستند و پاسخ‌ها به‌اندازهی کافی توضیح دارند", () => {
+  it("پرسش و پاسخ‌ها خالی نیستند و پاسخ‌ها به‌اندازۀ کافی توضیح دارند", () => {
     for (const article of articles) {
       for (const faq of article.faqs) {
         expect(faq.question.length, `پرسش کوتاه در ${article.slug}`).toBeGreaterThan(10);
@@ -43,18 +43,18 @@ describe("پرسش‌های متداول مقالات", () => {
     }
   });
 
-  it("پارسر در متن بدون بخش پرسش‌ها آرایهی خالی برمی‌گرداند", () => {
+  it("پارسر در متن بدون بخش پرسش‌ها آرایۀ خالی برمی‌گرداند", () => {
     expect(extractFaqs("## یک بخش\nمتن")).toEqual([]);
-    expect(extractFaqs("## سؤالات متداول\n\n### پرسش نمونهی کافی بلند\nپاسخ نمونه که به‌قدر کافی بلند است و بررسی می‌شود.")).toEqual([
+    expect(extractFaqs("## سؤالات متداول\n\n### پرسش نمونۀ کافی بلند\nپاسخ نمونه که به‌قدر کافی بلند است و بررسی می‌شود.")).toEqual([
       {
-        question: "پرسش نمونهی کافی بلند",
+        question: "پرسش نمونۀ کافی بلند",
         answer: "پاسخ نمونه که به‌قدر کافی بلند است و بررسی می‌شود.",
       },
     ]);
   });
 });
 
-describe("دادهی ساختاریافتهی مقاله برای سئو و جئو", () => {
+describe("دادۀ ساختاریافتۀ مقاله برای سئو و جئو", () => {
   const schemaFor = (slug: string) => {
     const jsonLd = resolveRoute(`/articles/${slug}`).meta.jsonLd ?? [];
     const articleSchema = jsonLd.find((item) => item["@type"] === "Article");
@@ -92,7 +92,7 @@ describe("دادهی ساختاریافتهی مقاله برای سئو و جئ
     }
   });
 
-  it("توضیح متای مقالات در محدودهی نمایش نتایج جست‌وجو است", () => {
+  it("توضیح متای مقالات در محدودۀ نمایش نتایج جست‌وجو است", () => {
     for (const article of articles) {
       const meta = resolveRoute(`/articles/${article.slug}`).meta;
       expect(meta.description.length, `متای بلند در ${article.slug}`).toBeLessThanOrEqual(165);
@@ -100,7 +100,7 @@ describe("دادهی ساختاریافتهی مقاله برای سئو و جئ
     }
   });
 
-  it("صفحهی فهرست مقالات، Blog و ItemList با همهی مقالات دارد", () => {
+  it("صفحۀ فهرست مقالات، Blog و ItemList با همۀ مقالات دارد", () => {
     const jsonLd = resolveRoute("/articles").meta.jsonLd ?? [];
     const types = jsonLd.map((item) => item["@type"]);
     expect(types).toContain("Blog");
@@ -119,7 +119,7 @@ describe("دادهی ساختاریافتهی مقاله برای سئو و جئ
     expect((articleSchema?.isPartOf as { "@id": string })["@id"]).toContain("/articles/#blog");
   });
 
-  it("تصویر شاخص مقاله در دادهی ساختاریافته با ابعاد درست می‌آید", () => {
+  it("تصویر شاخص مقاله در دادۀ ساختاریافته با ابعاد درست می‌آید", () => {
     const { articleSchema } = schemaFor("ejare-maskan-tamdid-va-takhliye");
     const image = articleSchema?.image as { url: string; width: number; height: number };
     expect(image.url).toContain("/images/covers/ejare-cover.jpg");
@@ -138,7 +138,7 @@ describe("فایل llms.txt", () => {
     expect(llms).toContain("مجتمع تجاری نیایش");
   });
 
-  it("همهی مقالات و صفحه‌های اصلی را فهرست می‌کند", () => {
+  it("همۀ مقالات و صفحه‌های اصلی را فهرست می‌کند", () => {
     for (const article of articles) {
       expect(llms).toContain(`${SITE_URL}/articles/${article.slug}/`);
     }
@@ -147,7 +147,7 @@ describe("فایل llms.txt", () => {
   });
 
   it("به مدل‌ها هشدار می‌دهد عدد و آمار نسازند", () => {
-    expect(llms).toContain("هیچ آمار، امتیاز، نظر موکل یا وعدهی نتیجه");
+    expect(llms).toContain("هیچ آمار، امتیاز، نظر موکل یا وعدۀ نتیجه");
     expect(llms).not.toContain("aggregateRating");
   });
 });
@@ -160,7 +160,7 @@ describe("پیوندهای درونی مقالات", () => {
     }
   });
 
-  it("همهی خدمات ارجاع‌شده در مقالات وجود دارند", () => {
+  it("همۀ خدمات ارجاع‌شده در مقالات وجود دارند", () => {
     for (const article of articles) {
       for (const slug of article.relatedServices) {
         expect(getArticle(article.slug)?.relatedServices).toContain(slug);

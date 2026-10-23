@@ -9,7 +9,7 @@ import { COVER_HEIGHT, COVER_RATIO, COVER_SIZES, COVER_WIDTH, coverImage } from 
 
 export default function ArticlePage({ article }: { article: Article }) {
   const breadcrumbs = [
-    { name: "صفحهی اصلی", path: "/" },
+    { name: "صفحۀ اصلی", path: "/" },
     { name: "مقالات", path: "/articles" },
     { name: article.title, path: articlePath(article.slug) },
   ];
@@ -24,7 +24,7 @@ export default function ArticlePage({ article }: { article: Article }) {
 
   return (
     <>
-      <PageHero eyebrow="مقالهی حقوقی" title={article.title} breadcrumbs={breadcrumbs}>
+      <PageHero eyebrow="مقالۀ حقوقی" title={article.title} breadcrumbs={breadcrumbs}>
         <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12.5px] text-white/70">
           <span>نویسنده: {article.author}</span>
           <span aria-hidden="true">·</span>
@@ -74,7 +74,7 @@ export default function ArticlePage({ article }: { article: Article }) {
             />
 
             <p className="mt-10 rounded-2xl border border-gold/25 bg-gold/5 p-5 text-[12.5px] leading-7 text-ink/75">
-              این مقاله جنبهی اطلاع‌رسانی عمومی دارد و جایگزین مشاورهی حقوقی دربارهی پروندهی مشخص
+              این مقاله جنبۀ اطلاع‌رسانی عمومی دارد و جایگزین مشاورۀ حقوقی دربارۀ پروندۀ مشخص
               نیست. برای بررسی موضوع خود،{" "}
               <Link
                 to="/contact"

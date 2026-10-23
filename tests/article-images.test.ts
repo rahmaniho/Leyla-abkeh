@@ -13,7 +13,7 @@ describe("تصاویر داخل متن مقالات", () => {
     expect(withFigures.length).toBe(ARTICLES.length);
   });
 
-  it("همهی فایل‌های تصویر داخل متن در سه قالب و دو اندازه موجودند", () => {
+  it("همۀ فایل‌های تصویر داخل متن در سه قالب و دو اندازه موجودند", () => {
     for (const article of withFigures) {
       const paths = Array.from(article.body.matchAll(/\]\((\/images\/articles\/[^\s")]+)/g)).map(
         (match) => match[1]
@@ -21,7 +21,7 @@ describe("تصاویر داخل متن مقالات", () => {
       expect(paths.length).toBeGreaterThan(0);
 
       for (const imagePath of paths) {
-        // مسیر باید به نسخهی بزرگ ۱۲۰۰w اشاره کند
+        // مسیر باید به نسخۀ بزرگ ۱۲۰۰w اشاره کند
         expect(imagePath, `مسیر ${imagePath} باید -1200 داشته باشد`).toMatch(/-1200\.jpe?g$/);
         const stem = imagePath.replace(/-1200\.jpe?g$/i, "");
 

@@ -71,7 +71,7 @@ export default function Navbar() {
         <Link
           to="/"
           className="group flex shrink-0 items-center gap-3"
-          aria-label={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} — صفحهی اصلی`}
+          aria-label={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} — صفحۀ اصلی`}
         >
           {/* لوگوی کامل رسمی: نشان + خطاطی + نام لاتین، بدون بریدگی */}
           <BrandLogo

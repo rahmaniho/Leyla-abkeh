@@ -18,13 +18,13 @@ import { buildAttorneySchema, buildBreadcrumbSchema, pageUrl, type PageMeta } fr
 import { Link } from "../lib/router";
 
 const breadcrumbs = [
-  { name: "صفحهی اصلی", path: "/" },
+  { name: "صفحۀ اصلی", path: "/" },
   { name: "تماس", path: "/contact" },
 ];
 
 export const meta: PageMeta = {
   title: "تماس با دفتر وکالت در قزوین | نشانی، ساعات کاری و فرم مشاوره | لیلا آبکه",
-  description: `راه‌های ارتباط با دفتر وکالت ${siteConfig.lawyer.name} در ${siteConfig.site.city}: ثبت درخواست مشاورهی آنلاین، نشانی دفتر و ساعات کاری.`,
+  description: `راه‌های ارتباط با دفتر وکالت ${siteConfig.lawyer.name} در ${siteConfig.site.city}: ثبت درخواست مشاورۀ آنلاین، نشانی دفتر و ساعات کاری.`,
   path: "/contact",
   type: "website",
   breadcrumbs,
@@ -46,7 +46,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="ارتباط با دفتر"
         title="تماس با دفتر وکالت"
-        description="برای تعیین نوبت مشاوره، پرسش دربارهی یک موضوع حقوقی یا هماهنگی جلسه، از راه‌های زیر با دفتر در تماس باشید."
+        description="برای تعیین نوبت مشاوره، پرسش دربارۀ یک موضوع حقوقی یا هماهنگی جلسه، از راه‌های زیر با دفتر در تماس باشید."
         breadcrumbs={breadcrumbs}
       />
 
@@ -128,7 +128,7 @@ export default function ContactPage() {
                     <span className="block text-[12.5px] font-medium text-ink/70">واتساپ</span>
                     <span className="mt-1 block text-base font-extrabold text-ink">
                       ارسال پیام در واتساپ
-                      <span className="sr-only">(باز شدن در پنجرهی جدید)</span>
+                      <span className="sr-only">(باز شدن در پنجرۀ جدید)</span>
                     </span>
                   </span>
                 </a>
@@ -172,7 +172,7 @@ export default function ContactPage() {
                         className="mt-2 inline-flex items-center gap-1.5 text-[12.5px] font-bold text-gold-deep underline decoration-gold/40 underline-offset-4 hover:text-ink"
                       >
                         مسیریابی در نقشه
-                        <span className="sr-only">(باز شدن در پنجرهی جدید)</span>
+                        <span className="sr-only">(باز شدن در پنجرۀ جدید)</span>
                       </a>
                     )}
                   </div>
@@ -224,7 +224,7 @@ export default function ContactPage() {
 
             <p className="mt-8 rounded-2xl border border-gold/25 bg-gold/5 p-5 text-[12.5px] leading-7 text-ink/75">
               برای حفظ محرمانگی، جزئیات حساس پرونده را در پیام یا فرم ارسال نکنید. اطلاعات ضروری
-              در جلسهی مشاوره و به‌صورت امن دریافت می‌شود.{" "}
+              در جلسۀ مشاوره و به‌صورت امن دریافت می‌شود.{" "}
               <Link
                 to="/privacy"
                 className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
