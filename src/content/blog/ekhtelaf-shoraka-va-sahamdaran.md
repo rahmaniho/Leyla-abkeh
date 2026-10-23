@@ -98,3 +98,4 @@ draft: false
 - [انحلال و تصفیۀ شرکت](/articles/enhelal-va-tasfiye-sherkat)
 - [مطالبۀ وجه: از اظهارنامه تا اجرا](/articles/vojoh-motalebe-madarek-va-marahel)
 - [کلاهبرداری و خیانت در امانت](/articles/kelahbardari-ya-khiyanat-dar-amanat)
+- [مطالبات تجاری شرکت](/articles/motalebat-tejari-sherkat)

@@ -106,3 +106,4 @@ draft: false
 - [گواهی انحصار وراثت: مدارک و مراحل](/articles/enhesar-varasat-madarek-va-marahel)
 
 برای بررسی پروندۀ خود [درخواست مشاوره](/contact) ثبت کنید یا صفحۀ [اموال غیرمنقول و امور ثبتی](/services/amlak-va-sebat) را ببینید.
+- [الزام به تفکیک و پایان‌کار](/articles/elzam-be-tafkik-payankar)

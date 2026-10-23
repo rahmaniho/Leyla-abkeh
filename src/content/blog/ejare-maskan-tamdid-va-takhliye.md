@@ -97,3 +97,4 @@ draft: false
 - [خلع ید و تصرف عدوانی در ملک](/articles/khole-yad-va-tasarrof-odvani)
 
 برای بررسی پروندۀ خود [درخواست مشاوره](/contact) ثبت کنید یا صفحۀ [اموال غیرمنقول و امور ثبتی](/services/amlak-va-sebat) را ببینید.
+- [حق سرقفلی و حق کسب‌وپیشه](/articles/hagh-sarghofli-va-kasb-opishe)

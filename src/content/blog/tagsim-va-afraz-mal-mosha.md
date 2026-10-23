@@ -111,3 +111,4 @@ draft: false
 - [خلع ید و رفع تصرف عدوانی](/articles/khole-yad-va-tasarrof-odvani)
 - [الزام به تنظیم سند رسمی](/articles/elzam-be-tanzim-sanad-rasmi)
 - [انحصار وراثت و تقسیم ترکه](/articles/enhesar-varasat-madarek-va-marahel)
+- [فروش مال مشترک وراث](/articles/forush-mal-moshtarak-varas)

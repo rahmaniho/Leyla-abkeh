@@ -94,3 +94,4 @@ draft: false
 - [کلاهبرداری و خیانت در امانت](/articles/kelahbardari-ya-khiyanat-dar-amanat)
 - [مطالبۀ وجه: از اظهارنامه تا اجرا](/articles/vojoh-motalebe-madarek-va-marahel)
 - [الزام به تنظیم سند رسمی](/articles/elzam-be-tanzim-sanad-rasmi)
+- [تغییرات و ثبت شرکت](/articles/taghirat-va-sabt-sherkat)
