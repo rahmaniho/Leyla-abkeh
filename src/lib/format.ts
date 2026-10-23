@@ -5,7 +5,7 @@ export function toFaDigits(value: string | number): string {
   return String(value).replace(/[0-9]/g, (digit) => FA_DIGITS[Number(digit)]);
 }
 
-/** تاریخ شمسی با ارقام فارسی — خروجی مستقل از منطقۀ زمانی مرورگر */
+/** تاریخ شمسی با ارقام فارسی — خروجی مستقل از منطقهی زمانی مرورگر */
 export function formatDateFa(isoDate: string): string {
   const date = new Date(isoDate);
   if (Number.isNaN(date.getTime())) return "";

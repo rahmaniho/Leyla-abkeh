@@ -79,7 +79,7 @@ function buildRobots(siteUrl) {
 }
 
 async function main() {
-  const { render, indexablePaths, sitemapEntries, SITE_URL } = await import(ssrEntry);
+  const { render, indexablePaths, sitemapEntries, buildLlmsFile, SITE_URL } = await import(ssrEntry);
   const template = await readTemplate();
 
   const siteUrl = (process.env.VITE_SITE_URL || process.env.URL || SITE_URL).replace(/\/+$/, "");
@@ -97,7 +97,7 @@ async function main() {
     }
   }
 
-  // صفحهٔ ۴۰۴ (Netlify برای مسیرهای ناموجود، dist/404.html را با کد ۴۰۴ سرو می‌کند)
+  // صفحهی ۴۰۴ (Netlify برای مسیرهای ناموجود، dist/404.html را با کد ۴۰۴ سرو می‌کند)
   const notFound = render("/404");
   const notFoundPage = buildPage(template, notFound);
   await writeFile(path.join(distDir, "404.html"), notFoundPage, "utf8");
@@ -107,6 +107,11 @@ async function main() {
   await writeFile(path.join(distDir, "sitemap.xml"), buildSitemap(entries, siteUrl), "utf8");
   await writeFile(path.join(distDir, "robots.txt"), buildRobots(siteUrl), "utf8");
   console.log(`  ✓ sitemap.xml (${entries.length} آدرس) و robots.txt`);
+
+  // llms.txt: معرفی سایت و فهرست صفحه‌ها برای دستیارهای هوش مصنوعی (GEO)
+  const llms = buildLlmsFile().replaceAll(SITE_URL, siteUrl);
+  await writeFile(path.join(distDir, "llms.txt"), llms, "utf8");
+  console.log("  ✓ llms.txt (معرفی سایت برای موتورهای پاسخ‌دهنده)");
 
   if (failures.length > 0) {
     console.error(`\n${failures.length} مسیر پیش‌رندر نشد.`);

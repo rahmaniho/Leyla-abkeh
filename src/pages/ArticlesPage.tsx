@@ -3,19 +3,19 @@ import Reveal from "../components/Reveal";
 import FinalCTA from "../components/FinalCTA";
 import { ARTICLES, articlePath } from "../content/articles";
 import { formatDateFa, toFaDigits } from "../lib/format";
-import { buildBreadcrumbSchema, type PageMeta } from "../lib/seo";
+import { buildBreadcrumbSchema, pageUrl, type PageMeta } from "../lib/seo";
 import { Link } from "../lib/router";
 import { CARD_SIZES, COVER_HEIGHT, COVER_RATIO, COVER_WIDTH, coverImage } from "../lib/images";
 
 const breadcrumbs = [
-  { name: "صفحۀ اصلی", path: "/" },
+  { name: "صفحهی اصلی", path: "/" },
   { name: "مقالات", path: "/articles" },
 ];
 
 export const meta: PageMeta = {
   title: "مقالات حقوقی | راهنمای مسائل خانواده، ملکی و تجاری | لیلا آبکه",
   description:
-    "مقالات حقوقی دفتر وکالت لیلا آبکه: راهنمای عملی موضوعات خانواده، چک و اسناد تجاری، ملکی و کیفری با نگاه به رویۀ عملی و مدارک لازم.",
+    "مقالات حقوقی دفتر وکالت لیلا آبکه: راهنمای عملی موضوعات خانواده، چک و اسناد تجاری، ملکی و کیفری با نگاه به رویهی عملی و مدارک لازم.",
   path: "/articles",
   type: "website",
   breadcrumbs,
@@ -26,6 +26,33 @@ export const meta: PageMeta = {
       "@type": "CollectionPage",
       name: "مقالات حقوقی",
       inLanguage: "fa-IR",
+      isPartOf: { "@id": `${pageUrl("/articles")}#blog` },
+    },
+    /*
+     * موجودیت Blog و فهرست مقالات:
+     * مقاله‌ها با `isPartOf` به همین گره ارجاع می‌دهند. ItemList هم به
+     * موتورهای جست‌وجو و دستیارهای هوش مصنوعی می‌گوید این صفحه یک فهرست
+     * مرتب است، نه چند لینک پراکنده.
+     */
+    {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      "@id": `${pageUrl("/articles")}#blog`,
+      name: "مقالات حقوقی دفتر وکالت لیلا آبکه",
+      inLanguage: "fa-IR",
+      publisher: { "@id": `${pageUrl("/")}#attorney` },
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "فهرست مقالات حقوقی",
+      numberOfItems: ARTICLES.length,
+      itemListElement: ARTICLES.map((article, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: pageUrl(articlePath(article.slug)),
+        name: article.title,
+      })),
     },
   ],
 };
@@ -36,7 +63,7 @@ export default function ArticlesPage() {
       <PageHero
         eyebrow="مقالات حقوقی"
         title="راهنمای حقوقی، بدون پیچیدگی"
-        description="مطالب این بخش با هدف روشن‌کردن مسیرهای قانونی نوشته می‌شوند؛ نه جایگزین مشاورۀ حقوقی، بلکه نقطۀ شروع برای پرسش‌های درست."
+        description="مطالب این بخش با هدف روشن‌کردن مسیرهای قانونی نوشته می‌شوند؛ نه جایگزین مشاورهی حقوقی، بلکه نقطهی شروع برای پرسش‌های درست."
         breadcrumbs={breadcrumbs}
       />
 

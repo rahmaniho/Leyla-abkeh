@@ -48,7 +48,7 @@ function imageSize(file: string): { width: number; height: number } | null {
     return null;
   }
 
-  // AVIF: جست‌وجوی جعبۀ ispe
+  // AVIF: جست‌وجوی جعبهی ispe
   const text = buffer.toString("latin1");
   const ispe = text.indexOf("ispe");
   if (ispe !== -1) {
@@ -61,20 +61,20 @@ function imageSize(file: string): { width: number; height: number } | null {
 const withCover = ARTICLES.filter((article) => article.cover);
 
 describe("تصاویر شاخص مقالات", () => {
-  it("هر مقالۀ منتشرشده تصویر شاخص با توضیح alt دارد", () => {
+  it("هر مقالهی منتشرشده تصویر شاخص با توضیح alt دارد", () => {
     expect(withCover.length).toBe(ARTICLES.length);
     for (const article of ARTICLES) {
-      expect(article.cover, `مقالۀ ${article.slug} تصویر شاخص ندارد`).toBeTruthy();
+      expect(article.cover, `مقالهی ${article.slug} تصویر شاخص ندارد`).toBeTruthy();
       expect(
         (article.coverAlt ?? "").trim().length,
-        `مقالۀ ${article.slug} توضیح تصویر (alt) ندارد`
+        `مقالهی ${article.slug} توضیح تصویر (alt) ندارد`
       ).toBeGreaterThan(15);
       // alt نباید صرفاً تکرار عنوان باشد
       expect(article.coverAlt).not.toBe(article.title);
     }
   });
 
-  it("فایل تصویر و نسخه‌های چندگانۀ آن در public وجود دارند", () => {
+  it("فایل تصویر و نسخه‌های چندگانهی آن در public وجود دارند", () => {
     for (const article of withCover) {
       const cover = article.cover as string;
       const stem = cover.replace(/\.jpe?g$/i, "");
@@ -88,7 +88,7 @@ describe("تصاویر شاخص مقالات", () => {
     }
   });
 
-  it("ابعاد تصاویر شاخص ۱۲۰۰×۶۳۰ و نسخۀ کوچک ۶۴۰×۳۳۶ است", () => {
+  it("ابعاد تصاویر شاخص ۱۲۰۰×۶۳۰ و نسخهی کوچک ۶۴۰×۳۳۶ است", () => {
     for (const article of withCover) {
       const stem = (article.cover as string).replace(/\.jpe?g$/i, "");
       for (const ext of ["jpg", "webp", "avif"]) {

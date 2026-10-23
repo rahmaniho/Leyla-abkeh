@@ -53,7 +53,7 @@ const paths = [
 ];
 
 describe("hydration", () => {
-  it.each(paths)("صفحۀ %s بدون ناسازگاری hydration بارگذاری می‌شود", async (path) => {
+  it.each(paths)("صفحهی %s بدون ناسازگاری hydration بارگذاری می‌شود", async (path) => {
     window.history.replaceState({}, "", path);
 
     const { html } = render(path);

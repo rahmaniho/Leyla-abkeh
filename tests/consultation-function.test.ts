@@ -6,7 +6,7 @@ const validBody = {
   name: "سارا محمدی",
   phone: "09121234567",
   topic: "دعاوی خانواده",
-  message: "دربارۀ مهریه سوال دارم.",
+  message: "دربارهی مهریه سوال دارم.",
   website: "",
   startedAt: Date.now() - 10_000,
 };
@@ -49,7 +49,7 @@ describe("تابع دریافت درخواست مشاوره", () => {
     expect(response.status).toBe(405);
   });
 
-  it("بدنۀ نامعتبر JSON را رد می‌کند", async () => {
+  it("بدنهی نامعتبر JSON را رد می‌کند", async () => {
     const response = await handler(request("{not json"), context);
     expect(response.status).toBe(400);
   });
@@ -90,7 +90,7 @@ describe("تابع دریافت درخواست مشاوره", () => {
     expect(data.ok).toBe(false);
   });
 
-  it("هرزنامۀ honeypot را بی‌صدا می‌پذیرد اما ارسال نمی‌کند", async () => {
+  it("هرزنامهی honeypot را بی‌صدا می‌پذیرد اما ارسال نمی‌کند", async () => {
     const response = await handler(request({ ...validBody, website: "http://spam.example" }), context);
     expect(response.status).toBe(202);
     expect(globalThis.fetch).not.toHaveBeenCalled();

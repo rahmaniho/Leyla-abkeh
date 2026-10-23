@@ -1,7 +1,7 @@
 /**
- * مسیر پایۀ انتشار (Base path)
+ * مسیر پایهی انتشار (Base path)
  * ------------------------------------------------------------------
- * - دامنۀ اختصاصی یا Netlify → `"/"`
+ * - دامنهی اختصاصی یا Netlify → `"/"`
  * - GitHub Pages برای یک مخزن پروژه‌ای → `"/Leyla-abkeh/"`
  *
  * مقدار از `base` در vite.config.ts می‌آید (متغیر محیطی `VITE_BASE_PATH`).
@@ -15,13 +15,13 @@ const RAW_BASE: string = import.meta.env?.BASE_URL ?? "/";
 /** مسیر پایه بدون اسلش انتهایی؛ مثال: `""` یا `"/Leyla-abkeh"` */
 export const BASE_PATH = RAW_BASE.replace(/\/+$/, "");
 
-/** نسخۀ خالص و آزمون‌پذیر: افزودن پایه به یک نشانی داخلی */
+/** نسخهی خالص و آزمون‌پذیر: افزودن پایه به یک نشانی داخلی */
 export function withBasePath(path: string, base = BASE_PATH): string {
   if (!path.startsWith("/")) return path;
   return `${base}${path}`;
 }
 
-/** نسخۀ خالص و آزمون‌پذیر: حذف پایه از `pathname` مرورگر */
+/** نسخهی خالص و آزمون‌پذیر: حذف پایه از `pathname` مرورگر */
 export function stripBaseFrom(pathname: string, base = BASE_PATH): string {
   if (!base) return pathname;
   if (pathname === base) return "/";

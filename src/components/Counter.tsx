@@ -10,7 +10,7 @@ interface CounterProps {
   duration?: number;
 }
 
-/** شمارندۀ متحرک که با ورود به دید، عدد را تا مقدار نهایی بالا می‌برد. */
+/** شمارندهی متحرک که با ورود به دید، عدد را تا مقدار نهایی بالا می‌برد. */
 export default function Counter({
   value,
   decimals = 0,

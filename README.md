@@ -4,7 +4,7 @@
 
 - **فناوری:** React 19 · TypeScript 5.9 · Vite 7 · Tailwind CSS 4
 - **میزبانی:** Netlify (Static + Functions) — میزبان اصلی
-- **نسخهٔ نمایشی:** GitHub Pages → https://rahmaniho.github.io/Leyla-abkeh/
+- **نسخهی نمایشی:** GitHub Pages → https://rahmaniho.github.io/Leyla-abkeh/
 - **مدیریت محتوا:** Decap CMS (محتوا در Git، پنل در `/admin/`)
 - **معماری:** چندصفحه‌ای با پیش‌رندر (SSG) در زمان بیلد
 
@@ -44,8 +44,8 @@ PREVIEW_BASE=/Leyla-abkeh npm run preview   # → http://localhost:4173/Leyla-ab
 
 ## تصاویر مقالات
 
-- **تصویر شاخص:** `public/images/covers/<نام>-cover.<jpg|webp|avif>` (۱۲۰۰×۶۳۰) + نسخهٔ `-640` (۶۴۰×۳۳۶)
-- **تصویر داخل متن:** `public/images/articles/<نام>-1200.<jpg|webp|avif>` (۱۲۰۰×۶۷۵) + نسخهٔ `-640` (۶۴۰×۳۶۰)
+- **تصویر شاخص:** `public/images/covers/<نام>-cover.<jpg|webp|avif>` (۱۲۰۰×۶۳۰) + نسخهی `-640` (۶۴۰×۳۳۶)
+- **تصویر داخل متن:** `public/images/articles/<نام>-1200.<jpg|webp|avif>` (۱۲۰۰×۶۷۵) + نسخهی `-640` (۶۴۰×۳۶۰)
 
 این نام‌گذاری باعث می‌شود `<picture>`، `srcset` و `sizes` خودکار ساخته شوند. در متن مقاله:
 
@@ -74,9 +74,9 @@ tests/             آزمون‌های واحد/یکپارچه
 docs/              ممیزی، گزارش تغییرات و راهنمای استقرار
 ```
 
-## اطلاعات سایت و «دروازهٔ تأیید»
+## اطلاعات سایت و «دروازهی تأیید»
 
-همهٔ اطلاعات تماس، نشانی، ساعات کاری و شبکه‌های اجتماعی در `src/config/site.ts`
+همهی اطلاعات تماس، نشانی، ساعات کاری و شبکه‌های اجتماعی در `src/config/site.ts`
 متمرکز شده است. برای تغییر شماره تلفن یا نشانی، فقط همین فایل را ویرایش کنید.
 
 اطلاعاتی که هنوز تأیید نشده‌اند در `src/config/verification.json` فهرست شده‌اند:
@@ -90,9 +90,9 @@ npm run verify:config
 
 | مورد | رفتار تا زمان تأیید |
 | --- | --- |
-| `contact.phone` | هیچ شماره‌ای (و هیچ لینک `tel:`/واتساپی) نمایش داده نمی‌شود؛ جای آن دکمهٔ «درخواست تماس» به فرم است |
-| `contact.officePhone` | شمارهٔ ثابت نمایش داده نمی‌شود |
-| `contact.address` / `contact.hours` | متن نمایش داده می‌شود اما با نشانهٔ «در حال تأیید» و **بدون** ورود به JSON-LD |
+| `contact.phone` | هیچ شماره‌ای (و هیچ لینک `tel:`/واتساپی) نمایش داده نمی‌شود؛ جای آن دکمهی «درخواست تماس» به فرم است |
+| `contact.officePhone` | شمارهی ثابت نمایش داده نمی‌شود |
+| `contact.address` / `contact.hours` | متن نمایش داده می‌شود اما با نشانهی «در حال تأیید» و **بدون** ورود به JSON-LD |
 | `lawyer.barAssociation` | ادعای عضویت در کانون وکلا حذف می‌شود |
 | `pricing.consultation` / `pricing.freeConsultation` | رقم تعرفه و ادعای رایگان‌بودن نمایش داده نمی‌شود |
 

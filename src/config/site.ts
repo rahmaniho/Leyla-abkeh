@@ -26,19 +26,19 @@ function normalizeSiteUrl(value: string | undefined): string {
 export const SITE_URL = normalizeSiteUrl(import.meta.env?.VITE_SITE_URL);
 
 /**
- * شمارۀ تماس اصلی.
+ * شمارهی تماس اصلی.
  * ⚠️ مقدار فعلی نمونه است و در هیچ صفحه‌ای نمایش داده نمی‌شود؛ چون مورد
- * `contact.phone` در `verification.json` باقی است. پس از دریافت شمارۀ واقعی،
+ * `contact.phone` در `verification.json` باقی است. پس از دریافت شمارهی واقعی،
  * همین مقدار را عوض کنید و آن مورد را از فهرست حذف کنید.
  */
 const PRIMARY_PHONE_E164 = "+989900925811";
 
 /**
- * مقدار نمونۀ کارخانه‌ای. اگر این مقدار در سایت بماند، حتی پس از حذف مورد از
- * فهرست تأیید هم منتشر نمی‌شود؛ تا شمارۀ واقعی جایگزین نشود.
+ * مقدار نمونهی کارخانه‌ای. اگر این مقدار در سایت بماند، حتی پس از حذف مورد از
+ * فهرست تأیید هم منتشر نمی‌شود؛ تا شمارهی واقعی جایگزین نشود.
  */
 const SAMPLE_PHONE_E164 = "+989121234567";
-/** شمارۀ ثابت دفتر — تأییدنشده؛ اگر وجود ندارد `null` بگذارید. */
+/** شمارهی ثابت دفتر — تأییدنشده؛ اگر وجود ندارد `null` بگذارید. */
 const OFFICE_PHONE_E164: string | null = null;
 
 export interface PendingVerification {
@@ -59,7 +59,7 @@ const PENDING_KEYS = new Set(PENDING_VERIFICATION.map((item) => item.key));
 /**
  * آیا این مورد هنوز تأیید نشده است؟
  * منبع حقیقت، همان `src/config/verification.json` است: هر موردی که در آن فهرست
- * باشد «تأییدنشده» شمرده می‌شود و از سایت/دادۀ ساختاریافته حذف می‌ماند.
+ * باشد «تأییدنشده» شمرده می‌شود و از سایت/دادهی ساختاریافته حذف می‌ماند.
  * برای انتشار یک مقدار: مقدار واقعی را در همین فایل بگذارید و مورد مربوط را
  * از `verification.json` بردارید.
  */
@@ -69,9 +69,9 @@ export function isPending(key: string): boolean {
 
 /** وضعیت تأیید اطلاعات حساس — هیچ‌کدام به‌صورت پیش‌فرض تأییدشده نیست. */
 export const verification = {
-  /** شمارۀ تلفن (و پیوند واتساپ ساخته‌شده از آن) */
+  /** شمارهی تلفن (و پیوند واتساپ ساخته‌شده از آن) */
   phone: isPending("contact.phone"),
-  /** شمارۀ ثابت دفتر */
+  /** شمارهی ثابت دفتر */
   officePhone: isPending("contact.officePhone"),
   /** نشانی دفتر */
   address: isPending("contact.address"),
@@ -79,11 +79,11 @@ export const verification = {
   hours: isPending("contact.hours"),
   /** عضویت در کانون وکلا */
   barAssociation: isPending("lawyer.barAssociation"),
-  /** شمارۀ پروانه */
+  /** شمارهی پروانه */
   licenseNumber: isPending("lawyer.licenseNumber"),
-  /** تعرفۀ مشاوره */
+  /** تعرفهی مشاوره */
   pricing: isPending("pricing.consultation"),
-  /** ادعای مشاورۀ اولیۀ رایگان */
+  /** ادعای مشاورهی اولیهی رایگان */
   freeConsultation: isPending("pricing.freeConsultation"),
 } as const;
 
@@ -118,10 +118,10 @@ function faDigits(value: string): string {
   return value.replace(/[0-9]/g, (digit) => map[Number(digit)]);
 }
 
-/** خلاصۀ ساعات کاری برای نمایش در یک خط */
+/** خلاصهی ساعات کاری برای نمایش در یک خط */
 export const HOURS_SUMMARY = "شنبه تا چهارشنبه ۹ تا ۱۸ · پنجشنبه‌ها ۹ تا ۱۳";
 
-/** ساعات کاری گروه‌بندی‌شده برای نمایش در فوتر و صفحۀ تماس */
+/** ساعات کاری گروه‌بندی‌شده برای نمایش در فوتر و صفحهی تماس */
 export const HOURS_LINES: string[] = [
   "شنبه تا چهارشنبه: ۹ تا ۱۸",
   "پنجشنبه‌ها: ۹ تا ۱۳",
@@ -142,7 +142,7 @@ export const siteConfig = {
     country: "IR",
     defaultTitle: "وکیل پایه یک دادگستری در قزوین | لیلا آبکه",
     defaultDescription:
-      "دفتر وکالت لیلا آبکه، وکیل پایه یک دادگستری در قزوین؛ مشاورۀ حقوقی در دعاوی خانواده، کیفری، ملکی، چک و اسناد تجاری، حقوق کار و شرکت‌ها.",
+      "دفتر وکالت لیلا آبکه، وکیل پایه یک دادگستری در قزوین؛ مشاورهی حقوقی در دعاوی خانواده، کیفری، ملکی، چک و اسناد تجاری، حقوق کار و شرکت‌ها.",
   },
 
   lawyer: {
@@ -150,14 +150,14 @@ export const siteConfig = {
     nameLatin: "Leyla Abkeh",
     jobTitle: "وکیل پایه یک دادگستری",
     /**
-     * شمارۀ پروانۀ وکالت — تأییدشده توسط مالک (۳۰ مهر ۱۴۰۴).
-     * مثل بقیۀ داده‌های حساس، اگر این مورد دوباره به `verification.json`
-     * برگردد به‌صورت خودکار از سایت و دادۀ ساختاریافته حذف می‌شود.
+     * شمارهی پروانهی وکالت — تأییدشده توسط مالک (۳۰ مهر ۱۴۰۴).
+     * مثل بقیهی داده‌های حساس، اگر این مورد دوباره به `verification.json`
+     * برگردد به‌صورت خودکار از سایت و دادهی ساختاریافته حذف می‌شود.
      */
     licenseNumber: (verification.licenseNumber ? null : "۲۳۷۰") as string | null,
     /** همان شماره با ارقام لاتین برای Schema.org — هم‌زمان با فیلد بالا فعال/غیرفعال می‌شود */
     licenseNumberLatin: (verification.licenseNumber ? null : "2370") as string | null,
-    /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادۀ ساختاریافته‌ای نمی‌آید. */
+    /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادهی ساختاریافته‌ای نمی‌آید. */
     barAssociation: (verification.barAssociation
       ? null
       : "کانون وکلای دادگستری استان قزوین") as string | null,
@@ -168,21 +168,21 @@ export const siteConfig = {
       basePath: "/images/lawyer",
       width: 762,
       height: 1016,
-      alt: "پرترۀ لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
+      alt: "پرترهی لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
     },
   },
 
-  /** هویت بصری: لوگوی رسمی دفتر (طلایی روی زمینۀ شفاف) */
+  /** هویت بصری: لوگوی رسمی دفتر (طلایی روی زمینهی شفاف) */
   brand: {
     /** مارک تنها (بدون خطاطی و نام لاتین) — برای نوار بالا، پاورقی و آیکون‌ها */
     mark: { png: "/images/brand/logo-mark.png", webp: "/images/brand/logo-mark.webp", width: 300, height: 274 },
-    /** لوگوی کامل: مارک + خطاطی «لیلا» + نام لاتین (با حاشیۀ امن، بدون بریدگی) */
+    /** لوگوی کامل: مارک + خطاطی «لیلا» + نام لاتین (با حاشیهی امن، بدون بریدگی) */
     lockup: {
       png: "/images/brand/logo-lockup.png",
       webp: "/images/brand/logo-lockup.webp",
       width: 460,
       height: 651,
-      /** نسخۀ بزرگ‌تر برای نمایشگرهای پرتراکم و بخش‌های بزرگ‌تر */
+      /** نسخهی بزرگ‌تر برای نمایشگرهای پرتراکم و بخش‌های بزرگ‌تر */
       pngLarge: "/images/brand/logo-lockup-700.png",
       webpLarge: "/images/brand/logo-lockup-700.webp",
     },
@@ -190,14 +190,14 @@ export const siteConfig = {
   },
 
   contact: {
-    /** شمارۀ اصلی — تأییدشده توسط دفتر */
+    /** شمارهی اصلی — تأییدشده توسط دفتر */
     phoneE164: PRIMARY_PHONE_E164,
     officePhoneE164: OFFICE_PHONE_E164,
     /** ایمیل رسمی دفتر */
     email: "info@leyla-abkeh.ir" as string | null,
     /** خالی‌گذاری‌شده: کد پستی تا تأیید */
     postalCode: null as string | null,
-    /** مختصات تأییدشدۀ دفتر (برای نقشه و دادۀ ساختاریافته) */
+    /** مختصات تأییدشدهی دفتر (برای نقشه و دادهی ساختاریافته) */
     geo: { latitude: 36.2665941, longitude: 50.0236544 } as {
       latitude: number;
       longitude: number;
@@ -234,7 +234,7 @@ export const siteConfig = {
      * آیا این استقرار سرور دریافت درخواست دارد؟
      * Netlify (با تابع `netlify/functions/consultation.mjs`) → true
      * GitHub Pages (فقط فایل ایستا) → با `VITE_FORM_MODE=static` در زمان بیلد false می‌شود
-     * تا فرم به‌جای وعدۀ بی‌عمل، وضعیت واقعی را نشان دهد.
+     * تا فرم به‌جای وعدهی بی‌عمل، وضعیت واقعی را نشان دهد.
      */
     deliveryAvailable: (import.meta.env?.VITE_FORM_MODE ?? "live") !== "static",
   },
@@ -250,7 +250,7 @@ export const siteConfig = {
       width: 416,
       height: 752,
       /** توضیح متنی جایگزین برای فناوری‌های کمکی */
-      alt: "لوگوموشن دفتر وکالت لیلا آبکه: نشان طلایی دفتر روی زمینۀ تیره",
+      alt: "لوگوموشن دفتر وکالت لیلا آبکه: نشان طلایی دفتر روی زمینهی تیره",
       /** ردیف متن توصیفی (ویدیو صدا ندارد) */
       captions: "/media/logo-motion.vtt",
     },
@@ -279,7 +279,7 @@ export function formatPhoneFa(e164: string): string {
   return digits;
 }
 
-/** «+989121234567» → «۰۲۸ ۳۳۶۶ ۰۰۰۰» برای شمارۀ ثابت */
+/** «+989121234567» → «۰۲۸ ۳۳۶۶ ۰۰۰۰» برای شمارهی ثابت */
 export function formatLandlineFa(e164: string): string {
   const national = e164.replace(/^\+98/, "0");
   return fa(national);
@@ -299,8 +299,8 @@ export interface PhoneLink {
 }
 
 /**
- * شمارۀ اصلی فقط زمانی وجود دارد که تأیید شده باشد.
- * همۀ کامپوننت‌ها باید حالت `null` را مدیریت کنند؛ در این حالت به‌جای
+ * شمارهی اصلی فقط زمانی وجود دارد که تأیید شده باشد.
+ * همهی کامپوننت‌ها باید حالت `null` را مدیریت کنند؛ در این حالت به‌جای
  * پیوند تلفنی، «درخواست تماس» از طریق فرم نمایش داده می‌شود.
  */
 export const primaryPhone: PhoneLink | null =
@@ -313,16 +313,16 @@ export const primaryPhone: PhoneLink | null =
       ariaLabel: `تماس با دفتر وکالت — ${formatPhoneFa(siteConfig.contact.phoneE164)}`,
     };
 
-/** متن شفاف برای زمانی که شمارۀ تلفن تأیید نشده است. */
+/** متن شفاف برای زمانی که شمارهی تلفن تأیید نشده است. */
 export const PHONE_PENDING_MESSAGE =
-  "شمارۀ تلفن دفتر پس از تأیید نهایی در همین صفحه منتشر می‌شود؛ تا آن زمان از فرم درخواست مشاوره استفاده کنید تا با شما تماس گرفته شود.";
+  "شمارهی تلفن دفتر پس از تأیید نهایی در همین صفحه منتشر می‌شود؛ تا آن زمان از فرم درخواست مشاوره استفاده کنید تا با شما تماس گرفته شود.";
 
 /** متن کوتاه برای دکمه‌ها و نوارها */
-export const PHONE_PENDING_SHORT = "شمارۀ تلفن در حال تأیید است";
+export const PHONE_PENDING_SHORT = "شمارهی تلفن در حال تأیید است";
 
 /** پیام تأییدنشدن ساعات کاری (نمایش داده می‌شوند اما صحتشان تأیید نشده) */
 export const CONTACT_DETAILS_PENDING_MESSAGE =
-  "ساعات کاری این صفحه هنوز تأیید نهایی نشده است؛ پیش از مراجعۀ حضوری، از طریق فرم یا تلفن هماهنگ کنید.";
+  "ساعات کاری این صفحه هنوز تأیید نهایی نشده است؛ پیش از مراجعهی حضوری، از طریق فرم یا تلفن هماهنگ کنید.";
 
 export const officePhone: PhoneLink | null =
   !verification.officePhone && siteConfig.contact.officePhoneE164
@@ -335,7 +335,7 @@ export const officePhone: PhoneLink | null =
     : null;
 
 /**
- * لینک واتساپ فقط با شمارۀ تأییدشده ساخته می‌شود؛ شمارۀ نمونه نباید به یک
+ * لینک واتساپ فقط با شمارهی تأییدشده ساخته می‌شود؛ شمارهی نمونه نباید به یک
  * حساب واقعی در واتساپ وصل شود.
  */
 /** پیوند ایمیل (تنها وقتی ایمیل تنظیم شده باشد) */
@@ -349,7 +349,7 @@ export const emailLink =
       ? { address: siteConfig.contact.email, href: `mailto:${siteConfig.contact.email}` }
       : null;
 
-/** پیوند نقشه بر پایۀ مختصات تأییدشده (در نبود مختصات، جست‌وجوی نشانی) */
+/** پیوند نقشه بر پایهی مختصات تأییدشده (در نبود مختصات، جست‌وجوی نشانی) */
 export const mapUrl: string | null = siteConfig.contact.geo
   ? `https://www.google.com/maps/search/?api=1&query=${siteConfig.contact.geo.latitude},${siteConfig.contact.geo.longitude}`
   : siteConfig.contact.address.full

@@ -8,7 +8,7 @@ import { SERVICES, servicePath } from "../src/content/services";
 /**
  * آزمون خودکار axe روی صفحات کلیدی.
  * jsdom چیدمان واقعی ندارد، بنابراین قواعد وابسته به رنگ/چیدمان
- * (color-contrast و …) غیرفعال‌اند؛ کنتراست به‌صورت محاسبۀ مستقل بررسی شده است.
+ * (color-contrast و …) غیرفعال‌اند؛ کنتراست به‌صورت محاسبهی مستقل بررسی شده است.
  */
 const DISABLED_RULES = {
   "color-contrast": { enabled: false },

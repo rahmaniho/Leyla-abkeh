@@ -5,14 +5,14 @@ import { SITE_FAQS } from "../content/faqs";
 import { buildBreadcrumbSchema, buildFaqSchema, type PageMeta } from "../lib/seo";
 
 const breadcrumbs = [
-  { name: "صفحۀ اصلی", path: "/" },
+  { name: "صفحهی اصلی", path: "/" },
   { name: "سوالات متداول", path: "/faq" },
 ];
 
 export const meta: PageMeta = {
   title: "سوالات متداول حقوقی | هزینه، مدارک و مراحل | لیلا آبکه",
   description:
-    "پاسخ به پرسش‌های پرتکرار دربارۀ مشاورۀ حقوقی در قزوین: هزینه و تعرفه، مدارک لازم، محرمانگی اطلاعات، مدت رسیدگی و امکان مشاورۀ آنلاین.",
+    "پاسخ به پرسش‌های پرتکرار دربارهی مشاورهی حقوقی در قزوین: هزینه و تعرفه، مدارک لازم، محرمانگی اطلاعات، مدت رسیدگی و امکان مشاورهی آنلاین.",
   path: "/faq",
   type: "website",
   breadcrumbs,
@@ -32,7 +32,7 @@ export default function FaqPage() {
         items={SITE_FAQS}
         eyebrow="پاسخ‌های کوتاه و روشن"
         title="پیش از مراجعه بدانید"
-        description="این پاسخ‌ها عمومی هستند؛ ارزیابی پروندۀ مشخص نیازمند بررسی مدارک است."
+        description="این پاسخ‌ها عمومی هستند؛ ارزیابی پروندهی مشخص نیازمند بررسی مدارک است."
         titleId="faq-page-title"
         openFirst={false}
       />
