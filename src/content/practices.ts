@@ -62,7 +62,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "مطالبۀ خسارت", article: "motalebe-khesarat" },
       { title: "وجه التزام و جریمۀ تأخیر", article: "vajh-altazam" },
       { title: "ابطال معامله", article: "ebtal-moamele" },
-      { title: "مطالبۀ طلب و بدهی" },
+      { title: "مطالبۀ طلب و بدهی", article: "motalebe-talab-va-bedehi" },
     ],
   },
   {
@@ -93,7 +93,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "اثبات وصیت و رد وصیت" },
       { title: "مطالبۀ سهم‌الارث", article: "tarkeh-taqsim-va-motalebe-sahm-ol-ers" },
       { title: "فروش مال مشترک وراث" },
-      { title: "استرداد اموال ماترک" },
+      { title: "استرداد اموال ماترک", article: "esterdad-amval-matarok" },
     ],
   },
   {
@@ -108,7 +108,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "مطالبۀ وجه سفته", article: "safte-motalebe-vojoh-va-vakhvast" },
       { title: "اخذ گواهی عدم پرداخت" },
       { title: "دعوای علیه ظهرنویس و ضامن" },
-      { title: "ابطال اجراییه" },
+      { title: "ابطال اجراییه", article: "ebtal-ejraiye" },
     ],
   },
   {
@@ -122,7 +122,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "سنوات و عیدی", article: "sanavat-va-eidi-motalebe" },
       { title: "شکایت اخراج از کار", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "بیمۀ بیکاری", article: "ekhraj-az-kar-va-bime-bikari" },
-      { title: "خسارت حادثۀ ناشی از کار" },
+      { title: "خسارت حادثۀ ناشی از کار", article: "khesarat-hadese-kar" },
       { title: "حق سرقفلی و حق کسب‌وپیشه", article: "hagh-sarghofli-va-kasb-opishe" },
     ],
   },
@@ -138,7 +138,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "بازبینی و تنظیم قرارداد تجاری" },
       { title: "مطالبات تجاری شرکت" },
       { title: "تغییرات و ثبت شرکت" },
-      { title: "دعاوی علیه مدیرعامل" },
+      { title: "دعاوی علیه مدیرعامل", article: "davaye-aliye-modir-amel" },
     ],
   },
   {
