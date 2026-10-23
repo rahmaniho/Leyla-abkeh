@@ -58,7 +58,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     claims: [
       { title: "مطالبۀ وجه", article: "vojoh-motalebe-madarek-va-marahel" },
       { title: "الزام به ایفای تعهد" },
-      { title: "فسخ و انفساخ قرارداد" },
+      { title: "فسخ و انفساخ قرارداد", article: "faskh-va-enfesakh-gharardad" },
       { title: "مطالبۀ خسارت" },
       { title: "وجه التزام و جریمۀ تأخیر" },
       { title: "ابطال معامله" },
@@ -89,9 +89,9 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     service: "ers-va-varasat",
     claims: [
       { title: "گواهی انحصار وراثت", article: "enhesar-varasat-madarek-va-marahel" },
-      { title: "تقسیم ترکه" },
+      { title: "تقسیم ترکه", article: "tarkeh-taqsim-va-motalebe-sahm-ol-ers" },
       { title: "اثبات وصیت و رد وصیت" },
-      { title: "مطالبۀ سهم‌الارث" },
+      { title: "مطالبۀ سهم‌الارث", article: "tarkeh-taqsim-va-motalebe-sahm-ol-ers" },
       { title: "فروش مال مشترک وراث" },
       { title: "استرداد اموال ماترک" },
     ],
@@ -123,7 +123,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "شکایت اخراج از کار", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "بیمۀ بیکاری", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "خسارت حادثۀ ناشی از کار" },
-      { title: "حق سرقفلی و حق کسب‌وپیشه" },
+      { title: "حق سرقفلی و حق کسب‌وپیشه", article: "hagh-sarghofli-va-kasb-opishe" },
     ],
   },
   {
@@ -133,7 +133,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     icon: "briefcase",
     service: "sherkat-ha",
     claims: [
-      { title: "اختلاف شرکا و سهامداران" },
+      { title: "اختلاف شرکا و سهامداران", article: "ekhtelaf-shoraka-va-sahamdaran" },
       { title: "انحلال و تصفیۀ شرکت", article: "enhelal-va-tasfiye-sherkat" },
       { title: "بازبینی و تنظیم قرارداد تجاری" },
       { title: "مطالبات تجاری شرکت" },
@@ -152,7 +152,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "دفاع در تحقیقات مقدماتی" },
       { title: "دفاع در دادگاه" },
       { title: "کلاهبرداری و خیانت در امانت", article: "kelahbardari-ya-khiyanat-dar-amanat" },
-      { title: "ضرب و جرح و تهدید" },
+      { title: "ضرب و جرح و تهدید", article: "zarb-jarh-va-tahdid-shkayat" },
       { title: "اعتراض به رأی کیفری" },
     ],
   },
