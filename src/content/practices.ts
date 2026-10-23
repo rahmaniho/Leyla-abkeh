@@ -59,8 +59,8 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "مطالبۀ وجه", article: "vojoh-motalebe-madarek-va-marahel" },
       { title: "الزام به ایفای تعهد", article: "elzam-be-ifaye-tahod" },
       { title: "فسخ و انفساخ قرارداد", article: "faskh-va-enfesakh-gharardad" },
-      { title: "مطالبۀ خسارت" },
-      { title: "وجه التزام و جریمۀ تأخیر" },
+      { title: "مطالبۀ خسارت", article: "motalebe-khesarat" },
+      { title: "وجه التزام و جریمۀ تأخیر", article: "vajh-altazam" },
       { title: "ابطال معامله", article: "ebtal-moamele" },
       { title: "مطالبۀ طلب و بدهی" },
     ],
@@ -78,7 +78,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
       { title: "رفع تصرف عدوانی", article: "khole-yad-va-tasarrof-odvani" },
       { title: "ممانعت از حق و مزاحمت", article: "momanet-az-hagh-va-mozahmat" },
       { title: "تقسیم مال مشاع", article: "tagsim-va-afraz-mal-mosha" },
-      { title: "الزام به تفکیک و پایان‌کار" },
+      { title: "الزام به تفکیک و پایان‌کار", article: "elzam-be-tafkik-payankar" },
     ],
   },
   {
@@ -118,7 +118,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     icon: "hardhat",
     service: "hoghoogh-kar",
     claims: [
-      { title: "مطالبۀ حقوق و مزایا" },
+      { title: "مطالبۀ حقوق و مزایا", article: "motalebe-hoquq-mozaya" },
       { title: "سنوات و عیدی", article: "sanavat-va-eidi-motalebe" },
       { title: "شکایت اخراج از کار", article: "ekhraj-az-kar-va-bime-bikari" },
       { title: "بیمۀ بیکاری", article: "ekhraj-az-kar-va-bime-bikari" },
@@ -148,7 +148,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
     icon: "gavel",
     service: "keyfari",
     claims: [
-      { title: "تنظیم شکواییه" },
+      { title: "تنظیم شکواییه", article: "tanzim-shekvaiye" },
       { title: "دفاع در تحقیقات مقدماتی" },
       { title: "دفاع در دادگاه" },
       { title: "کلاهبرداری و خیانت در امانت", article: "kelahbardari-ya-khiyanat-dar-amanat" },
