@@ -109,9 +109,12 @@ describe("رسم‌الخط فارسی در مقالات", () => {
       expect(/[\u0600-\u06FF]ۀ/.test(article.body), `${article.slug} شکل «ۀ» ندارد`).toBe(true);
 
       // واژه‌هایی که خودشان به «هی» ختم می‌شوند و «ۀ» در آن‌ها غلط است
-      const heiWords = ["گواهی", "آگاهی", "شفاهی", "کوتاهی", "همراهی", "کارگاهی", "منتهی"];
+      // «هی» در واژه‌هایی مثل گواهی، گزارش‌دهی و منتهی بخشی از خودِ واژه است
+      const notEzafe = [/اهی$/, /دهی$/, /تهی$/];
       const offenders = (article.body.match(/[\u0600-\u06FF\u200c]+/g) ?? []).filter(
-        (word) => /هی$/.test(word) && !/اهی$/.test(word) && !heiWords.includes(word)
+        (word) =>
+          /هی$/.test(word) &&
+          !notEzafe.some((suffix) => suffix.test(word))
       );
       expect(offenders, `${article.slug}: ${offenders.join(", ")}`).toEqual([]);
     }
