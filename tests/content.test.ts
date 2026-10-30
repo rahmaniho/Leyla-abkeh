@@ -4,7 +4,7 @@ import { SERVICES, getService } from "../src/content/services";
 import { SITE_FAQS } from "../src/content/faqs";
 import { APPROVED_TESTIMONIALS, TESTIMONIALS } from "../src/content/testimonials";
 import { STATS, VERIFIED_STATS } from "../src/content/stats";
-import { consultationFee, feeVerified, pricingPlans } from "../src/config/pricing";
+import { consultationAmount, consultationFee, feeVerified, freeConsultationVerified, pricingPlans } from "../src/config/pricing";
 import { PENDING_VERIFICATION } from "../src/config/site";
 
 describe("پارسر Front Matter", () => {
@@ -125,17 +125,20 @@ describe("محتوای حساس و تأییدنشده", () => {
     expect(STATS.every((stat) => stat.verified === false)).toBe(true);
   });
 
-  it("تعرفۀ تأییدنشده به‌عنوان تأییدشده علامت نخورده است", () => {
-    expect(consultationFee.verified).toBe(false);
+  it("تعرفۀ تأییدشدۀ مشاوره از یک منبع و متناسب با زمان محاسبه می‌شود", () => {
+    expect(consultationFee.verified).toBe(true);
+    expect(feeVerified).toBe(true);
+    expect([30, 60, 90].map(consultationAmount)).toEqual([500_000, 1_000_000, 1_500_000]);
+    expect(pricingPlans.find((plan) => plan.id === "consultation")?.priceLabel).toBe("۵۰۰٬۰۰۰");
+    expect(SITE_FAQS.some((faq) => faq.answer.includes("۵۰۰٬۰۰۰"))).toBe(true);
+    expect(SITE_FAQS.some((faq) => faq.answer.includes("۹۸۰"))).toBe(false);
   });
 
-  it("مبلغ تأییدنشدۀ مشاوره در هیچ متن عمومی منتشر نمی‌شود", () => {
-    const feeInPlans = pricingPlans.find((plan) => plan.id === "consultation");
-    expect(feeVerified).toBe(false);
-    expect(feeInPlans?.priceLabel).not.toContain("۹۸۰");
-    expect(SITE_FAQS.some((faq) => faq.answer.includes("۹۸۰"))).toBe(false);
-    // اگر دفتر مبلغ را تأیید کند، فقط با یک تغییر در `consultationFee.verified` برمی‌گردد
-    expect(consultationFee.amountToman).toBeGreaterThan(0);
+  it("تأیید تعرفه ادعای مشاورۀ رایگان یا کسر هزینه را فعال نمی‌کند", () => {
+    expect(freeConsultationVerified).toBe(false);
+    expect(pricingPlans.find((plan) => plan.id === "free")?.priceLabel).not.toBe("رایگان");
+    expect(JSON.stringify(pricingPlans)).not.toContain("کسر");
+    expect(JSON.stringify(SITE_FAQS)).not.toContain("از حق‌الوکاله کسر");
   });
 
   it("فهرست موارد نیازمند تأیید خالی نیست و کلید یکتا دارد", () => {

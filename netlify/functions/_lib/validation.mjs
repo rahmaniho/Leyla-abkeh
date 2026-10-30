@@ -7,11 +7,13 @@
  * @property {string} [phone]
  * @property {string} [topic]
  * @property {string} [message]
+ * @property {number|string} [durationMinutes]
+ * @property {string} [contactMethod]
  * @property {string} [website]        فیلد تلۀ هرزنامه (باید خالی باشد)
  * @property {number|string} [startedAt] زمان شروع پر کردن فرم (میلی‌ثانیه)
  *
  * @typedef {{ ok: true, data: SubmissionData } | { ok: false, errors: Record<string,string> }} ValidationResult
- * @typedef {{ name: string, phone: string, phoneE164: string, topic: string, message: string }} SubmissionData
+ * @typedef {{ name: string, phone: string, phoneE164: string, topic: string, message: string, durationMinutes?: number, contactMethod?: string }} SubmissionData
  */
 
 export const TOPICS = [
@@ -23,6 +25,9 @@ export const TOPICS = [
   "حقوق شرکت‌ها و امور تجاری",
   "سایر موضوعات",
 ];
+
+export const CONSULTATION_DURATIONS = [30, 60, 90];
+export const CONTACT_METHODS = ["تلفنی", "حضوری", "آنلاین"];
 
 export const LIMITS = {
   minNameLength: 2,
@@ -132,6 +137,13 @@ export function validateSubmission(input, options = {}) {
   const topic = String(input?.topic ?? "").trim();
   const honeypot = String(input?.website ?? "").trim();
   const normalizedPhone = normalizeIranPhone(String(input?.phone ?? ""));
+  // فیلدهای تازه برای سازگاری با کلاینت‌های قدیمی اختیاری‌اند، اما اگر ارسال شوند محدود می‌شوند.
+  const hasDuration = input?.durationMinutes !== undefined;
+  const rawDuration = input?.durationMinutes;
+  const durationMinutes = Number(rawDuration);
+  const validDurationType = typeof rawDuration === "number" || (typeof rawDuration === "string" && /^\d+$/.test(rawDuration));
+  const hasContactMethod = input?.contactMethod !== undefined;
+  const contactMethod = typeof input?.contactMethod === "string" ? input.contactMethod.trim() : "";
 
   if (honeypot) {
     // تلۀ هرزنامه؛ پیام خطا عمداً عمومی است.
@@ -153,6 +165,13 @@ export function validateSubmission(input, options = {}) {
 
   if (!TOPICS.includes(topic)) {
     errors.topic = "موضوع پرونده را از فهرست انتخاب کنید.";
+  }
+
+  if (hasDuration && (!validDurationType || !CONSULTATION_DURATIONS.includes(durationMinutes))) {
+    errors.durationMinutes = "مدت مشاوره را از فهرست انتخاب کنید.";
+  }
+  if (hasContactMethod && !CONTACT_METHODS.includes(contactMethod)) {
+    errors.contactMethod = "روش ارتباط را از فهرست انتخاب کنید.";
   }
 
   if (message.length > LIMITS.maxMessageLength) {
@@ -182,6 +201,8 @@ export function validateSubmission(input, options = {}) {
       phoneE164: toE164(normalizedPhone),
       topic,
       message,
+      ...(hasDuration ? { durationMinutes } : {}),
+      ...(contactMethod ? { contactMethod } : {}),
     },
   };
 }

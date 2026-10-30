@@ -72,6 +72,24 @@ describe("تابع دریافت درخواست مشاوره", () => {
     expect(data.receivedAt).toBeTruthy();
   });
 
+  it("مدت و روش انتخاب‌شده را پس از اعتبارسنجی به کانال تحویل می‌فرستد", async () => {
+    const response = await handler(request({ ...validBody, durationMinutes: 60, contactMethod: "حضوری" }), context);
+    expect(response.status).toBe(201);
+    const options = vi.mocked(globalThis.fetch).mock.calls[0][1];
+    const delivery = JSON.parse(String(options?.body));
+    expect(delivery.text).toContain("مدت مشاوره: 60 دقیقه");
+    expect(delivery.text).toContain("روش ترجیحی: حضوری");
+  });
+
+  it("مدت یا روش نامعتبر را پیش از تحویل رد می‌کند", async () => {
+    const response = await handler(request({ ...validBody, durationMinutes: 45, contactMethod: "دیگر" }), context);
+    expect(response.status).toBe(422);
+    const data = await response.json();
+    expect(data.errors.durationMinutes).toBeTruthy();
+    expect(data.errors.contactMethod).toBeTruthy();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
+  });
+
   it("در صورت نبود پیکربندی ارسال، پیام موفقیت نمی‌دهد", async () => {
     delete process.env.TELEGRAM_BOT_TOKEN;
     delete process.env.TELEGRAM_CHAT_ID;

@@ -259,6 +259,9 @@ describe("صفحۀ تماس و فرم مشاوره", () => {
 
     renderAt("/contact");
     fillForm();
+    fireEvent.change(screen.getByLabelText("مدت مشاوره"), { target: { value: "90" } });
+    fireEvent.change(screen.getByLabelText("روش ترجیحی ارتباط"), { target: { value: "آنلاین" } });
+    expect(screen.getByText(/تعرفۀ ۹۰ دقیقه مشاوره: ۱٬۵۰۰٬۰۰۰ تومان/)).toBeInTheDocument();
     vi.setSystemTime(new Date(Date.now() + 5000));
     fireEvent.submit(screen.getByRole("form", { name: "فرم درخواست مشاوره" }));
 
@@ -268,6 +271,8 @@ describe("صفحۀ تماس و فرم مشاوره", () => {
     const [, init] = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
     const payload = JSON.parse(String(init?.body));
     expect(payload.phone).toBe("۰۹۱۲۱۲۳۴۵۶۷");
+    expect(payload.durationMinutes).toBe(90);
+    expect(payload.contactMethod).toBe("آنلاین");
     expect(payload.website).toBe("");
   });
 
@@ -345,10 +350,12 @@ describe("صفحات محتوایی", () => {
     expect(screen.getAllByRole("button", { expanded: false }).length).toBeGreaterThan(0);
   });
 
-  it("صفحۀ تعرفه‌ها تا تأیید دفتر هیچ رقم تأییدنشده‌ای نشان نمی‌دهد", () => {
+  it("صفحۀ تعرفه‌ها مبلغ تأییدشده و هزینه‌های متناسب با زمان را نشان می‌دهد", () => {
     renderAt("/pricing");
+    expect(screen.getAllByText(/۵۰۰٬۰۰۰/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/۱٬۰۰۰٬۰۰۰/)).toBeInTheDocument();
+    expect(screen.getByText(/۱٬۵۰۰٬۰۰۰/)).toBeInTheDocument();
     expect(screen.queryByText(/۹۸۰٬۰۰۰/)).toBeNull();
-    expect(screen.getAllByText(/اعلام پیش از جلسه/).length).toBeGreaterThan(0);
     expect(screen.queryByText(/مشاورۀ اولیۀ تلفنی رایگان/)).toBeNull();
   });
 

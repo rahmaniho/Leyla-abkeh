@@ -4,6 +4,8 @@ export interface ConsultationPayload {
   name: string;
   phone: string;
   topic: string;
+  durationMinutes?: number;
+  contactMethod?: string;
   message?: string;
   /** فیلد تلۀ هرزنامه؛ باید خالی بماند */
   website?: string;

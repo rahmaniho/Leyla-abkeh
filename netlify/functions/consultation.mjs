@@ -83,6 +83,8 @@ function buildMessage(data, meta) {
     `نام: ${data.name}`,
     `تماس: ${data.phone}`,
     `موضوع: ${data.topic}`,
+    data.durationMinutes ? `مدت مشاوره: ${data.durationMinutes} دقیقه` : "مدت مشاوره: مشخص نشده",
+    data.contactMethod ? `روش ترجیحی: ${data.contactMethod}` : "روش ترجیحی: مشخص نشده",
     data.message ? `شرح: ${data.message}` : "شرح: —",
     "",
     `کد پیگیری: ${meta.reference}`,

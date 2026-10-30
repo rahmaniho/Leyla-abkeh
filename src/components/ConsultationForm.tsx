@@ -1,9 +1,10 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { primaryPhone, siteConfig } from "../config/site";
 import { serviceTopics } from "../content/services";
-import { validateSubmission } from "../lib/validation";
+import { CONTACT_METHODS, validateSubmission } from "../lib/validation";
+import { CONSULTATION_DURATIONS, consultationAmount, feeVerified, formatToman } from "../config/pricing";
 import { submitConsultation } from "../lib/consultation";
-import { formatDateTimeFa } from "../lib/format";
+import { formatDateTimeFa, toFaDigits } from "../lib/format";
 import { cn } from "../utils/cn";
 import { CheckIcon, PhoneIcon } from "./Icons";
 import { Link } from "../lib/router";
@@ -16,11 +17,13 @@ interface FormValues {
   name: string;
   phone: string;
   topic: string;
+  durationMinutes: string;
+  contactMethod: string;
   message: string;
   website: string;
 }
 
-const EMPTY_VALUES: FormValues = { name: "", phone: "", topic: "", message: "", website: "" };
+const EMPTY_VALUES: FormValues = { name: "", phone: "", topic: "", durationMinutes: "30", contactMethod: "تلفنی", message: "", website: "" };
 const DUPLICATE_WINDOW_MS = 30_000;
 const STORAGE_KEY = "consultation:last-submit";
 
@@ -71,7 +74,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
   };
 
   const focusFirstError = (fieldErrors: Record<string, string>) => {
-    const order = ["form", "name", "phone", "topic", "message"];
+    const order = ["form", "name", "phone", "topic", "durationMinutes", "contactMethod", "message"];
     const first = order.find((field) => fieldErrors[field]);
     if (!first) return;
     const element = formRef.current?.querySelector<HTMLElement>(`[data-field="${first}"]`);
@@ -80,7 +83,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (status === "submitting") return;
+    if (status === "submitting" || !siteConfig.forms.deliveryAvailable) return;
 
     const localValidation = validateSubmission(
       { ...values, startedAt: startedAtRef.current },
@@ -120,6 +123,8 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
       name: values.name,
       phone: values.phone,
       topic: values.topic,
+      durationMinutes: Number(values.durationMinutes),
+      contactMethod: values.contactMethod,
       message: values.message,
       website: values.website,
       startedAt: startedAtRef.current,
@@ -185,8 +190,8 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
         </span>
         <h3 className="mt-7 text-2xl font-black text-white">درخواست شما ثبت شد</h3>
         <p className="mt-4 max-w-sm text-[14px] leading-8 text-white/70">
-          درخواست شما در سامانۀ دفتر ثبت و به اطلاع وکیل رسید. برای هماهنگی نوبت با شما تماس
-          گرفته می‌شود.
+          درخواست شما به کانال دریافت دفتر ارسال شد. زمان و شیوۀ نوبت با هماهنگی دفتر
+          مشخص می‌شود.
         </p>
 
         <dl className="mt-6 w-full max-w-sm space-y-2 rounded-2xl border border-white/12 bg-ink/40 px-5 py-4 text-right text-[13px]">
@@ -234,7 +239,7 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
     >
       <h3 className="text-xl font-extrabold text-white">درخواست مشاوره</h3>
       <p className="mt-2 text-[13px] leading-6 text-white/60">
-        فرم را کامل کنید؛ پس از ثبت، برای تعیین نوبت با شما تماس گرفته می‌شود.
+        در صورت فعال‌بودن ارسال آنلاین، پس از ارسال موفق برای هماهنگی نوبت با شما تماس گرفته می‌شود.
       </p>
 
       {!siteConfig.forms.deliveryAvailable && (
@@ -245,6 +250,11 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
           <strong className="font-bold">توجه:</strong> در این نسخۀ سایت، ثبت آنلاین درخواست
           فعال نشده است. فرم برای بازبینی نمایش داده می‌شود و ارسال آن انجام نمی‌شود؛ لطفاً از
           راه‌های تماس دفتر استفاده کنید.
+          {primaryPhone && (
+            <a href={primaryPhone.href} className="mt-2 block font-bold underline underline-offset-4">
+              تماس تلفنی با دفتر: <span dir="ltr">{primaryPhone.display}</span>
+            </a>
+          )}
         </div>
       )}
 
@@ -355,6 +365,49 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
           )}
         </div>
 
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label htmlFor={`${baseId}-duration`} className={labelClassName}>مدت مشاوره</label>
+            <select
+              id={`${baseId}-duration`}
+              name="durationMinutes"
+              data-field="durationMinutes"
+              value={values.durationMinutes}
+              onChange={(event) => updateField("durationMinutes", event.target.value)}
+              aria-invalid={Boolean(errors.durationMinutes)}
+              aria-describedby={errors.durationMinutes ? `${baseId}-duration-error` : `${baseId}-fee`}
+              className={cn(fieldClassName, "[&>option]:bg-ink [&>option]:text-white")}
+            >
+              {CONSULTATION_DURATIONS.map((minutes) => (
+                <option key={minutes} value={minutes}>{toFaDigits(String(minutes))} دقیقه</option>
+              ))}
+            </select>
+            {errors.durationMinutes && <p id={`${baseId}-duration-error`} className={errorClassName}>{errors.durationMinutes}</p>}
+          </div>
+          <div>
+            <label htmlFor={`${baseId}-method`} className={labelClassName}>روش ترجیحی ارتباط</label>
+            <select
+              id={`${baseId}-method`}
+              name="contactMethod"
+              data-field="contactMethod"
+              value={values.contactMethod}
+              onChange={(event) => updateField("contactMethod", event.target.value)}
+              aria-invalid={Boolean(errors.contactMethod)}
+              aria-describedby={errors.contactMethod ? `${baseId}-method-error` : undefined}
+              className={cn(fieldClassName, "[&>option]:bg-ink [&>option]:text-white")}
+            >
+              {CONTACT_METHODS.map((method) => <option key={method} value={method}>{method}</option>)}
+            </select>
+            {errors.contactMethod && <p id={`${baseId}-method-error`} className={errorClassName}>{errors.contactMethod}</p>}
+          </div>
+        </div>
+        <p id={`${baseId}-fee`} aria-live="polite" className="rounded-xl border border-gold/30 bg-gold/10 px-4 py-3 text-[14px] leading-7 text-white/90">
+          {feeVerified
+            ? `تعرفۀ ${toFaDigits(values.durationMinutes)} دقیقه مشاوره: ${formatToman(consultationAmount(Number(values.durationMinutes)))} تومان`
+            : "تعرفۀ مشاوره پیش از جلسه با دفتر هماهنگ می‌شود."}
+          <span className="mt-1 block text-[12.5px] text-white/70">زمان و شیوۀ نهایی جلسه با دفتر هماهنگ می‌شود.</span>
+        </p>
+
         <div>
           <label htmlFor={`${baseId}-message`} className={labelClassName}>
             شرح کوتاه موضوع{" "}
@@ -417,16 +470,18 @@ export default function ConsultationForm({ compact = false }: { compact?: boolea
 
         <button
           type="submit"
-          disabled={status === "submitting"}
+          disabled={status === "submitting" || !siteConfig.forms.deliveryAvailable}
           className={cn(
             "group flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-l from-gold-light via-gold-light to-gold px-6 py-4 text-base font-extrabold text-ink-deep shadow-gold transition-all duration-300",
-            status === "submitting"
+            status === "submitting" || !siteConfig.forms.deliveryAvailable
               ? "cursor-not-allowed opacity-70"
               : "hover:-translate-y-0.5 hover:shadow-[0_20px_48px_-12px_rgba(184,145,90,0.7)]"
           )}
           aria-busy={status === "submitting"}
         >
-          {status === "submitting" ? (
+          {!siteConfig.forms.deliveryAvailable ? (
+            "ثبت آنلاین غیرفعال است"
+          ) : status === "submitting" ? (
             <>
               <span
                 className="h-5 w-5 animate-spin rounded-full border-2 border-ink-deep/30 border-t-ink-deep"

@@ -5,6 +5,8 @@
 export {
   LIMITS,
   TOPICS,
+  CONSULTATION_DURATIONS,
+  CONTACT_METHODS,
   normalizeDigits,
   normalizeIranPhone,
   toE164,

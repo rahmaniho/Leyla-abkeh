@@ -94,6 +94,18 @@ describe("اعتبارسنجی درخواست مشاوره", () => {
     if (!result.ok) expect(result.errors.phone).toContain("شمارۀ تماس معتبر نیست");
   });
 
+  it("مدت و روش مجاز را می‌پذیرد و انتخاب‌های خارج از فهرست را رد می‌کند", () => {
+    const result = validateSubmission({ ...validInput, durationMinutes: 90, contactMethod: "آنلاین" }, { now: 10_000 });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.data).toMatchObject({ durationMinutes: 90, contactMethod: "آنلاین" });
+    const invalid = validateSubmission({ ...validInput, durationMinutes: 45, contactMethod: "نامعتبر" }, { now: 10_000 });
+    expect(invalid.ok).toBe(false);
+    if (!invalid.ok) {
+      expect(invalid.errors.durationMinutes).toBeTruthy();
+      expect(invalid.errors.contactMethod).toBeTruthy();
+    }
+  });
+
   it("موضوع خارج از فهرست را رد می‌کند", () => {
     const result = validateSubmission({ ...validInput, topic: "موضوع ساختگی" }, { now: 10_000 });
     expect(result.ok).toBe(false);

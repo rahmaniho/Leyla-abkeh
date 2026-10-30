@@ -2,7 +2,8 @@ import Reveal from "./Reveal";
 import SectionHeader from "./SectionHeader";
 import { CheckIcon } from "./Icons";
 import { cn } from "../utils/cn";
-import { FEE_PENDING_MESSAGE, consultationFee, feeVerified, pricingPlans } from "../config/pricing";
+import { CONSULTATION_DURATIONS, FEE_PENDING_MESSAGE, consultationAmount, consultationFee, feeVerified, formatToman, pricingPlans } from "../config/pricing";
+import { toFaDigits } from "../lib/format";
 import { Link } from "../lib/router";
 
 export default function Pricing() {
@@ -82,6 +83,17 @@ export default function Pricing() {
                     {plan.unit}
                   </span>
                 </div>
+
+                {plan.id === "consultation" && feeVerified && (
+                  <dl className="mt-6 space-y-2 rounded-xl border border-white/15 bg-white/5 p-4 text-[14px] leading-7">
+                    {CONSULTATION_DURATIONS.map((minutes) => (
+                      <div key={minutes} className="flex justify-between gap-4">
+                        <dt className="text-white/75">{toFaDigits(String(minutes))} دقیقه</dt>
+                        <dd className="font-bold text-gold-light">{formatToman(consultationAmount(minutes))} تومان</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
 
                 <ul
                   className={cn(
