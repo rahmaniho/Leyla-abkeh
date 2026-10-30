@@ -186,11 +186,15 @@ export default function ContactPage() {
                   </span>
                   <div>
                     <h3 className="text-[12.5px] font-medium text-ink/70">ساعات کاری</h3>
-                    <ul className="mt-1.5 space-y-1 text-[13.5px] text-ink/80">
-                      {openingHoursFa.map((day) => (
-                        <li key={day.schemaDay}>{day.display}</li>
-                      ))}
-                    </ul>
+                    {verification.hours ? (
+                      <p className="mt-1.5 text-[13.5px] leading-7 text-ink/80">برای اطلاع از ساعت مراجعه با دفتر هماهنگ کنید.</p>
+                    ) : (
+                      <ul className="mt-1.5 space-y-1 text-[13.5px] text-ink/80">
+                        {openingHoursFa.map((day) => (
+                          <li key={day.schemaDay}>{day.display}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>

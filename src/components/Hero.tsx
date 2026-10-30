@@ -3,7 +3,7 @@ import LawyerPortrait from "./LawyerPortrait";
 import { ClockIcon, LockIcon, MapPinIcon, PhoneIcon, ScaleIcon, ShieldIcon } from "./Icons";
 import { Link } from "../lib/router";
 import { track } from "../lib/analytics";
-import { HOURS_SUMMARY, officePhone, primaryPhone, siteConfig } from "../config/site";
+import { HOURS_SUMMARY, officePhone, primaryPhone, siteConfig, verification } from "../config/site";
 
 /** نشان‌ها فقط شامل گزاره‌های قابل اثبات هستند. */
 const TRUST_BADGES = [
@@ -17,13 +17,13 @@ export default function Hero() {
 
   return (
     <section
-      className="relative isolate flex min-h-[780px] overflow-hidden bg-ink-deep pt-32 pb-14 sm:pt-36 lg:min-h-[830px] lg:pt-40 lg:pb-20"
+      className="relative isolate overflow-hidden bg-ink-deep pt-32 pb-14 sm:pt-36 lg:flex lg:min-h-[800px] lg:pt-36 lg:pb-16"
       aria-labelledby="hero-title"
     >
       <HeroMedia />
 
-      <div className="relative mx-auto flex w-full max-w-7xl items-center px-5 lg:px-8">
-        <div className="w-full max-w-[720px]">
+      <div className="relative mx-auto grid w-full max-w-7xl items-center gap-6 px-5 lg:grid-cols-[minmax(0,1fr)_minmax(300px,370px)] lg:gap-x-16 lg:gap-y-0 lg:px-8">
+        <div className="max-w-[720px] lg:col-start-1 lg:row-start-1 lg:self-end">
           <p className="inline-flex items-center gap-3 text-[14px] font-bold text-gold-light sm:text-base">
             <span className="h-px w-8 bg-gold-light/80 sm:w-11" aria-hidden="true" />
             دفتر وکالت {lawyer.name} <span className="text-white/35" aria-hidden="true">/</span> {siteConfig.site.city}
@@ -31,16 +31,37 @@ export default function Hero() {
 
           <h1
             id="hero-title"
-            className="mt-5 text-[2rem] font-black leading-[1.5] text-white sm:text-[3.05rem] sm:leading-[1.4] lg:text-[3.45rem]"
+            className="mt-5 text-[2rem] font-black leading-[1.5] text-white sm:text-[3.05rem] sm:leading-[1.4] lg:text-[3.3rem]"
           >
             وکیل خانواده، کیفری
             <br />
             و ملکی <span className="text-gradient-gold">در قزوین</span>
           </h1>
+        </div>
 
-          <p className="mt-5 max-w-xl text-[16px] leading-8 text-white/80 sm:text-lg sm:leading-9">
-            از نخستین مشاوره تا پایان پرونده، در کنار شما هستم؛ با ارزیابی واقع‌بینانه، توضیح
-            شفاف هر مرحله و پیگیری مستمر. اطلاعات موکل، راز حرفه‌ای است.
+        <div className="relative mx-auto w-full max-w-[420px] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none">
+          <div className="pointer-events-none absolute -inset-3 rounded-[2rem] border border-gold-light/20" aria-hidden="true" />
+          <div className="relative flex items-center gap-4 overflow-hidden rounded-[1.5rem] border border-gold-light/30 bg-ink-deep/85 p-3 shadow-deep backdrop-blur-md sm:gap-6 lg:block lg:p-3">
+            <div className="hero-lawyer-photo h-32 w-24 shrink-0 overflow-hidden rounded-xl bg-ink-soft sm:h-40 sm:w-32 lg:aspect-[3/3.25] lg:h-auto lg:w-full">
+              <LawyerPortrait sizes="(min-width: 1024px) 350px, (min-width: 640px) 128px, 96px" priority />
+            </div>
+            <div className="min-w-0 py-2 lg:px-3 lg:py-5">
+              <p className="text-[12px] font-bold text-gold-light">دفتر وکالت در قزوین</p>
+              <p className="mt-1 text-xl font-extrabold text-white sm:text-2xl">{lawyer.name}</p>
+              <p className="mt-1 text-[14px] leading-7 text-white/80">{lawyer.professionalTitle}</p>
+              {lawyer.licenseNumber && (
+                <p className="mt-2 text-[12px] text-white/70">
+                  شمارۀ پروانۀ وکالت: <span className="font-bold text-gold-light">{lawyer.licenseNumber}</span>
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-[720px] lg:col-start-1 lg:row-start-2 lg:self-start">
+          <p className="max-w-xl text-[16px] leading-8 text-white/85 sm:text-lg sm:leading-9 lg:mt-5">
+            برای بررسی مسائل خانواده، کیفری، ملکی و دیگر موضوعات حقوقی، موضوع و مدارک خود را
+            در جلسۀ مشاوره مطرح کنید. تصمیم‌گیری آگاهانه با توضیح مسیرها و رازداری حرفه‌ای آغاز می‌شود.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -85,37 +106,23 @@ export default function Hero() {
             )}
           </div>
 
-          <p className="mt-3 max-w-md text-[13px] leading-6 text-white/65">
-            فرم کوتاه است: نام، شمارۀ تماس و موضوع کلی پرونده. جزئیات حساس را در جلسه مطرح کنید.
+          <p className="mt-3 max-w-md text-[13px] leading-6 text-white/70">
+            برای هماهنگی با دفتر تماس بگیرید؛ جزئیات حساس پرونده را در جلسه مطرح کنید.
           </p>
 
-          <div className="mt-7 flex items-center gap-4 border-t border-white/15 pt-6">
-            <div className="hero-lawyer-photo h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-gold-light/70 bg-ink-soft shadow-deep">
-              <LawyerPortrait sizes="64px" priority />
-            </div>
-            <div className="min-w-0">
-              <p className="text-lg font-extrabold text-white">{lawyer.name}</p>
-              <p className="text-[14px] leading-6 text-white/80">
-                {lawyer.professionalTitle}
-              </p>
-              {lawyer.licenseNumber && (
-                <p className="text-[12px] text-white/65">
-                  شمارۀ پروانۀ وکالت: <span className="font-bold text-gold-light">{lawyer.licenseNumber}</span>
-                </p>
-              )}
-              <p className="text-[12px] text-white/65">پذیرش پرونده با تعیین وقت</p>
-            </div>
-          </div>
-
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[13px] leading-6 text-white/75">
-            <li className="flex items-start gap-2">
-              <MapPinIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
-              <span>{contact.address.full}</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <ClockIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
-              <span>{HOURS_SUMMARY}</span>
-            </li>
+          <ul className="mt-7 flex flex-wrap gap-x-6 gap-y-2 border-t border-white/15 pt-5 text-[13px] leading-6 text-white/75">
+            {!verification.address && (
+              <li className="flex items-start gap-2">
+                <MapPinIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
+                <span>{contact.address.full}</span>
+              </li>
+            )}
+            {!verification.hours && (
+              <li className="flex items-start gap-2">
+                <ClockIcon className="mt-1 h-4 w-4 shrink-0 text-gold-light" />
+                <span>{HOURS_SUMMARY}</span>
+              </li>
+            )}
             {officePhone && (
               <li className="flex items-center gap-2">
                 <PhoneIcon className="h-4 w-4 shrink-0 text-gold-light" />
@@ -124,7 +131,7 @@ export default function Hero() {
             )}
           </ul>
 
-          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-white/10 pt-4">
+          <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
             {TRUST_BADGES.map(({ icon: Icon, text }) => (
               <li key={text} className="flex items-center gap-1.5 text-[12px] font-medium text-white/70">
                 <Icon className="h-4 w-4 shrink-0 text-gold-light" />

@@ -62,24 +62,40 @@ export default function ServicePage({ service }: { service: Service }) {
           <div>
             <div className="space-y-5">
               {service.intro.map((paragraph) => (
-                <p key={paragraph.slice(0, 24)} className="text-[14.5px] leading-9 text-ink/80">
+                <p key={paragraph.slice(0, 24)} className="text-[16px] leading-9 text-ink/85">
                   {paragraph}
                 </p>
               ))}
             </div>
 
+            <nav aria-label="فهرست مطالب این خدمت" className="mt-8 rounded-2xl border border-ink/10 bg-white/75 p-5 sm:p-6">
+              <h2 className="text-base font-extrabold text-ink">در این صفحه</h2>
+              <ul className="mt-3 flex flex-wrap gap-2">
+                {service.sections.map((section, index) => (
+                  <li key={section.heading}>
+                    <a href={`#service-section-${index + 1}`} className="inline-flex min-h-10 items-center rounded-xl border border-ink/10 px-3 py-2 text-[13px] font-bold text-gold-deep hover:border-gold hover:bg-gold/5">
+                      {section.heading}
+                    </a>
+                  </li>
+                ))}
+                <li>
+                  <a href="#service-faq-title" className="inline-flex min-h-10 items-center rounded-xl border border-ink/10 px-3 py-2 text-[13px] font-bold text-gold-deep hover:border-gold hover:bg-gold/5">پرسش‌های متداول</a>
+                </li>
+              </ul>
+            </nav>
+
             <div className="mt-12 space-y-12">
-              {service.sections.map((section) => (
+              {service.sections.map((section, index) => (
                 <Reveal key={section.heading}>
                   <article>
-                    <h2 className="text-xl font-extrabold leading-9 text-ink sm:text-2xl">
+                    <h2 id={`service-section-${index + 1}`} className="scroll-mt-28 text-xl font-extrabold leading-9 text-ink sm:text-2xl">
                       {section.heading}
                     </h2>
                     <div className="mt-4 space-y-4">
                       {section.paragraphs.map((paragraph) => (
                         <p
                           key={paragraph.slice(0, 24)}
-                          className="text-[14px] leading-9 text-ink/75"
+                          className="text-[16px] leading-9 text-ink/85"
                         >
                           {paragraph}
                         </p>
@@ -88,7 +104,7 @@ export default function ServicePage({ service }: { service: Service }) {
                     {section.bullets && (
                       <ul className="mt-5 space-y-3 rounded-2xl border border-ink/10 bg-white/70 p-5">
                         {section.bullets.map((bullet) => (
-                          <li key={bullet} className="flex items-start gap-3 text-[13.5px] leading-7 text-ink/80">
+                          <li key={bullet} className="flex items-start gap-3 text-[15px] leading-8 text-ink/85">
                             <span className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold/15 text-gold-deep">
                               <CheckIcon className="h-3 w-3" />
                             </span>
@@ -103,7 +119,7 @@ export default function ServicePage({ service }: { service: Service }) {
             </div>
 
             <section className="mt-14" aria-labelledby="service-faq-title">
-              <h2 id="service-faq-title" className="text-xl font-extrabold text-ink sm:text-2xl">
+              <h2 id="service-faq-title" className="scroll-mt-28 text-xl font-extrabold text-ink sm:text-2xl">
                 پرسش‌های متداول دربارۀ {service.title}
               </h2>
               <div className="mt-6 space-y-4">
@@ -123,7 +139,7 @@ export default function ServicePage({ service }: { service: Service }) {
                         </span>
                       </span>
                     </summary>
-                    <p className="mt-3 text-[13.5px] leading-8 text-ink/75">{faq.answer}</p>
+                    <p className="mt-3 text-[15px] leading-8 text-ink/85">{faq.answer}</p>
                   </details>
                 ))}
               </div>

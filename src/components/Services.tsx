@@ -74,13 +74,13 @@ export default function Services({ limit }: { limit?: number }) {
                       {service.title}
                     </Link>
                   </h3>
-                  <p className="mt-3 flex-1 text-[13.5px] leading-7 text-ink/70">{service.summary}</p>
+                  <p className="mt-3 flex-1 text-[15px] leading-8 text-ink/80">{service.summary}</p>
 
                   <div className="mt-5 flex flex-wrap gap-2">
                     {service.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full border border-ink/10 bg-ink/4 px-3 py-1 text-[11.5px] font-semibold text-ink/70 transition-colors duration-300 group-hover:border-gold/35 group-hover:text-gold-deep"
+                        className="rounded-full border border-ink/10 bg-ink/4 px-3 py-1 text-[13px] font-semibold text-ink/80 transition-colors duration-300 group-hover:border-gold/35 group-hover:text-gold-deep"
                       >
                         {tag}
                       </span>

@@ -51,16 +51,6 @@ export interface PricingPlan {
 
 export const pricingPlans: PricingPlan[] = [
   {
-    id: "free",
-    name: freeConsultationVerified ? "مشاورۀ اولیه" : "هماهنگی نخستین تماس",
-    priceLabel: freeConsultationVerified ? "رایگان" : "با هماهنگی دفتر",
-    unit: "برای تعیین وقت",
-    description: "برای انتخاب موضوع، زمان و شیوۀ برگزاری جلسه با دفتر تماس بگیرید.",
-    features: ["تعیین موضوع کلی درخواست", "هماهنگی زمان جلسه", "انتخاب شیوۀ ارتباط"],
-    cta: "هماهنگی با دفتر",
-    featured: false,
-  },
-  {
     id: "consultation",
     name: "مشاورۀ حقوقی تخصصی",
     priceLabel: feeVerified ? formatToman(consultationFee.amountToman) : FEE_PENDING_LABEL,
@@ -69,6 +59,16 @@ export const pricingPlans: PricingPlan[] = [
     features: ["بررسی موضوع و مستندات", "گفت‌وگو دربارۀ مسیر حقوقی", "اعلام هزینۀ مشاوره پیش از جلسه"],
     cta: "درخواست مشاوره",
     featured: true,
+  },
+  {
+    id: "free",
+    name: freeConsultationVerified ? "مشاورۀ اولیه" : "هماهنگی نخستین تماس",
+    priceLabel: freeConsultationVerified ? "رایگان" : "با هماهنگی دفتر",
+    unit: "برای تعیین وقت",
+    description: "برای انتخاب موضوع، زمان و شیوۀ برگزاری جلسه با دفتر تماس بگیرید.",
+    features: ["تعیین موضوع کلی درخواست", "هماهنگی زمان جلسه", "انتخاب شیوۀ ارتباط"],
+    cta: "هماهنگی با دفتر",
+    featured: false,
   },
   {
     id: "retainer",

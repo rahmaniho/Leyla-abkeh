@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../src/App";
-import { primaryPhone, siteConfig } from "../src/config/site";
+import { HOURS_SUMMARY, openingHoursFa, primaryPhone, siteConfig, verification } from "../src/config/site";
 import { SERVICES } from "../src/content/services";
 import { ARTICLES, articlePath } from "../src/content/articles";
 import { PRACTICE_GROUPS } from "../src/content/practices";
@@ -71,12 +71,20 @@ describe("صفحۀ اصلی", () => {
     // نشانی و مختصات تأیید شده‌اند؛ تنها ساعات کاری تأییدنشده می‌ماند
     expect(text).not.toContain("نشانی و ساعات کاری این صفحه هنوز تأیید نهایی نشده");
     expect(text).toContain("ساعات کاری این صفحه هنوز تأیید نهایی نشده");
+    for (const day of openingHoursFa) expect(text).not.toContain(day.display);
     unmount();
   });
 
   it("لینک پرش به محتوای اصلی وجود دارد", () => {
     renderAt("/");
     expect(screen.getByRole("link", { name: "پرش به محتوای اصلی" })).toHaveAttribute("href", "#main");
+  });
+
+  it("ساعات تأییدنشده در هیرو یا بخش تماس منتشر نمی‌شود", () => {
+    renderAt("/");
+    expect(verification.hours).toBe(true);
+    expect(document.getElementById("hero-title")?.closest("section")).not.toHaveTextContent(HOURS_SUMMARY);
+    expect(document.getElementById("contact")).not.toHaveTextContent(HOURS_SUMMARY);
   });
 
   it("هیچ دادۀ تأییدنشده (آمار و نظرات) منتشر نمی‌شود", () => {
@@ -177,6 +185,18 @@ describe("صفحات خدمات", () => {
       expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(service.title);
       expect(screen.getByText("پرسش‌های متداول دربارۀ " + service.title)).toBeInTheDocument();
       unmount();
+    }
+  });
+
+  it("فهرست هر خدمت به بخش‌های واقعی همان صفحه پیوند می‌دهد", () => {
+    const service = SERVICES[0];
+    renderAt(`/services/${service.slug}`);
+    const nav = screen.getByRole("navigation", { name: "فهرست مطالب این خدمت" });
+    const links = within(nav).getAllByRole("link");
+    expect(links.length).toBe(service.sections.length + 1);
+    for (const link of links) {
+      const id = link.getAttribute("href")?.slice(1);
+      expect(id && document.getElementById(id), `بخش ${id} پیدا نشد`).toBeTruthy();
     }
   });
 
