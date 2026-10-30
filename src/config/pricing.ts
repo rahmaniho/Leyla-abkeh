@@ -1,6 +1,7 @@
 /** تعرفۀ تأییدشدۀ مشاوره؛ تنها منبع مبلغ برای صفحه‌ها و فرم. */
 import { verification } from "./site";
 import { CONSULTATION_DURATIONS } from "../lib/validation";
+import { toFaDigits } from "../lib/format";
 export { CONSULTATION_DURATIONS };
 
 export interface ConsultationFee {
@@ -54,7 +55,7 @@ export const pricingPlans: PricingPlan[] = [
     id: "consultation",
     name: "مشاورۀ حقوقی تخصصی",
     priceLabel: feeVerified ? formatToman(consultationFee.amountToman) : FEE_PENDING_LABEL,
-    unit: feeVerified ? "تومان · هر ۳۰ دقیقه" : FEE_PENDING_UNIT,
+    unit: feeVerified ? `تومان · هر ${toFaDigits(String(consultationFee.sessionMinutes))} دقیقه` : FEE_PENDING_UNIT,
     description: "بررسی موضوع و مدارک در جلسۀ مشاوره؛ زمان و شیوۀ برگزاری با دفتر هماهنگ می‌شود.",
     features: ["بررسی موضوع و مستندات", "گفت‌وگو دربارۀ مسیر حقوقی", "اعلام هزینۀ مشاوره پیش از جلسه"],
     cta: "درخواست مشاوره",
@@ -83,5 +84,5 @@ export const pricingPlans: PricingPlan[] = [
 ];
 
 export const consultationFeeText = feeVerified
-  ? `تعرفۀ مشاورۀ حقوقی تخصصی برای هر ${consultationFee.sessionMinutes === 30 ? "۳۰" : consultationFee.sessionMinutes} دقیقه ${formatToman(consultationFee.amountToman)} تومان است`
+  ? `تعرفۀ مشاورۀ حقوقی تخصصی برای هر ${toFaDigits(String(consultationFee.sessionMinutes))} دقیقه ${formatToman(consultationFee.amountToman)} تومان است`
   : "تعرفۀ جلسۀ مشاورۀ تخصصی پیش از برگزاری جلسه با دفتر هماهنگ می‌شود";
