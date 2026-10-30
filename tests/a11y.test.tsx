@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import App from "../src/App";
@@ -111,5 +112,16 @@ describe("دسترس‌پذیری پایه در همۀ صفحات", () => {
       expect(Boolean(labelled), "بخش بدون عنوان").toBe(true);
     }
     unmount();
+  });
+
+  it("در حالت کم‌حرکت، بخش‌های جهت‌دار بدون جابه‌جایی یا تأخیر نمایش داده می‌شوند", () => {
+    const css = readFileSync("src/index.css", "utf8");
+    const mediaStart = css.indexOf("@media (prefers-reduced-motion: reduce)");
+    expect(mediaStart).toBeGreaterThanOrEqual(0);
+    // ویژگی data-dir هم‌وزن قاعدۀ جابه‌جایی اصلی است و آن را واقعاً خنثی می‌کند.
+    const rule = css.slice(mediaStart).match(/\.reveal\[data-dir\]\s*\{([^}]*)\}/)?.[1] ?? "";
+    expect(rule).toMatch(/opacity:\s*1/);
+    expect(rule).toMatch(/transform:\s*none/);
+    expect(rule).toMatch(/transition-delay:\s*0ms\s*!important/);
   });
 });

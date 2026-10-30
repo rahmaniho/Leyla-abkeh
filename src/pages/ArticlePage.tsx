@@ -150,7 +150,7 @@ function AuthorBox() {
       />
       <div className="text-[13px] leading-7 text-ink/75">
         <p className="text-[14px] font-extrabold text-ink">
-          {lawyer.name} — {lawyer.jobTitle}
+          {lawyer.name} — {lawyer.professionalTitle}
         </p>
         <p className="mt-1.5">
           این مقاله در دفتر وکالت {lawyer.name} نوشته و بازبینی شده است.

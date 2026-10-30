@@ -19,7 +19,7 @@ export const meta: PageMeta = {
   description: siteConfig.site.defaultDescription,
   path: "/",
   type: "website",
-  ogImageAlt: `${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} در قزوین`,
+  ogImageAlt: `${siteConfig.lawyer.name}، ${siteConfig.lawyer.professionalTitle}`,
   /* تصویر ثابت هیرو پیش از ویدئو نمایش داده می‌شود و جایگزین کم‌حرکت آن است. */
   preloadImage: {
     href: siteConfig.media.hero.poster,

@@ -395,5 +395,6 @@ summary {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .reveal { opacity: 1; transform: none; }
+  /* هم‌وزن انتخاب‌گر جهت، تا محتوای بیرون قاب هم در حالت کم‌حرکت جابه‌جا نشود. */
+  .reveal[data-dir] { opacity: 1; transform: none; transition-delay: 0ms !important; }
 }
