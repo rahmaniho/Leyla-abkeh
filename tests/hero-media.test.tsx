@@ -64,25 +64,17 @@ describe("فوتیج هیرو", () => {
     expect(play).not.toHaveBeenCalled();
   });
 
-  it("با ورود به قاب دید پخش می‌شود و انتخاب توقف کاربر با بازگشت حفظ می‌شود", () => {
-    render(<HeroMedia />);
+  it("با ورود به قاب دید خودکار پخش می‌شود، بدون دکمۀ توقف یا پخش", () => {
+    const { container } = render(<HeroMedia />);
     intersect(true);
     expect(video()).toHaveAttribute("src", hero.sources[0]);
     expect(load).toHaveBeenCalledOnce();
     expect(play).toHaveBeenCalledOnce();
 
-    fireEvent.play(video());
     fireEvent.playing(video());
     expect(video()).toHaveClass("opacity-100");
-    fireEvent.click(screen.getByRole("button", { name: "توقف ویدئوی پس‌زمینه" }));
-    expect(pause).toHaveBeenCalledOnce();
-    expect(screen.getByRole("button", { name: "پخش ویدئوی پس‌زمینه" })).toBeInTheDocument();
-
-    intersect(false);
-    intersect(true);
-    expect(play).toHaveBeenCalledOnce();
-    fireEvent.click(screen.getByRole("button", { name: "پخش ویدئوی پس‌زمینه" }));
-    expect(play).toHaveBeenCalledTimes(2);
+    expect(container.querySelector("button")).toBeNull();
+    expect(screen.queryByText(/توقف ویدئو|پخش ویدئو/)).not.toBeInTheDocument();
   });
 
   it("با خروج از قاب دید یا پنهان شدن برگه متوقف و با بازگشت ادامه می‌یابد", () => {
@@ -103,19 +95,29 @@ describe("فوتیج هیرو", () => {
     expect(play).toHaveBeenCalledTimes(3);
   });
 
-  it("در ترجیح کاهش حرکت بارگذاری خودکار ندارد، اما کاربر می‌تواند پخش را انتخاب کند", () => {
+  it("رویداد دیرهنگام پخش پس از خروج از قاب ویدئو را دوباره نمایان نمی‌کند", () => {
+    render(<HeroMedia />);
+    intersect(true);
+    intersect(false);
+    expect(pause).toHaveBeenCalledOnce();
+    paused = false; // شبیه‌سازی رسیدن یک رویداد playing معلق پس از خروج از قاب
+    fireEvent.playing(video());
+    expect(pause).toHaveBeenCalledTimes(2);
+    expect(video()).toHaveClass("opacity-0");
+  });
+
+  it("در ترجیح کاهش حرکت فقط پوستر را نشان می‌دهد و ویدئو را دریافت نمی‌کند", () => {
     const matchMedia = window.matchMedia;
     vi.spyOn(window, "matchMedia").mockImplementation((query) => ({
       ...matchMedia(query),
       matches: query.includes("prefers-reduced-motion"),
     }));
-    render(<HeroMedia />);
+    const { container } = render(<HeroMedia />);
     intersect(true);
     expect(video()).not.toHaveAttribute("src");
     expect(play).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "پخش ویدئوی پس‌زمینه" }));
-    expect(video()).toHaveAttribute("src", hero.sources[0]);
-    expect(play).toHaveBeenCalledOnce();
+    expect(document.querySelector(`img[src='${hero.poster}']`)).toBeInTheDocument();
+    expect(container.querySelector("button")).toBeNull();
   });
 
   it.each([
@@ -127,8 +129,8 @@ describe("فوتیج هیرو", () => {
     intersect(true);
     expect(video()).not.toHaveAttribute("src");
     expect(play).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole("button", { name: "پخش ویدئوی پس‌زمینه" }));
-    expect(play).toHaveBeenCalledOnce();
+    expect(document.querySelector(`img[src='${hero.poster}']`)).toBeInTheDocument();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });
 
   it("با فعال شدن صرفه‌جویی داده هنگام پخش خودکار، دریافت را متوقف می‌کند", () => {
@@ -176,17 +178,25 @@ describe("فوتیج هیرو", () => {
     expect(pause).toHaveBeenCalledOnce();
     expect(video()).not.toHaveAttribute("src");
     expect(video()).toHaveClass("opacity-0");
+    paused = false;
+    fireEvent.playing(video());
+    expect(pause).toHaveBeenCalledTimes(2);
+    expect(video()).toHaveClass("opacity-0");
+    matches = false;
+    act(() => onChange?.());
+    expect(play).toHaveBeenCalledTimes(2);
   });
 
-  it("اگر پخش خودکار مسدود شود، پوستر و دکمۀ پخش سالم می‌مانند", async () => {
+  it("اگر پخش خودکار مسدود شود، پوستر بدون دکمۀ اضافه نمایش داده می‌شود", async () => {
     play.mockImplementation(() => Promise.reject(new Error("NotAllowedError")));
-    render(<HeroMedia />);
+    const { container } = render(<HeroMedia />);
     await act(async () => {
       intersect(true);
       await Promise.resolve();
     });
     expect(video()).toHaveClass("opacity-0");
-    expect(screen.getByRole("button", { name: "پخش ویدئوی پس‌زمینه" })).toBeInTheDocument();
+    expect(document.querySelector(`img[src='${hero.poster}']`)).toBeInTheDocument();
+    expect(container.querySelector("button")).toBeNull();
   });
 
   it("در صورت خطای پیاپی، منابع دیگر را امتحان و در نهایت پوستر را حفظ می‌کند", () => {
@@ -201,16 +211,27 @@ describe("فوتیج هیرو", () => {
     fireEvent.error(video());
     expect(document.querySelector(`img[src='${hero.poster}']`)).toBeInTheDocument();
     expect(video()).toHaveClass("opacity-0");
-    expect(screen.queryByRole("button", { name: /ویدئوی پس‌زمینه/ })).toBeNull();
+    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    intersect(false);
+    intersect(true);
+    expect(play).toHaveBeenCalledTimes(3);
   });
 
-  it("خطای منبع هنگام توقف دستی، پخش را بی‌اجازۀ کاربر از سر نمی‌گیرد", () => {
+  it("خطای منبع بیرون از قاب، پخش را تا بازگشت از سر نمی‌گیرد", () => {
     render(<HeroMedia />);
     intersect(true);
-    fireEvent.play(video());
-    fireEvent.click(screen.getByRole("button", { name: "توقف ویدئوی پس‌زمینه" }));
+    intersect(false);
     fireEvent.error(video());
     expect(video()).toHaveAttribute("src", hero.sources[1]);
+    expect(play).toHaveBeenCalledOnce();
+    intersect(true);
+    expect(play).toHaveBeenCalledTimes(2);
+  });
+
+  it("بدون پشتیبانی IntersectionObserver نیز از پخش خودکار استفاده می‌کند", () => {
+    vi.stubGlobal("IntersectionObserver", undefined);
+    render(<HeroMedia />);
+    expect(video()).toHaveAttribute("src", hero.sources[0]);
     expect(play).toHaveBeenCalledOnce();
   });
 

@@ -1,0 +1,148 @@
+/* امضای کوچک توسعه‌دهنده، تنها در نوار پایینی پاورقی */
+.developer-credit {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 9px;
+  border-radius: 14px;
+  text-decoration: none;
+}
+
+.developer-credit:focus-visible {
+  outline: 2px solid var(--color-gold-pale);
+  outline-offset: 4px;
+}
+
+.developer-credit__label {
+  color: #d0c7b8;
+  font-family: system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.developer-credit__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px 5px 6px;
+  border: 1px solid rgba(212, 180, 131, 0.65);
+  border-radius: 14px;
+  /* زمینۀ روشن، رنگ‌های اصلی نوشته‌های سرمه‌ای را روی فوتر تیره خوانا می‌کند. */
+  background: #e9dfcc;
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.18);
+  transition: transform 250ms ease, box-shadow 250ms ease;
+}
+
+.developer-credit:hover .developer-credit__brand,
+.developer-credit:focus-visible .developer-credit__brand {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.24), 0 0 0 2px rgba(212, 180, 131, 0.16);
+}
+
+.developer-credit__emblem {
+  position: relative;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: #f5ecdd;
+  box-shadow: 0 0 0 1px rgba(31, 73, 116, 0.1);
+}
+
+.developer-credit__emblem::before {
+  position: absolute;
+  inset: -3px;
+  border: 1px solid transparent;
+  border-right-color: rgba(38, 149, 202, 0.75);
+  border-left-color: #b8915a;
+  border-radius: 50%;
+  content: "";
+}
+
+.developer-credit__emblem img {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.developer-credit__wordmarks {
+  display: flex;
+  width: 96px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.developer-credit__wordmarks img {
+  display: block;
+  height: auto;
+}
+
+.developer-credit__wordmark-fa { width: 92px; }
+.developer-credit__wordmark-en { width: 88px; }
+
+/* هر بار ورود به قاب حداکثر چهار ثانیه حرکت دارد؛ تعامل دوباره آن را تکرار می‌کند. */
+.developer-credit--visible .developer-credit__emblem::before {
+  animation: developer-credit-orbit 4s ease-in-out 1;
+}
+.developer-credit--visible .developer-credit__label {
+  animation: developer-credit-label 4s ease-in-out 1;
+}
+.developer-credit--visible .developer-credit__wordmarks {
+  animation: developer-credit-wordmarks 4s ease-in-out 1;
+}
+
+.developer-credit:hover .developer-credit__emblem::before,
+.developer-credit:focus-visible .developer-credit__emblem::before {
+  animation: developer-credit-orbit-interaction 3s ease-in-out 1;
+}
+.developer-credit:hover .developer-credit__label,
+.developer-credit:focus-visible .developer-credit__label {
+  animation: developer-credit-label-interaction 3s ease-in-out 1;
+}
+.developer-credit:hover .developer-credit__wordmarks,
+.developer-credit:focus-visible .developer-credit__wordmarks {
+  animation: developer-credit-wordmarks-interaction 3s ease-in-out 1;
+}
+
+@keyframes developer-credit-orbit {
+  to { transform: rotate(360deg); }
+}
+@keyframes developer-credit-orbit-interaction {
+  to { transform: rotate(360deg); }
+}
+@keyframes developer-credit-label {
+  0%, 100% { color: #d0c7b8; }
+  50% { color: #f1dfc2; }
+}
+@keyframes developer-credit-label-interaction {
+  0%, 100% { color: #d0c7b8; }
+  50% { color: #f1dfc2; }
+}
+@keyframes developer-credit-wordmarks {
+  0%, 100% { transform: translateY(0); }
+  35%, 70% { transform: translateY(-1px); }
+}
+@keyframes developer-credit-wordmarks-interaction {
+  0%, 100% { transform: translateY(0); }
+  35%, 70% { transform: translateY(-1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .developer-credit:is(.developer-credit--visible, :hover, :focus-visible) .developer-credit__label,
+  .developer-credit:is(.developer-credit--visible, :hover, :focus-visible) .developer-credit__wordmarks,
+  .developer-credit:is(.developer-credit--visible, :hover, :focus-visible) .developer-credit__emblem::before {
+    animation: none;
+  }
+
+  .developer-credit__brand { transition: none; }
+  .developer-credit:hover .developer-credit__brand,
+  .developer-credit:focus-visible .developer-credit__brand { transform: none; }
+}
