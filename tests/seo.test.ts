@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { indexablePaths, resolveRoute, sitemapEntries } from "../src/routes";
 import { absoluteUrl, pageHref, pageUrl, renderHeadTags, normalizePath } from "../src/lib/seo";
 import { SITE_URL } from "../src/config/site";
+import { ARTICLES } from "../src/content/articles";
 
 const paths = indexablePaths();
 
@@ -82,6 +83,29 @@ describe("متادیتای صفحات", () => {
     expect(head).toContain('property="og:image"');
     expect(head).toContain('name="twitter:card"');
     expect(head).toContain("index, follow");
+  });
+
+  it("پیش‌بارگذاری تصویر از همان مبدأ است و canonical مطلق باقی می‌ماند", () => {
+    const homeHead = renderHeadTags(resolveRoute("/").meta);
+    expect(homeHead).toContain('rel="preload" as="image" href="/images/articles/chek-keyfari-1200.jpg"');
+    expect(homeHead).toContain(`rel="canonical" href="${SITE_URL}/"`);
+    const articleHead = renderHeadTags(resolveRoute(`/articles/${ARTICLES[0].slug}`).meta);
+    const preload = articleHead.match(/<link rel="preload" as="image"[^>]+>/)?.[0] ?? "";
+    expect(preload).toContain('href="/images/covers/');
+    expect(preload).toContain('imagesrcset="/images/covers/');
+    expect(preload).not.toContain(SITE_URL);
+  });
+
+  it("برای تصویر بارگذاری‌شده در CMS نسخۀ AVIF ساختگی پیش‌بارگذاری نمی‌کند", () => {
+    const article = ARTICLES[0];
+    const originalCover = article.cover;
+    try {
+      article.cover = "/uploads/photo.jpg";
+      const preload = resolveRoute(`/articles/${article.slug}`).meta.preloadImage;
+      expect(preload).toEqual({ href: "/uploads/photo.jpg" });
+    } finally {
+      article.cover = originalCover;
+    }
   });
 
   it("صفحۀ ۴۰۴ در head با noindex علامت می‌خورد", () => {

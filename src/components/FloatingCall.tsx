@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { primaryPhone } from "../config/site";
 import { PhoneIcon } from "./Icons";
 import { Link, usePathname } from "../lib/router";
@@ -5,12 +6,29 @@ import { track } from "../lib/analytics";
 
 /**
  * دکمۀ شناور «درخواست تماس».
- * - در صفحۀ تماس پنهان می‌شود تا روی فرم و دکمۀ ارسال نیفتد.
+ * - در صفحۀ تماس و هنگام دیدن هیرو یا فرم مشاوره پنهان می‌شود تا روی کنترل‌ها نیفتد.
  * - تا تأیید شمارۀ تلفن، به فرم درخواست مشاوره لینک می‌دهد (نه شمارۀ نمونه).
  */
 export default function FloatingCall() {
   const pathname = usePathname();
-  if (pathname === "/contact") return null;
+  const [visibility, setVisibility] = useState({ pathname: "", overlaps: false });
+
+  useEffect(() => {
+    if (pathname === "/contact" || typeof IntersectionObserver === "undefined") return;
+    const targets = document.querySelectorAll('section[aria-labelledby="hero-title"], form[aria-label="فرم درخواست مشاوره"]');
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      }
+      setVisibility({ pathname, overlaps: visible.size > 0 });
+    });
+    targets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  if (pathname === "/contact" || (visibility.pathname === pathname && visibility.overlaps)) return null;
 
   const label = primaryPhone ? "تماس با دفتر" : "درخواست تماس";
   const shell =

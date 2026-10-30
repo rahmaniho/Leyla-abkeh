@@ -1,5 +1,5 @@
 import { SITE_URL, activeSocials, primaryPhone, siteConfig, verification } from "../config/site";
-import { withBase } from "./base";
+import { stripBase, withBase } from "./base";
 
 export interface BreadcrumbItem {
   name: string;
@@ -257,18 +257,21 @@ export function renderHeadTags(meta: PageMeta): string {
 
   if (meta.preloadImage) {
     const { href, type, srcSet, sizes } = meta.preloadImage;
-    /* نشانی‌ها در `imagesrcset` هم مطلق می‌شوند تا مستقل از مسیر صفحه معتبر بمانند */
-    const absoluteSrcSet = srcSet
+    // منابع داخلی از همان مبدأ و مسیر پایۀ استقرار دریافت شوند؛ canonical همچنان مطلق است.
+    // srcset ممکن است از پیش دارای مسیر پایه باشد، پس ابتدا پایه حذف و دوباره افزوده می‌شود.
+    const resourceUrl = (url: string) =>
+      url.startsWith("/") && !url.startsWith("//") ? withBase(stripBase(url)) : url;
+    const resourceSrcSet = srcSet
       ?.split(",")
       .map((candidate) => {
         const [url, descriptor] = candidate.trim().split(/\s+/, 2);
-        return `${absoluteUrl(url)}${descriptor ? ` ${descriptor}` : ""}`;
+        return `${resourceUrl(url)}${descriptor ? ` ${descriptor}` : ""}`;
       })
       .join(", ");
     tags.push(
-      `<link rel="preload" as="image" href="${escapeAttribute(absoluteUrl(href))}"${
+      `<link rel="preload" as="image" href="${escapeAttribute(resourceUrl(href))}"${
         type ? ` type="${escapeAttribute(type)}"` : ""
-      }${absoluteSrcSet ? ` imagesrcset="${escapeAttribute(absoluteSrcSet)}"` : ""}${
+      }${resourceSrcSet ? ` imagesrcset="${escapeAttribute(resourceSrcSet)}"` : ""}${
         sizes ? ` imagesizes="${escapeAttribute(sizes)}"` : ""
       } />`
     );
