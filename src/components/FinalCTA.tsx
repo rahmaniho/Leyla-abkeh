@@ -1,7 +1,7 @@
 import Reveal from "./Reveal";
 import ConsultationForm from "./ConsultationForm";
 import { ClockIcon, MapPinIcon, PhoneIcon } from "./Icons";
-import { HOURS_SUMMARY, officePhone, primaryPhone, siteConfig } from "../config/site";
+import { HOURS_SUMMARY, officePhone, primaryPhone, siteConfig, verification } from "../config/site";
 
 export default function FinalCTA() {
   return (
@@ -25,7 +25,7 @@ export default function FinalCTA() {
                 <span className="animate-ring absolute inline-flex h-full w-full rounded-full bg-gold-light" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-gold-light" />
               </span>
-              مشاورۀ حضوری، تلفنی و آنلاین
+              هماهنگی مشاوره با دفتر
             </span>
           </Reveal>
 
@@ -41,8 +41,8 @@ export default function FinalCTA() {
 
           <Reveal delay={200}>
             <p className="mt-5 max-w-lg text-[14.5px] leading-8 text-white/70">
-              یک گفت‌وگوی کوتاه کافی است تا مسیر حقوقی شما روشن شود. درخواست‌تان را از فرم ثبت
-              کنید یا تلفنی تماس بگیرید؛ پس از بررسی اولیه، گزینه‌های پیشِ رو توضیح داده می‌شود.
+              برای هماهنگی زمان و شیوۀ مشاوره با دفتر تماس بگیرید. در جلسۀ مشاوره، موضوع و
+              مدارک شما بررسی می‌شود.
             </p>
           </Reveal>
 
@@ -76,23 +76,22 @@ export default function FinalCTA() {
 
           <Reveal delay={400}>
             <ul className="mt-9 space-y-4 text-[13px] text-white/70">
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
-                  <ClockIcon className="h-4 w-4" />
-                </span>
-                <span className="leading-6">
-                  {HOURS_SUMMARY}
-                  <span className="mt-1 block text-[12px] text-white/50">
-                    پاسخ به درخواست‌های فرم در ساعات کاری انجام می‌شود.
+              {!verification.hours && (
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
+                    <ClockIcon className="h-4 w-4" />
                   </span>
-                </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
-                  <MapPinIcon className="h-4 w-4" />
-                </span>
-                <span className="leading-6">{siteConfig.contact.address.full}</span>
-              </li>
+                  <span className="leading-6">{HOURS_SUMMARY}</span>
+                </li>
+              )}
+              {!verification.address && (
+                <li className="flex items-start gap-3">
+                  <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">
+                    <MapPinIcon className="h-4 w-4" />
+                  </span>
+                  <span className="leading-6">{siteConfig.contact.address.full}</span>
+                </li>
+              )}
               {officePhone && (
                 <li className="flex items-start gap-3">
                   <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gold/15 text-gold-light">

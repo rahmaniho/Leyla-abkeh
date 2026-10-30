@@ -174,12 +174,14 @@ function articleMeta(slug: string): PageMeta | null {
     type: "article",
     ...(cover
       ? {
-          preloadImage: {
-            href: article.cover?.replace(/\.jpe?g$/i, ".avif") ?? cover.src,
-            type: "image/avif",
-            srcSet: avifSource?.srcSet,
-            sizes: COVER_SIZES,
-          },
+          preloadImage: avifSource
+            ? {
+                href: article.cover?.replace(/\.jpe?g$/i, ".avif") ?? cover.src,
+                type: "image/avif",
+                srcSet: avifSource.srcSet,
+                sizes: COVER_SIZES,
+              }
+            : { href: cover.src },
         }
       : {}),
     publishedTime: article.publishDate,

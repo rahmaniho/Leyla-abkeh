@@ -90,7 +90,7 @@ export default function FAQ({
                     )}
                   >
                     <div className="min-h-0">
-                      <p className="px-5 pb-6 text-[13.5px] leading-8 text-ink/75 sm:px-6">{faq.answer}</p>
+                      <p className="px-5 pb-6 text-[15px] leading-8 text-ink/85 sm:px-6">{faq.answer}</p>
                     </div>
                   </div>
                 </div>

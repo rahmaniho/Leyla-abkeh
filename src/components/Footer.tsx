@@ -19,6 +19,7 @@ import {
   openingHoursFa,
   primaryPhone,
   siteConfig,
+  verification,
   type SocialKey,
 } from "../config/site";
 
@@ -175,7 +176,7 @@ export default function Footer() {
                   <ClockIcon className="h-4 w-4" />
                 </span>
                 <span className="flex flex-col gap-1 leading-6">
-                  {openingHoursFa.map((day) => (
+                  {verification.hours ? "ساعت مراجعه با هماهنگی دفتر" : openingHoursFa.map((day) => (
                     <span key={day.schemaDay}>{day.display}</span>
                   ))}
                 </span>

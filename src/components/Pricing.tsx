@@ -2,7 +2,8 @@ import Reveal from "./Reveal";
 import SectionHeader from "./SectionHeader";
 import { CheckIcon } from "./Icons";
 import { cn } from "../utils/cn";
-import { FEE_PENDING_MESSAGE, consultationFee, feeVerified, pricingPlans } from "../config/pricing";
+import { CONSULTATION_DURATIONS, FEE_PENDING_MESSAGE, consultationAmount, consultationFee, feeVerified, formatToman, pricingPlans } from "../config/pricing";
+import { toFaDigits } from "../lib/format";
 import { Link } from "../lib/router";
 
 export default function Pricing() {
@@ -23,7 +24,7 @@ export default function Pricing() {
         <SectionHeader
           eyebrow="تعرفۀ شفاف"
           title={feeVerified ? "هزینه‌ای که از همان ابتدا روشن است" : "هزینه‌ها چگونه تعیین می‌شوند"}
-          description="هر مسیر از گفت‌وگوی اولیه آغاز می‌شود. مبلغ پیش از شروع کار به‌صورت مکتوب اعلام می‌شود و هزینۀ پنهانی وجود ندارد."
+          description="تعرفۀ مشاوره بر اساس مدت جلسه محاسبه می‌شود؛ شرایط وکالت در پرونده پس از بررسی موضوع مشخص خواهد شد."
           titleId="pricing-title"
         />
 
@@ -83,6 +84,17 @@ export default function Pricing() {
                   </span>
                 </div>
 
+                {plan.id === "consultation" && feeVerified && (
+                  <dl className="mt-6 space-y-2 rounded-xl border border-white/15 bg-white/5 p-4 text-[14px] leading-7">
+                    {CONSULTATION_DURATIONS.map((minutes) => (
+                      <div key={minutes} className="flex justify-between gap-4">
+                        <dt className="text-white/75">{toFaDigits(String(minutes))} دقیقه</dt>
+                        <dd className="font-bold text-gold-light">{formatToman(consultationAmount(minutes))} تومان</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+
                 <ul
                   className={cn(
                     "mt-7 flex-1 space-y-3.5 border-t pt-7",
@@ -129,8 +141,8 @@ export default function Pricing() {
 
         <Reveal delay={250}>
           <p className="mt-10 text-center text-[12.5px] font-medium leading-7 text-ink/70">
-            {feeVerified ? `${consultationFee.note} ` : ""}شرایط دقیق و حق‌الوکاله پس از بررسی
-            مدارک، پیش از شروع کار و به‌صورت مکتوب اعلام می‌شود.
+            {feeVerified ? `${consultationFee.note} ` : ""}شرایط و حق‌الوکالۀ پرونده پس از بررسی
+            مدارک در قرارداد وکالت مشخص می‌شود.
           </p>
         </Reveal>
       </div>

@@ -1,7 +1,9 @@
+import { useState } from "react";
 import Reveal from "./Reveal";
 import SectionHeader from "./SectionHeader";
 import { Link } from "../lib/router";
 import { toFaDigits } from "../lib/format";
+import { matchesAll, normalizeFa, searchTerms } from "../lib/text";
 import {
   BriefcaseIcon,
   ContractIcon,
@@ -34,6 +36,23 @@ const ICONS: Record<ServiceIconKey, typeof FamilyIcon> = {
  * نتیجه‌ای در این بخش نیست؛ فقط دسته‌بندی موضوعی و مسیر مطالعه.
  */
 export default function LegalTopics() {
+  const [query, setQuery] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("all");
+  const terms = searchTerms(query);
+  const results = PRACTICE_GROUPS.filter((group) => selectedGroup === "all" || group.id === selectedGroup)
+    .map((group) => {
+      const groupText = normalizeFa(`${group.title} ${group.summary}`);
+      const groupMatches = matchesAll(groupText, terms);
+      const claims = groupMatches
+        ? group.claims
+        : group.claims.filter((claim) => matchesAll(normalizeFa(`${groupText} ${claim.title}`), terms));
+      return { ...group, claims };
+    })
+    .filter((group) => group.claims.length > 0);
+  const resultCount = results.reduce((total, group) => total + group.claims.length, 0);
+  const isFiltering = terms.length > 0 || selectedGroup !== "all";
+  const reset = () => { setQuery(""); setSelectedGroup("all"); };
+
   return (
     <section
       id="legal-topics"
@@ -57,13 +76,56 @@ export default function LegalTopics() {
           titleId="legal-topics-title"
         />
 
-        <p className="mt-5 text-[13px] font-semibold text-ink/55">
-          {toFaDigits(String(PRACTICE_GROUPS.length))} گروه تخصصی · بیش از{" "}
-          {toFaDigits(String(PRACTICE_CLAIM_COUNT))} عنوان دعوا
-        </p>
+        <div className="mt-10 rounded-3xl border border-ink/10 bg-white/85 p-5 shadow-soft sm:p-6">
+          <div className="grid gap-4 md:grid-cols-[minmax(0,1fr)_minmax(220px,0.5fr)]">
+            <div>
+              <label htmlFor="legal-topics-search" className="block text-[14px] font-extrabold text-ink">جست‌وجوی موضوع حقوقی</label>
+              <input
+                id="legal-topics-search"
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="مثلاً مهریه، چک یا ملک"
+                autoComplete="off"
+                aria-describedby="legal-topics-search-hint"
+                className="mt-2 min-h-12 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-[15px] text-ink placeholder:text-ink/50 focus:border-gold-deep focus:outline-none focus:ring-2 focus:ring-gold/40"
+              />
+            </div>
+            <div>
+              <label htmlFor="legal-topics-group" className="block text-[14px] font-extrabold text-ink">گروه موضوعی</label>
+              <select
+                id="legal-topics-group"
+                value={selectedGroup}
+                onChange={(event) => setSelectedGroup(event.target.value)}
+                className="mt-2 min-h-12 w-full rounded-xl border border-ink/15 bg-white px-4 py-3 text-[15px] text-ink focus:border-gold-deep focus:outline-none focus:ring-2 focus:ring-gold/40"
+              >
+                <option value="all">همۀ گروه‌ها</option>
+                {PRACTICE_GROUPS.map((group) => <option key={group.id} value={group.id}>{group.title}</option>)}
+              </select>
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+            <p id="legal-topics-search-hint" role="status" aria-live="polite" className="text-[13px] leading-6 text-ink/70">
+              {isFiltering
+                ? `${toFaDigits(String(resultCount))} عنوان در ${toFaDigits(String(results.length))} گروه پیدا شد.`
+                : `${toFaDigits(String(PRACTICE_CLAIM_COUNT))} عنوان دعوا در ${toFaDigits(String(PRACTICE_GROUPS.length))} گروه تخصصی`}
+            </p>
+            {isFiltering && (
+              <button type="button" onClick={reset} className="min-h-11 rounded-xl px-3 text-[13px] font-bold text-gold-deep underline underline-offset-4 hover:text-ink">
+                نمایش همۀ موضوعات
+              </button>
+            )}
+          </div>
+        </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:mt-14">
-          {PRACTICE_GROUPS.map((group, index) => {
+        {results.length === 0 && (
+          <p className="mt-6 rounded-2xl border border-ink/10 bg-white/75 p-6 text-[14px] leading-7 text-ink/75">
+            موضوعی با این عبارت پیدا نشد؛ عبارت دیگری را امتحان کنید یا همۀ موضوعات را نمایش دهید.
+          </p>
+        )}
+
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          {results.map((group, index) => {
             const Icon = ICONS[group.icon];
             return (
               <Reveal key={group.id} delay={(index % 2) * 100}>
@@ -91,7 +153,7 @@ export default function LegalTopics() {
                         <li key={claim.title}>
                           <Link
                             to={`/articles/${claim.article}`}
-                            className="inline-flex rounded-full border border-gold/30 bg-gold/8 px-3 py-1 text-[11.5px] font-bold text-gold-deep transition-colors hover:border-gold hover:bg-gold/15"
+                            className="inline-flex min-h-10 items-center rounded-full border border-gold/30 bg-gold/8 px-3 py-1.5 text-[13px] font-bold text-gold-deep transition-colors hover:border-gold hover:bg-gold/15"
                           >
                             {claim.title}
                           </Link>
@@ -99,7 +161,7 @@ export default function LegalTopics() {
                       ) : (
                         <li
                           key={claim.title}
-                          className="inline-flex rounded-full border border-ink/10 bg-white/60 px-3 py-1 text-[11.5px] font-semibold text-ink/70"
+                          className="inline-flex min-h-10 items-center rounded-full border border-ink/10 bg-white/60 px-3 py-1.5 text-[13px] font-semibold text-ink/80"
                         >
                           {claim.title}
                         </li>

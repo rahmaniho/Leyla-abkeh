@@ -12,7 +12,7 @@ export interface SiteFaq {
 export const SITE_FAQS: SiteFaq[] = [
   {
     question: "هزینۀ مشاوره چقدر است؟",
-    answer: `${consultationFeeText}. جلسۀ اول برای آشنایی با موضوع و تعیین مسیر کلی پرونده است و اگر وکالت پذیرفته شود، هزینۀ مشاوره از حق‌الوکاله کسر می‌شود.`,
+    answer: `${consultationFeeText}. برای هماهنگی زمان و شیوۀ برگزاری جلسه با دفتر تماس بگیرید.`,
   },
   {
     question: "چه مدارکی باید برای جلسۀ مشاوره همراه داشته باشم؟",

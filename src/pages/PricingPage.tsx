@@ -3,7 +3,6 @@ import Pricing from "../components/Pricing";
 import FAQ from "../components/FAQ";
 import FinalCTA from "../components/FinalCTA";
 import { SITE_FAQS } from "../content/faqs";
-import { feeVerified } from "../config/pricing";
 import { buildBreadcrumbSchema, buildFaqSchema, type PageMeta } from "../lib/seo";
 
 const breadcrumbs = [
@@ -29,7 +28,7 @@ export default function PricingPage() {
       <PageHero
         eyebrow="تعرفۀ شفاف"
         title="هزینۀ مشاوره و وکالت"
-        description="هزینه‌ها پیش از شروع کار به‌صورت مکتوب اعلام می‌شوند. مبلغ نهایی وکالت به نوع پرونده، مرحلۀ دادرسی و حجم کار بستگی دارد."
+        description="تعرفۀ مشاوره بر اساس مدت جلسه مشخص است. حق‌الوکالۀ پرونده به نوع پرونده، مرحلۀ دادرسی و حجم کار بستگی دارد."
         breadcrumbs={breadcrumbs}
       />
       <Pricing />
@@ -71,9 +70,7 @@ export default function PricingPage() {
           </ul>
 
           <p className="mt-8 rounded-2xl bg-white/60 p-5 text-[13px] leading-8 text-ink/75">
-            {feeVerified
-              ? "مبلغ مشاورۀ تخصصی اعلام‌شده پیش از شروع کار به‌صورت مکتوب تأیید می‌شود و در صورت قبول وکالت از حق‌الوکاله کسر می‌گردد. هیچ هزینۀ پنهانی وجود ندارد."
-              : "مبلغ جلسۀ مشاوره پس از نهایی‌شدن از سوی دفتر اعلام و پیش از برگزاری جلسه به‌صورت مکتوب تأیید می‌شود. اگر وکالت پذیرفته شود، هزینۀ مشاوره از حق‌الوکاله کسر می‌گردد. هیچ هزینۀ پنهانی وجود ندارد."}
+            تعرفۀ مشاوره جدا از حق‌الوکالۀ پرونده است. شرایط وکالت پس از بررسی مدارک و پیش از شروع کار در قرارداد مشخص می‌شود.
           </p>
         </div>
       </section>

@@ -39,7 +39,7 @@ export default function PageHero({ eyebrow, title, description, breadcrumbs, chi
         </h1>
 
         {description && (
-          <p className="mt-5 max-w-2xl text-[15px] leading-8 text-white/65 sm:text-base">
+          <p className="mt-5 max-w-2xl text-[15px] leading-8 text-white/80 sm:text-base">
             {description}
           </p>
         )}
