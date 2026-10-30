@@ -54,12 +54,18 @@ afterEach(() => {
 });
 
 describe("محل و تعداد پخش", () => {
-  it("فقط در صفحۀ «درباره» و فقط یک نمونه ویدئو وجود دارد", () => {
+  it("لوگوموشن فقط دربارۀ ما و ویدئوی مستقل هیرو فقط در صفحۀ اصلی است", () => {
     const about = renderAt("/about");
     expect(document.querySelectorAll("video")).toHaveLength(1);
+    expect(getVideo()?.getAttribute("poster")).toBe(logoMotion.poster);
     about.unmount();
 
-    for (const path of ["/", "/contact", "/services", "/faq", "/pricing", "/articles"]) {
+    const home = renderAt("/");
+    expect(document.querySelectorAll("video")).toHaveLength(1);
+    expect(document.querySelector("video[data-hero-video]")).not.toBeNull();
+    home.unmount();
+
+    for (const path of ["/contact", "/services", "/faq", "/pricing", "/articles"]) {
       const view = renderAt(path);
       expect(document.querySelectorAll("video"), `مسیر ${path}`).toHaveLength(0);
       view.unmount();

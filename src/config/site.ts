@@ -240,6 +240,21 @@ export const siteConfig = {
   },
 
   media: {
+    /** فوتیج تزئینی هیرو؛ جزئیات منبع و استفاده در docs/HERO-MEDIA.md است. */
+    hero: {
+      sources: [
+        "https://videos.pexels.com/video-files/5636977/5636977-hd_1280_720_24fps.mp4",
+        "https://videos.pexels.com/video-files/5636977/5636977-sd_640_360_24fps.mp4",
+        /** نسخۀ فهرست‌شده در صفحۀ اصلی Pexels، در صورت نبود نسخه‌های سبک‌تر */
+        "https://videos.pexels.com/video-files/5636977/5636977-uhd_2560_1440_24fps.mp4",
+      ],
+      /** تصویر نمادین موجود در سایت؛ در حالت کم‌حرکت و قطع اتصال نمایش می‌یابد. */
+      poster: "/images/articles/chek-keyfari-1200.jpg",
+      width: 1280,
+      height: 720,
+      posterWidth: 1200,
+      posterHeight: 675,
+    },
     /** لوگوموشن رسمی (بدون صدا، بهینه‌شده برای وب) */
     logoMotion: {
       mp4: "/media/logo-motion.mp4",

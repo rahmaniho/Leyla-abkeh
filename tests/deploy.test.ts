@@ -49,6 +49,12 @@ describe("پیکربندی استقرار Netlify", () => {
     expect(csp).toContain("frame-ancestors 'none'");
   });
 
+  it("CSP فقط به ویدئوی محلی و CDN مشخص Pexels اجازۀ پخش رسانه می‌دهد", () => {
+    const csp = netlifyToml.match(/Content-Security-Policy = "([^"]+)"/)?.[1] ?? "";
+    expect(csp).toContain("media-src 'self' https://videos.pexels.com;");
+    expect(csp).not.toMatch(/media-src[^;]*\*/);
+  });
+
   it("دارایی‌های هش‌دار کش طولانی و پنل مدیریت noindex دارند", () => {
     expect(netlifyToml).toContain('for = "/assets/*"');
     expect(netlifyToml).toContain('Cache-Control = "public, max-age=31536000, immutable"');

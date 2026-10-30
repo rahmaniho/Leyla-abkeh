@@ -20,12 +20,10 @@ export const meta: PageMeta = {
   path: "/",
   type: "website",
   ogImageAlt: `${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle} در قزوین`,
-  /* پرترۀ بالای صفحه، بزرگ‌ترین عنصر دیداری است؛ پیش‌بارگذاری LCP را کوتاه می‌کند */
+  /* تصویر ثابت هیرو پیش از ویدئو نمایش داده می‌شود و جایگزین کم‌حرکت آن است. */
   preloadImage: {
-    href: `${siteConfig.lawyer.photo.basePath}.avif`,
-    type: "image/avif",
-    srcSet: `${siteConfig.lawyer.photo.basePath}-560.avif 560w, ${siteConfig.lawyer.photo.basePath}.avif ${siteConfig.lawyer.photo.width}w`,
-    sizes: "(min-width: 1024px) 420px, 88vw",
+    href: siteConfig.media.hero.poster,
+    type: "image/jpeg",
   },
   jsonLd: [buildWebsiteSchema(), buildAttorneySchema()],
 };
