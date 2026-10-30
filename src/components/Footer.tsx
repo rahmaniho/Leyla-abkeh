@@ -10,6 +10,7 @@ import {
 } from "./Icons";
 import { Link } from "../lib/router";
 import BrandLogo from "./BrandLogo";
+import DeveloperCredit from "./DeveloperCredit";
 import { FOOTER_LEGAL_LINKS, NAV_ITEMS } from "../config/nav";
 import { SERVICES, servicePath } from "../content/services";
 import {
@@ -185,10 +186,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/8 pt-7 sm:flex-row">
-          <p className="text-[12px] text-white/50" suppressHydrationWarning>
-            © {year} {siteConfig.lawyer.name} — تمامی حقوق محفوظ است.
-          </p>
+        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/8 pt-7 lg:flex-row">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-6">
+            <p className="text-[12px] text-white/50" suppressHydrationWarning>
+              © {year} {siteConfig.lawyer.name} — تمامی حقوق محفوظ است.
+            </p>
+            <DeveloperCredit />
+          </div>
           <p className="text-[12px] text-white/50">
             محتوای این سایت جنبۀ اطلاع‌رسانی عمومی دارد و جایگزین مشاورۀ حقوقی نیست.
           </p>
