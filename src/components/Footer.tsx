@@ -43,12 +43,12 @@ export default function Footer() {
             <Link
               to="/"
               className="flex items-center gap-3"
-              aria-label={`${siteConfig.lawyer.name} — بازگشت به صفحۀ اصلی`}
+              aria-label={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.professionalTitle} — بازگشت به صفحۀ اصلی`}
             >
               <BrandLogo height={78} />
-              <span className="flex flex-col leading-tight">
-                <span className="text-[11px] font-medium text-gold-light">
-                  {siteConfig.lawyer.jobTitle}
+              <span className="flex min-w-0 flex-col leading-[1.7]">
+                <span className="text-[13px] font-medium text-gold-light">
+                  {siteConfig.lawyer.professionalTitle}
                 </span>
                 <span className="text-[11px] text-white/50">دفتر قزوین</span>
               </span>

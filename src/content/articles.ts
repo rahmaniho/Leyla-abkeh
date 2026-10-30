@@ -1,4 +1,5 @@
 import { marked } from "marked";
+import { siteConfig } from "../config/site";
 import {
   FIGURE_HEIGHT,
   FIGURE_RATIO,
@@ -311,8 +312,14 @@ const rawModules = import.meta.glob("./blog/*.md", {
 /** HTML رندرشدۀ هر مقاله؛ پس از نخستین نمایش نگه داشته می‌شود */
 const htmlCache = new Map<string, string>();
 
+/** عنوان وکیل در متن و alt مقاله از تنظیمات تأییدشده ساخته می‌شود. */
+function withLawyerIdentity(text: string): string {
+  return text.replaceAll("{{lawyer.professionalTitle}}", siteConfig.lawyer.professionalTitle);
+}
+
 function buildArticle(path: string, raw: string): Article {
-  const { data, body } = parseFrontMatter(raw);
+  const { data, body: rawBody } = parseFrontMatter(raw);
+  const body = withLawyerIdentity(rawBody);
   const fallbackDate = "1970-01-01T00:00:00.000Z";
   const slug =
     typeof data.slug === "string" && data.slug.trim() ? data.slug.trim() : slugFromPath(path);
@@ -347,7 +354,7 @@ function buildArticle(path: string, raw: string): Article {
     publishDate,
     lastReviewed: lastReviewedRaw ? toIsoDate(lastReviewedRaw, publishDate) : undefined,
     cover: typeof data.cover === "string" && data.cover.trim() ? data.cover : undefined,
-    coverAlt: typeof data.coverAlt === "string" ? data.coverAlt : title,
+    coverAlt: typeof data.coverAlt === "string" ? withLawyerIdentity(data.coverAlt) : title,
     seoTitle: typeof data.seoTitle === "string" ? data.seoTitle : undefined,
     metaDescription: typeof data.metaDescription === "string" ? data.metaDescription : undefined,
     tags: toStringArray(data.tags),

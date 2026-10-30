@@ -87,6 +87,15 @@ export const verification = {
   freeConsultation: isPending("pricing.freeConsultation"),
 } as const;
 
+/** عنوان و عضویت تأییدشده؛ در صورت بازگشت عضویت به فهرست تأیید، عنوان کوتاه می‌شود. */
+const LAWYER_JOB_TITLE = "وکیل پایه یک دادگستری";
+const LAWYER_BAR_ASSOCIATION: string | null = verification.barAssociation
+  ? null
+  : "کانون وکلای دادگستری قزوین";
+const LAWYER_PROFESSIONAL_TITLE = LAWYER_BAR_ASSOCIATION
+  ? `${LAWYER_JOB_TITLE} و عضو ${LAWYER_BAR_ASSOCIATION}`
+  : LAWYER_JOB_TITLE;
+
 export interface OpeningDay {
   /** نام روز به انگلیسی برای Schema.org */
   schemaDay: string;
@@ -140,15 +149,16 @@ export const siteConfig = {
     city: "قزوین",
     region: "قزوین",
     country: "IR",
-    defaultTitle: "وکیل پایه یک دادگستری در قزوین | لیلا آبکه",
-    defaultDescription:
-      "دفتر وکالت لیلا آبکه، وکیل پایه یک دادگستری در قزوین؛ مشاورۀ حقوقی در دعاوی خانواده، ملکی، ارث، قراردادها و مطالبات، چک و اسناد تجاری، حقوق کار و شرکت‌ها.",
+    defaultTitle: `${LAWYER_PROFESSIONAL_TITLE} | لیلا آبکه`,
+    defaultDescription: `دفتر وکالت لیلا آبکه در قزوین؛ ${LAWYER_PROFESSIONAL_TITLE}، مشاورۀ حقوقی در دعاوی خانواده، کیفری، ملکی، ارث، چک و قراردادها.`,
   },
 
   lawyer: {
     name: "لیلا آبکه",
     nameLatin: "Leyla Abkeh",
-    jobTitle: "وکیل پایه یک دادگستری",
+    jobTitle: LAWYER_JOB_TITLE,
+    /** عنوان کامل برای نمایش در سراسر سایت */
+    professionalTitle: LAWYER_PROFESSIONAL_TITLE,
     /**
      * شمارۀ پروانۀ وکالت — تأییدشده توسط مالک (۳۰ مهر ۱۴۰۴).
      * مثل بقیۀ داده‌های حساس، اگر این مورد دوباره به `verification.json`
@@ -157,10 +167,8 @@ export const siteConfig = {
     licenseNumber: (verification.licenseNumber ? null : "۲۳۷۰") as string | null,
     /** همان شماره با ارقام لاتین برای Schema.org — هم‌زمان با فیلد بالا فعال/غیرفعال می‌شود */
     licenseNumberLatin: (verification.licenseNumber ? null : "2370") as string | null,
-    /** عضویت حرفه‌ای؛ تا تأیید، `null` است و در هیچ صفحه/دادۀ ساختاریافته‌ای نمی‌آید. */
-    barAssociation: (verification.barAssociation
-      ? null
-      : "کانون وکلای دادگستری استان قزوین") as string | null,
+    /** عضویت حرفه‌ای تأییدشده؛ اگر دوباره در فهرست تأیید قرار گیرد، منتشر نمی‌شود. */
+    barAssociation: LAWYER_BAR_ASSOCIATION,
     barAssociationPending: verification.barAssociation,
     photo: {
       /** تصویر رسمی و ارسالی خود وکیل (نه تصویر نمونه). */
@@ -168,7 +176,7 @@ export const siteConfig = {
       basePath: "/images/lawyer",
       width: 762,
       height: 1016,
-      alt: "پرترۀ لیلا آبکه، وکیل پایه یک دادگستری در قزوین",
+      alt: `پرترۀ لیلا آبکه، ${LAWYER_PROFESSIONAL_TITLE}`,
     },
   },
 

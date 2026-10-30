@@ -88,6 +88,13 @@ export function buildBreadcrumbSchema(items: BreadcrumbItem[]): JsonLd {
   };
 }
 
+/** عضویت حرفه‌ای فقط به شخص وکیل نسبت داده می‌شود و تا تأیید پنهان می‌ماند. */
+export function buildLawyerMembershipSchema(association: string | null = siteConfig.lawyer.barAssociation) {
+  return association
+    ? { memberOf: { "@type": "Organization", name: association } }
+    : {};
+}
+
 /** سازمان/دفتر وکالت — بدون aggregateRating و بدون ادعای تأییدنشده */
 export function buildAttorneySchema(): JsonLd {
   const { contact, lawyer, site } = siteConfig;
@@ -120,6 +127,7 @@ export function buildAttorneySchema(): JsonLd {
       "@type": "Person",
       name: lawyer.name,
       jobTitle: lawyer.jobTitle,
+      ...buildLawyerMembershipSchema(lawyer.barAssociation),
     },
     ...(showAddress
       ? {
@@ -305,6 +313,7 @@ export function applyMetaInBrowser(meta: PageMeta): void {
     "og:image",
     absoluteUrl(meta.ogImage ?? DEFAULT_OG_IMAGE)
   );
+  setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", meta.ogImageAlt ?? siteConfig.lawyer.name);
   setMeta('meta[name="twitter:title"]', "name", "twitter:title", meta.title);
   setMeta('meta[name="twitter:description"]', "name", "twitter:description", meta.description);
 

@@ -95,8 +95,8 @@ export default function Hero() {
             </div>
             <div className="min-w-0">
               <p className="text-lg font-extrabold text-white">{lawyer.name}</p>
-              <p className="text-[13px] leading-6 text-white/75">
-                {lawyer.jobTitle}{lawyer.barAssociation ? ` · ${lawyer.barAssociation}` : ""}
+              <p className="text-[14px] leading-6 text-white/80">
+                {lawyer.professionalTitle}
               </p>
               {lawyer.licenseNumber && (
                 <p className="text-[12px] text-white/65">

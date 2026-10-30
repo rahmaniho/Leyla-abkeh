@@ -5,13 +5,12 @@ import SectionHeader from "../components/SectionHeader";
 import LogoMotion from "../components/LogoMotion";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
-import { buildAttorneySchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
+import { buildAttorneySchema, buildLawyerMembershipSchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
 import LawyerPortrait from "../components/LawyerPortrait";
 
 export const meta: PageMeta = {
-  title: "دربارۀ لیلا آبکه | وکیل پایه یک دادگستری در قزوین",
-  description:
-    "معرفی رویکرد کاری دفتر وکالت لیلا آبکه در قزوین: ارزیابی واقع‌بینانۀ پرونده، شفافیت هزینه‌ها، محرمانگی اطلاعات موکل و پیگیری مستمر پرونده.",
+  title: `دربارۀ لیلا آبکه | ${siteConfig.lawyer.professionalTitle}`,
+  description: `لیلا آبکه، ${siteConfig.lawyer.professionalTitle}؛ آشنایی با رویکرد دفتر، محرمانگی اطلاعات موکل، شفافیت هزینه‌ها و پیگیری پرونده.`,
   path: "/about",
   type: "website",
   breadcrumbs: [
@@ -26,6 +25,7 @@ export const meta: PageMeta = {
       "@id": `${pageUrl("/about")}#person`,
       name: siteConfig.lawyer.name,
       jobTitle: siteConfig.lawyer.jobTitle,
+      ...buildLawyerMembershipSchema(),
       // تصویر اصلی + تصاویر رسمی دفتر: این‌ها همان فایل‌هایی هستند که در
       // مقالۀ «انتخاب وکیل در قزوین» هم منتشر شده‌اند، تا موتور جست‌وجو
       // (به‌ویژه جست‌وجوی تصویر) این عکس‌ها را به نام وکیل نسبت دهد.
@@ -78,7 +78,7 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="درباره وکیل"
-        title={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.jobTitle}`}
+        title={`${siteConfig.lawyer.name}، ${siteConfig.lawyer.professionalTitle}`}
         description={`دفتر وکالت و مشاورۀ حقوقی در ${siteConfig.site.city}؛ با تمرکز بر دعاوی خانواده، کیفری، ملکی و ثبتی، اسناد تجاری، حقوق کار و امور شرکت‌ها.`}
         breadcrumbs={meta.breadcrumbs}
       />
@@ -90,14 +90,7 @@ export default function AboutPage() {
               <LawyerPortrait sizes="(min-width: 1024px) 340px, 90vw" />
               <div className="space-y-2 p-5">
                 <p className="text-base font-extrabold text-ink">{siteConfig.lawyer.name}</p>
-                <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.jobTitle}</p>
-                {siteConfig.lawyer.barAssociation ? (
-                  <p className="text-[12.5px] text-ink/70">{siteConfig.lawyer.barAssociation}</p>
-                ) : (
-                  <p className="text-[12.5px] text-ink/70">
-                    دفتر وکالت و مشاورۀ حقوقی در {siteConfig.site.city}
-                  </p>
-                )}
+                <p className="text-[14px] leading-6 text-ink/80">{siteConfig.lawyer.professionalTitle}</p>
                 <p className="text-[12.5px] text-ink/70">دفتر: {siteConfig.contact.address.full}</p>
                 {siteConfig.lawyer.licenseNumber && (
                   <p className="text-[12.5px] text-ink/70">
@@ -166,10 +159,6 @@ export default function AboutPage() {
             </div>
 
             <p className="mt-8 text-[12.5px] leading-7 text-ink/70">
-              عضویت در کانون وکلا پس از تأیید دفتر در همین صفحه منتشر می‌شود.
-            </p>
-
-            <p className="mt-4 text-[12.5px] leading-7 text-ink/70">
               اگر در حال انتخاب وکیل هستید، راهنمای{" "}
               <Link
                 to="/articles/behtarin-vakil-qazvin"
