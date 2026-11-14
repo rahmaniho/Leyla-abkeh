@@ -43,8 +43,11 @@
 
 ## گام ۳ — رکوردهای DNS در ثبت‌کنندهٔ دامنه
 
-دو روش کامل وجود دارد؛ **روش الف را انتخاب کنید اگر ایمیل روی همین دامنه است** (نگه‌داشتن MX فعلی)؛
-روش ب اگر ایمیل ندارید و ساده‌ترین نگهداری را می‌خواهید.
+سه روش کامل وجود دارد — شما NSها را به Cloudflare منتقل کرده‌اید، پس **روش ج** را بخوانید:
+
+- **روش ج (سناریوی شما):** DNS روی Cloudflare؛ سایت روی Netlify — رکوردها خاکستری، گواهی از Netlify، ایمیل با رکوردهای MX/SPF در همان Cloudflare.
+- روش الف: DNS ثبت‌کننده دست‌نخورده بماند (اگر NS را به Cloudflare برگردانید).
+- روش ب: انتقال کامل NS به Netlify DNS (اگر از Cloudflare پشیمان شدید).
 
 ### روش الف — نگه‌داشتن DNS ثبت‌کننده (پیشنهادی برای ایمیل‌دار)
 
@@ -69,6 +72,80 @@
   (وگرنه دامنه unresolvable می‌شود). در روش الف نیازی به تغییر NS نیست.
 - مقدار `www` را به `leyla-abkeh.netlify.app` بزنید؛ اگر نام سایت در Netlify شما چیز دیگری
   است، دقیقاً همان را از پنل کپی کنید.
+
+### روش ج — دامنه روی Cloudflare (NS به Cloudflare منتقل شده) ⭐ سناریوی فعلی
+
+اگر نام‌سرورها را به Cloudflare تغییر داده‌اید و می‌خواهید DNS/CDN را آنجا مدیریت کنید
+(سایت همچنان روی Netlify می‌ماند)، ترتیب و نکات زیر را دقیق رعایت کنید — رایج‌ترین علت
+«سایت باز می‌شود ولی HTTPS مشکل دارد» همین پروکسی Cloudflare قبل از صدور گواهی Netlify است.
+
+**۱) ابتدا رکوردها را در Cloudflare DNS درست ثبت کنید (Cloudflare → دامنه → DNS → Records):**
+
+| نوع | نام | مقدار | وضعیت پروکسی |
+| --- | --- | --- | --- |
+| `A` | `@` | `75.2.60.5` | **DNS only (ابر خاکستری)** در گام اول |
+| `CNAME` | `www` | `leyla-abkeh.netlify.app` | **DNS only (ابر خاکستری)** در گام اول |
+
+- هر رکورد `A`/`AAAA`/`CNAME` قبلی یا پارکینگ/هاست قبلی را حذف کنید (فقط این دو رکورد برای وب بمانند).
+- رکورد `www` را به همان `<سایت>.netlify.app` خودتان بزنید (نام سایت را از پنل Netlify کپی کنید؛
+  مستندات این مخزن `leyla-abkeh.netlify.app` را نشان می‌دهند).
+- `MX`/`SPF`/`DKIM`/`DMARC` ایمیل هم در همین بخش اضافه می‌شوند؛ کلودفلر فقط HTTP/S را پروکسی می‌کند
+  و این رکوردها همیشه خاکستری (DNS only) هستند.
+
+**۲) در Netlify دامنه را Add کنید:** Site configuration → Domains → Add a domain →
+`laylaabkeh.ir` و سپس `www.laylaabkeh.ir`؛ یکی را **Primary** کنید (پیش‌فرض پروژه: apex) و
+ریدایرکت دیگری به آن فعال باشد. منتظر بمانید وضعیت به **«Netlify DNS / Secured»** برود.
+اگر گواهی «Pending/Failed» ماند: مطمئن شوید رکوردها **خاکستری (DNS only)** هستند، سپس
+Domains → HTTPS → **Provision certificate** را بزنید. با A خاکستری، Netlify مستقیماً
+به باربالانسرش می‌رسد و گواهی Let's Encrypt در چند دقیقه صادر می‌شود.
+
+**۳) فقط پس از «Secured» شدن:** اگر می‌خواهید CDN/WAF کلودفلر فعال باشد، ابر رکوردها را
+نارنجی (Proxied) کنید و حتماً در Cloudflare → **SSL/TLS → Overview** حالت را
+**Full (strict)** بگذارید (هرگز Flexible — حلقهٔ ریدایرکت می‌سازد). اگر گواهی Netlify
+صادر نشده باشد، orange کردن گواهی را برای همیشه خراب می‌کند.
+- اگر Cloudflare «Edge Certificate» نشان می‌دهد «Pending/Initializing»، چند دقیقه صبر کنید.
+- **Always Use HTTPS** را می‌توانید روشن کنید (با Netlify Force HTTPS تداخل ندارد).
+- **HSTS را در Cloudflare روشن نکنید**؛ سایت هم‌اکنون HSTS را از Netlify ارسال می‌کند (`netlify.toml`).
+- کش: لازم نیست دستکاری کنید؛ HTML از Netlify با `must-revalidate` می‌آید و کلودفلر آن را
+  cache نمی‌کند؛ دارایی‌های هش‌دار هم آفلاین‌کش می‌شوند — بی‌خطر است. اگر خواستید Rule بزنید:
+  Bypass cache برای `/admin*` و `/api/*`.
+
+**۴) ایمیل روی همین دامنه (MX در Cloudflare ثبت می‌شود):** رکوردهای MX/SPF/DKIM را از
+سرویس ایمیل‌تان بگیرید و در همین DNS Records بگذارید (مثلاً MX → `mx1.zoho.com` و …؛ مقدار واقعی
+را از پنل سرویس ایمیل بردارید). نکته‌های رایج:
+
+- کلودفلر پروکسی برای MX ندارد؛ این رکوردها اصلاً نارنجی نمی‌شوند.
+- اگر صندوق کامل نمی‌خواهید: **Cloudflare → Email → Email Routing** آدرس
+  `info@laylaabkeh.ir` را به هر آدرس دیگرتان (مثلاً Gmail شما) **فوروارد** می‌کند (رایگان؛ فقط دریافت).
+  برای ارسال از همین آدرس، به یک سرویس SMTP نیاز دارید (مثلاً Resend/Zoho/Brevo) و باید آن را در
+  تنظیمات «Send mail as» جیمیل اضافه کنید؛ یا همان گزینهٔ صندوق (Zoho/Workspace) را بسازید.
+- SPF ساده: `TXT @ v=spf1 include:<سرویس‌دهنده> ~all` · DMARC: `TXT _dmarc v=DMARC1; p=quarantine;`
+
+**۵) راستی‌آزمایی سریع:**
+
+```bash
+dig NS laylaabkeh.ir +short        # باید ...ns.cloudflare.com برگرداند
+dig A laylaabkeh.ir +short         # خاکستری: 75.2.60.5 · نارنجی: IPهای کلودفلر
+dig CNAME www.laylaabkeh.ir +short
+curl -sI https://laylaabkeh.ir/    # 200 + هدر strict-transport-security و CSP
+```
+
+سپس در مرورگر: بدون خطای گواهی باز شود؛ پدلاک سبز؛ و مسیر ناموجود `404` واقعی بدهد.
+
+**عیب‌یابی حالت «گیر کرده»:**
+
+| نشانه | علت | درمان |
+| --- | --- | --- |
+| خطای گواهی / `SSL_ERROR` / `ERR_SSL_VERSION` | رکورد نارنجی قبل از صدور گواهی Netlify یا حالت Flexible | رکوردها را موقتاً خاکستری کنید → Provision certificate در Netlify → بعد در صورت تمایل orange + Full (strict) |
+| «This site can't be reached» (NXDOMAIN/REFUSED) | رکورد A/CNAME وجود ندارد یا به جای دیگری می‌رود | فقط A @ → 75.2.60.5 و CNAME www → site.netlify.app (+حذف بقیه) |
+| حلقهٔ ریدایرکت (redirect loop) | SSL mode = Flexible + Force HTTPS در Netlify | SSL/TLS را **Full (strict)** کنید |
+| orange فعال ولی 502/520/522 | کلودفلر به Netlify نمی‌رسد | خاکستری کنید؛ cert Netlify را چک کنید؛ بعد orange |
+| www باز می‌شود، apex نه (یا برعکس) | یکی از دو رکورد جا مانده | هر دو رکورد را بگذارید؛ در Netlify هم هر دو را Add کنید |
+| ایمیل می‌رسد ولی ارسال خطا می‌خورد | SPF/DKIM ناقص (به‌خصوص با Email Routing) | رکوردهای SPF/DKIM را از سرویس ایمیل دقیق کپی کنید |
+
+**ترکیب نهایی پیشنهادی (بیشترین پایداری):** رکوردها خاکستری + گواهی Netlify + Force HTTPS در
+Netlify + ایمیل با Email Routing/هاست معمولی. اگر بعدتر WAF/Turnstile/کش می‌خواهید:
+نارنجی + Full (strict).
 
 ### روش ب — انتقال NS به Netlify DNS
 
