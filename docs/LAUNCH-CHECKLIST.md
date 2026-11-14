@@ -326,6 +326,73 @@ TXT   <selector>._domainkey  v=DKIM1; k=rsa; p=MIGfMA0G…   (از پنل سرو
 
 ---
 
+## پیوست الف — کلیک‌به‌کلیک: ثبت رکورد DNS در Cloudflare
+
+هر رکورد را جداگانه اضافه کنید: **Cloudflare Dashboard → انتخاب `laylaabkeh.ir` → منوی سمت چپ: DNS → Records → دکمهٔ «+ Add record»**. فرم باز می‌شود:
+
+**فیلدهای هر ردیف:**
+
+1. **Type** — نوع رکورد را از فهرست بازشونده انتخاب کنید (A / CNAME / MX / TXT).
+2. **Name** — نام میزبان: برای دامنهٔ اصلی (apex) عبارت `@` بنویسید؛ برای `www` عبارت `www` بنویسید؛ برای `_dmarc` عبارت `_dmarc` (نقطه/نام کامل لازم نیست).
+3. **IPv4 address / Target / Mail server / Content** — مقدار واقعی رکورد (جدول پایین).
+4. **Priority** — فقط برای MX: عدد اولویت صندوق (مثلاً ۱۰، ۲۰).
+5. **Proxy status** — آیکون ابر: **خاکستری «DNS only»** یا نارنجی «Proxied». برای وب طبق مراحل روش ج ابتدا خاکستری؛ برای MX/TXT/CAA/SRV اصلاً نارنجی نمی‌شود.
+6. **TTL** — همان `Auto` پیش‌فرض بگذارید.
+7. دکمهٔ **Save**.
+
+**رکوردهای وب (همه خاکستری ⚪):**
+
+| # | Type | Name | مقدار | Priority | Proxy |
+| --- | --- | --- | --- | --- | --- |
+| ۱ | `A` | `@` | `75.2.60.5` | — | DNS only |
+| ۲ | `CNAME` | `www` | `leyla-abkeh.netlify.app` | — | DNS only |
+
+**رکوردهای ایمیل (همیشه DNS only؛ مقادیر دقیق را از پنل سرویس ایمیل خودتان بردارید):**
+
+| # | Type | Name | مقدار نمونه | Priority |
+| --- | --- | --- | --- | --- |
+| ۳ | `MX` | `@` | `mx1.zoho.com` (مثال Zoho) — یا `aspmx.l.google.com` (مثال Google) | 10 (یا 1) |
+| ۴ | `MX` | `@` | `mx2.zoho.com` — یا `alt1.aspmx.l.google.com` | 20 (یا 5) |
+| ۵ | `TXT` | `@` | `v=spf1 include:zoho.com ~all` (مثال Zoho) — برای Google: `v=spf1 include:_spf.google.com ~all` | — |
+| ۶ | `TXT` | `_dmarc` | `v=DMARC1; p=quarantine; rua=mailto:postmaster@laylaabkeh.ir` | — |
+| ۷ | `TXT` | `<selector>._domainkey` | مقدار DKIM که سرویس ایمیل می‌دهد (مثل `v=DKIM1; k=rsa; p=…`) | — |
+
+> اسامی و اولویت‌های MX/SPF/DKIM برای هر سرویس‌دهنده متفاوت است؛ ستون آخر را از همان سرویس
+> کپی کنید، نه از این نمونه‌ها. اگر هنوز سرویس ایمیل انتخاب نکرده‌اید، با Email Routing کلودفلر
+> (بخش Email → Email Routing) فقط دریافت به یک صندوق دیگر (مثلاً Gmail) را رایگان فعال کنید؛
+> در این حالت کلودفلر خودش سه رکورد لازم (MX + TXT مالکیت/SPF) را پیشنهاد و خودکار ثبت می‌کند.
+
+**قبل از «Add record»، رکوردهای مزاحم را حذف کنید:**
+
+در همان صفحهٔ Records هر ردیفی که این‌ها را دارد را ردیابی و حذف کنید (دکمهٔ «…» → Delete):
+
+- هر `A`/`AAAA` دیگری برای `@` (پارکینگ، هاست قبلی، IPهای قدیمی)
+- هر `CNAME` با نام `www` به جای دیگری
+- رکورد wildcard `*` اگر به غیر از Netlify اشاره می‌کند
+- رکورد `CAA` اگر `letsencrypt.org` یا CA گواهی شما را مجاز نمی‌کند
+  (یا آن را اصلاح کنید: `0 issue "letsencrypt.org"`)
+
+**ترتیب پیشنهادی:** ۱ → ۲ را ثبت کنید و **صبور بمانید تا Netlify گواهی را صادر کند** (Domains → Secured)؛
+بعد اگر مایل بودید ابر رکوردهای ۱ و ۲ را نارنجی کنید و SSL/TLS را **Full (strict)** بگذارید؛
+در آخر رکوردهای ایمیل ۳ تا ۷.
+
+**راستی‌آزمایی (روی کامپیوتر خودتان):**
+
+```bash
+dig A laylaabkeh.ir +short        # خاکستری → 75.2.60.5 · نارنجی → IPهای کلودفلر
+dig CNAME www.laylaabkeh.ir +short
+dig MX laylaabkeh.ir +short
+dig TXT laylaabkeh.ir +short      # باید SPF شما را نشان دهد
+dig TXT _dmarc.laylaabkeh.ir +short
+```
+
+یا آنلاین: وب‌سایت‌هایی مثل `whatsmydns.net` (انتشار سراسری رکوردها) و `mxtoolbox.com` (سلامت MX/SPF).
+
+**نشانه‌های موفقیت در پنل Cloudflare:** NSهای دامنه «Active» باشند؛ مقابل هر رکورد ابر درست باشد؛
+در صفحهٔ Overview خطای «DNS records still pointing elsewhere» نبینید.
+
+---
+
 ## چک‌لیست نهایی (کپی کنید و تیک بزنید)
 
 - [ ] PR #22 مرج شد؛ دیپلوی main Published و دامنه در لاگ `https://laylaabkeh.ir` است
