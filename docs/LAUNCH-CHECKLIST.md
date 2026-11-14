@@ -1,121 +1,273 @@
-# چک‌لیست انتشار در laylaabkeh.ir
+# انتشار سایت روی laylaabkeh.ir — راهنمای قدم‌به‌قدم
 
-تاریخ: ۱۴۰۵/۰۸/۲۳ · دامنۀ نهایی: **https://laylaabkeh.ir**
+تاریخ: ۱۴۰۵/۰۸/۲۳ · PR: #22 (شاخهٔ `arena/460f6923-leyla-abkeh`)
 
-این سند، وضعیت آماده‌سازی انتشار را ثبت می‌کند: آنچه در کد انجام شد و آنچه
-مالک سایت باید در پنل Netlify و ثبت‌کنندهٔ دامنه انجام دهد.
+⏱️ زمان تقریبی کل: ۱ تا ۳ ساعت کار + انتظار انتشار DNS (چند دقیقه تا چند ساعت).
+
+> از این طرف همه‌چیز در کد آماده است (دامنه، canonical، sitemap، ایمیل، آزمون‌ها).
+> مراحل زیر بیرون از مخزن و در پنل‌ها انجام می‌شود.
 
 ---
 
-## بخش ۱ — در کد انجام شده ✅
+## گام ۰ — پیش‌نیازها
 
-| مورد | فایل |
-| --- | --- |
-| دامنۀ پیش‌فرض (canonical/sitemap/OG/llms.txt/feed) به `https://laylaabkeh.ir` تغییر کرد | `src/config/site.ts` |
-| ایمیل رسمی سایت به `info@laylaabkeh.ir` تغییر کرد | `src/config/site.ts` |
-| نمونۀ مقدار در راهنما به‌روزرسانی شد | `.env.example` |
-| نشانی پنل مدیریت (site_url/display_url/logo_url) به‌روزرسانی شد | `public/admin/config.yml` |
-| نمونۀ دامنه در تایپ‌های env به‌روزرسانی شد | `src/vite-env.d.ts` |
-| مورد `site.url` از دروازهٔ تأیید حذف شد (دامنه توسط مالک اعلام شد) | `src/config/verification.json` |
-| آزمون‌ها (RSS/llms/mailto) به دامنه و ایمیل جدید منتقل شدند | `tests/` |
-| وضعیت اقدام ۱۵ طرح بهبود به‌روزرسانی شد | `docs/IMPROVEMENT-PLAN.md` |
+- [ ] دسترسی به حساب Netlify که سایت فعلی (پیش‌فرض `leyla-abkeh.netlify.app`) روی آن است
+- [ ] دسترسی به پنل دامنهٔ `laylaabkeh.ir` (ایرنیک یا ثبت‌کنندهٔ دامنه) و امکان ویرایش رکوردهای DNS/NS
+- [ ] تصمیم دربارهٔ ایمیل (گام ۲) — چون سایت `info@laylaabkeh.ir` را منتشر می‌کند
+- [ ] PR #22 مرج شود (گام ۱) — وگرنه روی سایت زنده canonical قدیمی می‌ماند
 
-خروجی بیلد (canonical، `sitemap.xml`، `robots.txt`، `feed.xml`، `llms.txt`)
-همه از همین یک تنظیمات به‌صورت خودکار ساخته می‌شوند؛ پس از بیلد روی دامنهٔ جدید
-هیچ نشانی قدیمی نباید در `dist` بماند (با `grep -ri 'leyla-abkeh' dist/` بررسی کنید).
+---
 
-## بخش ۲ — اقدامات مالک (پنل Netlify و ثبت‌کنندهٔ دامنه)
+## گام ۱ — مرج PR و اطمینان از دیپلوی main
 
-### الف. دامنه و DNS
+1. PR #22 را بررسی و مرج کنید (یا از من بخواهید مرجش کنم).
+2. Netlify معمولاً از شاخهٔ `main` بیلد می‌کند؛ پس از مرج، یک دیپلوی جدید در
+   Netlify → Deploys ببینید و وضعیتش را **Published** کنید.
+3. در لاگ همان دیپلوی، خط «پیش‌رندر کامل شد … دامنه: `https://laylaabkeh.ir`» را تأیید کنید.
 
-1. از ثبت دامنهٔ `laylaabkeh.ir` و دسترسی به پنل DNS آن مطمئن شوید
-   (دامنه‌های `.ir` از طریق ایرنیک/ثبت‌کننده‌های معتبر مدیریت می‌شوند).
-2. در Netlify → **Domain management** → *Add a domain* هر دو را اضافه کنید:
-   - `laylaabkeh.ir` (apex)
-   - `www.laylaabkeh.ir` (به‌عنوان دامنۀ فرعی؛ یکی را Primary کنید و دیگری را به آن ریدایرکت کنید — پیش‌فرض سایت «apex بدون www» است)
-3. رکوردهای DNS را دقیقاً همان‌طور که خودِ Netlify در همین صفحه نشان می‌دهد ثبت کنید؛
-   معمول‌ترین حالت:
-   - apex: رکورد `A` به IP موازن‌کنندهٔ بار Netlify (یا استفاده از قابلیت flattening/ALIAS ثبت‌کننده)، **یا**
-   - انتقال NS به Netlify DNS (ساده‌ترین و پایدارترین راه برای صدور خودکار گواهی)
-   - `www`: رکورد `CNAME` به `<site-name>.netlify.app`
-4. در پنل DNS، مقدار TTL را روی حالت پیش‌فرض بگذارید؛ انتشار DNS را
-   با `https://laylaabkeh.ir` باز کنید.
-5. Netlify به‌صورت خودکار گواهی Let's Encrypt را صادر و **Force HTTPS** را پیشنهاد می‌کند؛
-   آن را فعال کنید. HSTS در `netlify.toml` از قبل تنظیم شده است.
+> تا قبل از مرج، نگران نباشید: سایت زنده با دامنهٔ قدیمی هم کار می‌کند و canonical قدیمی نشان می‌دهد.
 
-> ⚠️ این sandbox به DNS خارجی دسترسی ندارد؛ وضعیت ثبت دامنه و رکوردها را
-> خودتان در پنل ایرنیک/Netlify بررسی کنید.
+---
 
-### ب. متغیرهای محیطی Netlify
+## گام ۲ — تصمیم ایمیل (قبل از انتشار رکوردها)
 
-در Netlify → Site settings → Environment variables:
+سایت اکنون `info@laylaabkeh.ir` را در فوتر، صفحهٔ تماس و `llms.txt` منتشر می‌کند.
 
-| متغیر | ضرورت | توضیح |
-| --- | --- | --- |
-| `VITE_SITE_URL` | توصیه‌شده (هم‌اکنون مقدار پیش‌فرض کد `https://laylaabkeh.ir` است) | اگر ست شود، همان اولویت دارد؛ بدون اسلش انتهایی |
-| `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHAT_ID` | **یکی از کانال‌ها الزامی** | بدون آن فرم مشاوره `503` برمی‌گرداند |
-| یا `RESEND_API_KEY` + `CONSULTATION_NOTIFY_EMAIL` + `CONSULTATION_FROM_EMAIL` | جایگزین | ارسال ایمیل درخواست |
-| یا `CONSULTATION_WEBHOOK_URL` | اختیاری | CRM/Zapier/Make |
-| `VITE_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | اختیاری | ضدهرزنامه |
+- **اگر صندوق `info@laylaabkeh.ir` را می‌سازید:** ادامه دهید؛ در گام ۸ رکوردهای MX/SPF را هم اضافه کنید.
+- **اگر هنوز صندوق آماده نیست:** ایمیل‌های موکلان بی‌پاسخ می‌مانند. دو راه دارید:
+  1. سریعاً با یک سرویس ایمیل آن را بسازید (مثلاً Google Workspace / Zoho / هاست ایمیل ایرانی)، یا
+  2. فعلاً ایمیل را از سایت حذف کنید: در `src/config/site.ts` مقدار `email` را `null` بگذارید،
+     `npm run verify` بگیرید و یک PR کوچک بسازید. هر زمان آماده شد برگردانید.
 
-پس از هر تغییر، **Trigger deploy** بزنید تا در بیلد اعمال شود.
+---
 
-> وضعیت فعلی کانال ارسال برای مالک نامشخص است؛ قبل از اعلام عمومی سایت
-> حتماً یک درخواست آزمایشی بفرستید (بخش د).
+## گام ۳ — رکوردهای DNS در ثبت‌کنندهٔ دامنه
 
-### ج. صندوق ایمیل
+دو روش کامل وجود دارد؛ **روش الف را انتخاب کنید اگر ایمیل روی همین دامنه است** (نگه‌داشتن MX فعلی)؛
+روش ب اگر ایمیل ندارید و ساده‌ترین نگهداری را می‌خواهید.
 
-- سایت هم‌اکنون `info@laylaabkeh.ir` را منتشر می‌کند. مطمئن شوید این صندوق
-  واقعاً وجود دارد یا فوروارد آن برقرار است (رکوردهای `MX`/`SPF` دامنه را در
-  همان پنل DNS تنظیم کنید؛ اگر صندوق هنوز آماده نیست، در `src/config/site.ts`
-  مقدار `email` را موقتاً `null` بگذارید و دوباره بیلد بگیرید).
+### روش الف — نگه‌داشتن DNS ثبت‌کننده (پیشنهادی برای ایمیل‌دار)
 
-### د. آزمون پس از استقرار
+در پنل DNS دامنه **دقیقاً این رکوردها** را تنظیم/اضافه کنید (مقادیر Netlify همان‌اند؛ نسخهٔ نهایی را از صفحهٔ Domains پنل خودتان بخوانید):
+
+| نوع | نام/میزبان | مقدار | هدف |
+| --- | --- | --- | --- |
+| `A` | `@` (ریشه/apex) | `75.2.60.5` | سایت روی apex |
+| یا `ALIAS` / `ANAME` | `@` | `leyla-abkeh.netlify.app` | اگر ثبت‌کننده از flattening پشتیبانی می‌کند (بهتر از IP ثابت) |
+| `CNAME` | `www` | `leyla-abkeh.netlify.app` | سایت روی www |
+| `MX` | `@` | طبق سرویس ایمیل شما | ایمیل (گام ۸) |
+| `TXT` | `@` | `v=spf1 include:…` | SPF (گام ۸) |
+
+نکات حیاتی:
+
+- **هر رکورد A یا AAAA قدیمیِ apex را حذف کنید** (پارکینگ قبلی، هاست قبلی). باقی‌ماندن
+  AAAA قدیمی رایج‌ترین علت «https کار نمی‌کند» است.
+- اگر رکورد **CAA** دارید، اجازهٔ گواهی Let's Encrypt را بدهید:
+  `0 issue "letsencrypt.org"` (یا CAA را موقتاً حذف کنید).
+- رکورد wildcard (`*`) که به جای دیگری اشاره می‌کند را بردارید.
+- اگر دامنه **DNSSEC** فعال دارد و می‌خواهید NS را عوض کنید → اول DNSSEC را خاموش کنید
+  (وگرنه دامنه unresolvable می‌شود). در روش الف نیازی به تغییر NS نیست.
+- مقدار `www` را به `leyla-abkeh.netlify.app` بزنید؛ اگر نام سایت در Netlify شما چیز دیگری
+  است، دقیقاً همان را از پنل کپی کنید.
+
+### روش ب — انتقال NS به Netlify DNS
+
+1. Netlify → **Domains** → «Add a domain» → دامنه را اضافه کنید → **Set up Netlify DNS**.
+2. چهار رکورد NS نشان‌داده‌شده (`dns1…` تا `dns4…nsone.net`) را در ثبت‌کننده به‌جای NSهای فعلی بگذارید.
+   (مقدار دقیق را از پنل خودتان کپی کنید؛ پیشوند ممکن است `p06` یا مشابه آن باشد.)
+3. **هشدار:** در این حالت تمام رکوردهای قبلی (به‌خصوص MX ایمیل) باید در DNS پنل Netlify بازسازی شوند.
+   قبل از انتقال آن‌ها را یادداشت/اکسپورت کنید. همین‌جا گزینهٔ ساده برای صدور خودکار گواهی و مدیریت متمرکز است.
+
+### تأیید انتشار DNS (از هر کامپیوتری)
 
 ```bash
-# صفحهٔ اصلی و یک صفحهٔ داخلی + هدرها
-curl -sI https://laylaabkeh.ir/ | head -20
-curl -s https://laylaabkeh.ir/ | grep -o 'canonical[^>]*'
+dig A laylaabkeh.ir +short          # باید 75.2.60.5 (یا ALIAS resolve‌شده به IP نتلیفای) برگرداند
+dig CNAME www.laylaabkeh.ir +short  # باید leyla-abkeh.netlify.app برگرداند
+dig MX laylaabkeh.ir +short         # پس از تنظیم ایمیل
+```
 
-# sitemap و robots
-curl -s https://laylaabkeh.ir/sitemap.xml | head -5
+انتشار ممکن است چند دقیقه تا ۲۴–۴۸ ساعت طول بکشد؛ گام بعدی را می‌توانید هم‌زمان انجام دهید.
+
+---
+
+## گام ۴ — اتصال دامنه در پنل Netlify
+
+1. Netlify → سایت → **Site configuration → Domains** (یا منوی «Domains» در نوار کناری).
+2. **Add a domain** → `laylaabkeh.ir` را تایپ کنید → Confirm.
+3. دوباره **Add a domain** → `www.laylaabkeh.ir` را اضافه کنید.
+   - یکی را **Primary domain** کنید؛ پیش‌فرض این پروژه `laylaabkeh.ir` (apex بدون www) است.
+   - دیگری را Netlify خودکار به Primary ریدایرکت می‌کند (مطمئن شوید گزینهٔ «Redirect to primary» فعال است).
+4. مقابل هر دامنه، وضعیت DNS را چک کنید؛ با درست بودن رکوردها، وضعیت «Awaiting external DNS» / «Checking» به «Netlify DNS / Configured» می‌رود.
+5. زیر همان صفحه → **HTTPS** → منتظر صدور خودکار گواهی Let's Encrypt بمانید (چند دقیقه پس از DNS درست)، سپس **Force HTTPS** را روشن کنید.
+   (HSTS در `netlify.toml` روشن است؛ گواهی خودکار تمدید می‌شود.)
+6. اگر DNS اشتباه باشد، Netlify پیام «DNS verification failed» می‌دهد — به گام ۳ برگردید و رکوردهای A/AAAA قدیمی را چک کنید.
+
+---
+
+## گام ۵ — متغیرهای محیطی روی Netlify
+
+Netlify → **Site configuration → Environment variables**:
+
+| متغیر | وضعیت | مقدار نمونه |
+| --- | --- | --- |
+| `VITE_SITE_URL` | توصیه‌شده | `https://laylaabkeh.ir` (بدون اسلش انتهایی) — اگر ست نشود هم مقدار پیش‌فرض کد همین است |
+| `TELEGRAM_BOT_TOKEN` | یکی از سه کانال الزامی | از @BotFather |
+| `TELEGRAM_CHAT_ID` | همراه توکن | عددی؛ از @userinfobot یا `getUpdates` |
+| `RESEND_API_KEY` | جایگزین تلگرام | از داشبورد Resend |
+| `CONSULTATION_NOTIFY_EMAIL` | همراه Resend | `info@laylaabkeh.ir` (یا صندوق دیگر) |
+| `CONSULTATION_FROM_EMAIL` | همراه Resend | آدرس فرستنده با دامنهٔ تأییدشده در Resend |
+| `CONSULTATION_WEBHOOK_URL` (+`CONSULTATION_WEBHOOK_SECRET`) | اختیاری | CRM / Zapier / Make |
+| `VITE_TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | اختیاری ولی توصیه‌شده | از Cloudflare Turnstile |
+
+**تنظیم کانال تلگرام (ساده‌ترین):**
+
+1. در تلگرام به **@BotFather** پیام `/newbot` بدهید؛ نام و یوزرنیم بسازید؛ **توکن** را کپی کنید.
+2. به ربات خودتان یک پیام بفرستید (مثلاً «سلام»).
+3. در مرورگر باز کنید: `https://api.telegram.org/bot<TOKEN>/getUpdates`
+4. در خروجی JSON، `result[0].message.chat.id` عدد **chat_id** شماست.
+5. هر دو مقدار را در Netlify ست کنید.
+
+> قانون طلایی پروژه: بدون هیچ کانالی، فرم عمداً `503 «سامانه پیکربندی نشده»` می‌دهد تا
+> درخواست‌ها گم نشوند؛ داده‌ای نشت نمی‌کند.
+
+**فعال‌سازی خودکار و اعمال تغییرات:** پس از هر تغییر متغیر → تب **Deploys** → **Trigger deploy → Deploy site** (معمولاً < ۲ دقیقه).
+
+---
+
+## گام ۶ — آزمون پس از دیپلوی (۱۰ دقیقه)
+
+```bash
+# 1) صفحهٔ اصلی + هدرهای امنیتی
+curl -sI https://laylaabkeh.ir/ | head -25
+# انتظار: HTTP/2 200، وجود strict-transport-security، content-security-policy، x-content-type-options
+
+# 2) Canonical و OG در صفحهٔ اصلی و یک صفحهٔ داخلی
+curl -s https://laylaabkeh.ir/ | grep -o 'rel="canonical" href="[^"]*"'
+curl -s https://laylaabkeh.ir/contact/ | grep -o 'property="og:url" content="[^"]*"'
+# انتظار: https://laylaabkeh.ir/ و https://laylaabkeh.ir/contact/
+
+# 3) sitemap و robots
+curl -s https://laylaabkeh.ir/sitemap.xml | head -8
 curl -s https://laylaabkeh.ir/robots.txt
 
-# فرم مشاوره (باید 201 با reference بدهد؛ 503 یعنی کانال ارسال تنظیم نشده)
+# 4) کد ۴۰۴ واقعی برای مسیر ناموجود
+curl -s -o /dev/null -w "%{http_code}\n" https://laylaabkeh.ir/invoice-that-does-not-exist
+# انتظار: 404
+
+# 5) فرم مشاوره (باید 201 + reference بدهد؛ 503 = کانال ارسال ست نشده)
 curl -i -X POST https://laylaabkeh.ir/api/consultation \
   -H 'content-type: application/json' \
   --data '{"name":"آزمون","phone":"09121234567","topic":"سایر موضوعات","message":"تست پس از انتشار","startedAt":1}'
+
+# 6) ایمیل منتشر شده
+curl -s https://laylaabkeh.ir/contact/ | grep -o 'mailto:[^"]*'
+# انتظار: info@laylaabkeh.ir
 ```
 
-- [ ] صفحهٔ اصلی، خدمات، تماس، مقالات با تصویر و فونت درست نمایش داده می‌شوند
-- [ ] canonical/OG/absolute URLs همگی `laylaabkeh.ir` هستند
-- [ ] فرم واقعاً درخواست را به دفتر می‌رساند (`201` + reference)
-- [ ] `/admin/` باز می‌شود و ورود با Netlify Identity انجام می‌شود
-- [ ] کنسول مرورگر بدون خطا است (به‌ویژه hydration)
-- [ ] HTTP حقیقیِ ۴۰۴ برای مسیر ناموجود (بدون soft-404)
+و به‌صورت چشمی: صفحهٔ اصلی، `/services/`، یک خدمت، `/articles/` و یک مقاله، `/contact/`، `/faq/`، `/pricing/` —
+فونت‌ها، تصاویر، ناوبری موبایل، دکمهٔ «درخواست مشاوره» و کنسول مرورگر (F12 → Console) بدون خطا.
 
-### ه. سئو و ایندکس
+---
 
-1. Google Search Console: افزودن ملک `https://laylaabkeh.ir` (تأیید با رکورد TXT یا فایل HTML)
-2. ثبت `https://laylaabkeh.ir/sitemap.xml` در Search Console
-3. بررسی `robots.txt` (الان منتشر می‌شود و مانعی ندارد)
-4. همین کارها در Bing Webmaster Tools (اختیاری ولی توصیه‌شده)
-5. دامنهٔ قدیمی `rahmaniho.github.io/Leyla-abkeh/` (دمو) دست‌نخورده می‌ماند؛
-   canonical همهٔ صفحات به `laylaabkeh.ir` اشاره می‌کند پس مشکلی برای سئو ندارد.
-   `leyla-abkeh.netlify.app` هم پس از اتصال دامنهٔ سفارشی همچنان در دسترس است ولی
-   canonical به دامنهٔ نهایی است.
+## گام ۷ — ایندکس در موتورهای جست‌وجو
 
-## بخش ۳ — موارد «در حال تأیید» که با سایت سازگارند
+**Google Search Console** (توصیه‌شده، رایگان):
 
-این موارد هنوز تأییدنشده‌اند و عمداً از سایت/JSON-LD پنهان‌اند (تا وقتی مالک
-تأیید و آن‌ها را از `verification.json` بردارد): ساعات کاری، کد پستی، شمارهٔ ثابت،
-لینک شبکه‌های اجتماعی، «مشاورهٔ اولیه رایگان»، نظرات موکلان و آمار پرونده‌ها.
-انتشار سایت بدون آن‌ها از نظر محتوایی مشکلی ندارد.
+1. https://search.google.com/search-console → **Add property**.
+2. اگر روش **Domain property** را انتخاب کردید: تأیید با یک رکورد `TXT` در DNS (مقدار را خودش می‌دهد؛
+   مثل `google-site-verification=…`) — این حالت کل apex + www + زیردمین‌ها را پوشش می‌دهد و بهترین است.
+3. یا **URL-prefix property** با نشانی `https://laylaabkeh.ir/`: تأیید با همان رکورد TXT یا فایل HTML
+   (برای فایل HTML باید فایلی با نام داده‌شده در `public/` بگذارید + push + deploy؛ روش TXT ساده‌تر است).
+4. پس از تأیید → **Sitemaps** → وارد کنید: `sitemap.xml` → Submit.
+5. ابزار **URL Inspection** → آدرس صفحهٔ اصلی را بررسی و «Request indexing» بزنید (اختیاری).
 
-## بخش ۴ — کارهای خارج از دامنهٔ این مخزن
+**Bing Webmaster Tools** (اختیاری): همان مراحل؛ می‌توانید از Search Console import کنید.
 
-- ثبت/تمدید دامنه و DNS (ایرنیک یا ثبت‌کننده)
-- اتصال دامنه و HTTPS در Netlify
-- ساخت صندوق `info@laylaabkeh.ir` و رکوردهای MX/SPF
-- ست‌کردن متغیرهای محیطی کانال ارسال فرم
-- Search Console / Bing
+> `robots.txt` فعلی سایت `Allow: /` است و فقط `/admin/` و `/api/` را مسدود می‌کند؛ مانعی برای ایندکس نیست.
+
+---
+
+## گام ۸ — صندوق ایمیل `info@laylaabkeh.ir`
+
+سایت این آدرس را منتشر می‌کند؛ صندوق باید واقعاً وجود داشته باشد.
+
+**گزینه‌ها:** Google Workspace، Zoho Mail (پلن رایگان)، یا هاست ایمیل ایرانی (مثلاً سرورهای داخل کشور).
+
+**رکوردهایی که سرویس‌دهندهٔ ایمیل می‌دهد را به DNS اضافه کنید**؛ نمونهٔ رایج:
+
+```text
+MX    @     10 mx1.example.com.
+MX    @     20 mx2.example.com.
+TXT   @     v=spf1 include:_spf.example.com ~all
+TXT   _dmarc v=DMARC1; p=quarantine; rua=mailto:postmaster@laylaabkeh.ir
+TXT   <selector>._domainkey  v=DKIM1; k=rsa; p=MIGfMA0G…   (از پنل سرویس ایمیل)
+```
+
+**بررسی سلامت ایمیل:** https://www.mxtoolbox.com/ یا `dig MX laylaabkeh.ir`، سپس یک ایمیل تست به یک صندوق بیرونی بفرستید و تحویلش را ببینید (پوشهٔ spam را هم چک کنید).
+
+> اگر دامنه را به Netlify DNS منتقل کردید (روش ب)، همین رکوردهای MX/SPF/DKIM را در پنل Netlify DNS ثبت کنید.
+
+---
+
+## گام ۹ — فعال‌سازی پنل مدیریت (`/admin/`) — Decap CMS
+
+1. Netlify → سایت → **Identity** → **Enable Identity**.
+2. Identity → **Services** → **Git Gateway** → **Enable**.
+3. Identity → **Invite users** → ایمیل مدیر (مثلاً همان `info@laylaabkeh.ir` اگر صندوق دارید) → ارسال دعوت.
+4. ایمیل دعوت را باز کنید → روی لینک کلیک کنید → رمز تعیین کنید → به `https://laylaabkeh.ir/admin/` بروید و وارد شوید.
+5. یک مقالهٔ تستی (Draft) بسازید و مطمئن شوید «Publish» یک کامیت در `main` می‌سازد و Netlify خودکار دیپلوی می‌کند.
+
+> ترتیب مهم است: اول ایمیل (گام ۸) → دعوت Identity؛ وگرنه ایمیل دعوت به آدرس خالی می‌رود.
+> بودجه‌بندی خطای رایج: «پنل باز می‌شود ولی خالی است» = Git Gateway فعال نیست یا کاربر به مخزن دسترسی ندارد.
+
+---
+
+## گام ۱۰ — نگهداری پس از انتشار
+
+- [ ] **Search Console** را هفتگی بررسی کنید (Coverage / Indexing / Core Web Vitals).
+- [ ] **Uptime monitoring** رایگان بگذارید (مثلاً UptimeRobot با پینگ هر ۵ دقیقه به `https://laylaabkeh.ir/`).
+- [ ] **تمدید دامنه** را در تقویم ثبت کنید (ایرنیک سالانه است؛ انقضای دامنه یعنی قطعی کامل سایت).
+- [ ] گواهی SSL توسط Netlify خودکار تمدید می‌شود؛ فقط اگر Force HTTPS ناگهان خطا داد، از پنل دوباره Provision را بزنید.
+- [ ] هر انتشار محتوا از `/admin/` یک کامیت در `main` می‌سازد؛ تاریخچه در GitHub باقی می‌ماند.
+- [ ] بازگشت سریع (rollback): Netlify → Deploys → روی دیپلوی سالم قبلی → **Publish deploy**.
+- [ ] پس از هر تغییر محتوایی مهم، یک‌بار `curl -s https://laylaabkeh.ir/sitemap.xml` و یکی از صفحات را چک کنید.
+
+---
+
+## خطاهای رایج و درمان
+
+| نشانه | علت احتمالی | درمان |
+| --- | --- | --- |
+| HTTPS صادر نمی‌شود | DNS هنوز propagate نشده / AAAA قدیمی / DNSSEC | صبر + حذف رکوردهای قدیمی + خاموش کردن DNSSEC هنگام تعویض NS |
+| apex باز می‌شود ولی `www` نه (یا برعکس) | رکورد مربوطه ناقص | CNAME برای `www` یا A/ALIAS برای apex را اصلاح کنید |
+| `www` به apex ریدایرکت نمی‌کند | Primary تنظیم نشده | در Domains یکی را Primary کنید |
+| فرم `503` برمی‌گرداند | هیچ کانال ارسالی ست نشده (رفتار عمدی) | گام ۵: تلگرام یا Resend را ست کنید + Trigger deploy |
+| canonical هنوز دامنهٔ قدیمی را نشان می‌دهد | PR #22 مرج نشده یا دیپلوی جدید نیست | گام ۱ |
+| `/admin/` سفید/خالی | Git Gateway خاموش | گام ۹ |
+| دانلود فونت/تصویر خطای `net::ERR` | CSP دستکاری شده | `netlify.toml` را به نسخهٔ داخل مخزن برگردانید |
+| خطای ۴۰۴ روی همهٔ مسیرها | publish directory اشتباه در پنل | Site configuration → Build → Publish: `dist` |
+
+---
+
+## چک‌لیست نهایی (کپی کنید و تیک بزنید)
+
+- [ ] PR #22 مرج شد؛ دیپلوی main Published و دامنه در لاگ `https://laylaabkeh.ir` است
+- [ ] DNS: `dig A laylaabkeh.ir` → `75.2.60.5` (یا ALIAS) · `dig CNAME www.laylaabkeh.ir` → `….netlify.app`
+- [ ] Netlify Domains: apex Primary + ریدایرکت www؛ Force HTTPS روشن
+- [ ] `curl -sI https://laylaabkeh.ir/` → 200 + هدرهای امنیتی
+- [ ] canonical/OG همه روی `laylaabkeh.ir`
+- [ ] `curl -s -o /dev/null -w "%{http_code}" https://laylaabkeh.ir/xyz` → `404`
+- [ ] فرم مشاوره: `201` با `reference` (یا حداقل: پیام خطای واقعی در UI)
+- [ ] `info@laylaabkeh.ir` صندوق ساخته شد؛ MX/SPF/DKIM/DMARC درست؛ ایمیل تست تحویل شد
+- [ ] Search Console: ملک تأیید شد؛ `sitemap.xml` Submit شد
+- [ ] `/admin/` وارد شد؛ یک draft تستی ساخته و حذف شد
+- [ ] تمدید سالانهٔ دامنه در تقویم ثبت شد
+
+---
+
+## منابع
+
+- Netlify — Custom domains: Domains در پنل (مقادیر دقیق DNS از خودِ پنل معتبر است؛ IP باربالانسر ممکن است تغییر کند)
+- Netlify — HTTPS: صدور و تمدید خودکار Let's Encrypt + Force HTTPS
+- Google Search Console: https://search.google.com/search-console
+- راهنماهای داخلی: `docs/NETLIFY-SETUP.md` · `docs/CMS-SETUP.md` · `docs/ANALYTICS.md`
