@@ -23,9 +23,9 @@ backend:
     deleteMedia: "media: delete {{path}}"
 
 # نشانی عمومی سایت (برای پیش‌نمایش و بازگشت از پنل)
-site_url: https://leyla-abkeh.netlify.app
-display_url: https://leyla-abkeh.netlify.app
-logo_url: https://leyla-abkeh.netlify.app/favicon.svg
+site_url: https://laylaabkeh.ir
+display_url: https://laylaabkeh.ir
+logo_url: https://laylaabkeh.ir/favicon.svg
 
 locale: fa
 

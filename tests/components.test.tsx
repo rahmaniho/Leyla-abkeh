@@ -45,7 +45,7 @@ describe("صفحۀ اصلی", () => {
   it("ایمیل، واتساپ و نقشۀ مختصات در صفحۀ تماس موجود است", () => {
     const { unmount } = renderAt("/contact");
 
-    const email = document.querySelector('a[href="mailto:info@leyla-abkeh.ir"]');
+    const email = document.querySelector('a[href="mailto:info@laylaabkeh.ir"]');
     expect(email).not.toBeNull();
 
     // واتساپ از همان شمارۀ تأییدشده ساخته می‌شود
