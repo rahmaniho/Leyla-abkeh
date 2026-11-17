@@ -134,7 +134,7 @@ describe("فایل llms.txt", () => {
   it("نهاد، تلفن، ایمیل و نشانی را معرفی می‌کند", () => {
     expect(llms).toContain("# دفتر وکالت لیلا آبکه");
     expect(llms).toContain("شماره پروانه وکالت: 2370");
-    expect(llms).toContain("info@laylaabkeh.ir");
+    expect(llms).toContain("info@leylaabkeh.ir");
     expect(llms).toContain("مجتمع تجاری نیایش");
   });
 

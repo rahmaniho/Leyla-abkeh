@@ -7,7 +7,7 @@ import { matchesAll, normalizeFa, searchTerms } from "../src/lib/text";
 import { resolveRoute, sitemapEntries } from "../src/routes";
 import { renderHeadTags } from "../src/lib/seo";
 
-const SITE = "https://laylaabkeh.ir";
+const SITE = "https://leylaabkeh.ir";
 
 describe("تاریخ‌های انتشار", () => {
   it("هیچ مقاله‌ای تاریخ انتشار یا بازبینی در آینده ندارد", () => {
