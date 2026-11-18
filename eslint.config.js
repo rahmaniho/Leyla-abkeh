@@ -6,7 +6,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: ["dist/**", ".ssr/**", "node_modules/**", "coverage/**", "public/admin/**"],
+    ignores: ["dist/**", ".ssr/**", "node_modules/**", "coverage/**", "public/admin/**", "apps/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
