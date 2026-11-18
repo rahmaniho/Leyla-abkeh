@@ -11,7 +11,7 @@
 
 import verificationData from "./verification.json";
 
-const FALLBACK_SITE_URL = "https://leylaabkeh.ir";
+const FALLBACK_SITE_URL = "https://leyla-abkeh.ir";
 
 /** تاریخ آخرین بازبینی محتوای صفحات ثابت (برای sitemap و نمایش) */
 export const SITE_LAST_UPDATED = "2026-10-23";
@@ -202,7 +202,7 @@ export const siteConfig = {
     phoneE164: PRIMARY_PHONE_E164,
     officePhoneE164: OFFICE_PHONE_E164,
     /** ایمیل رسمی دفتر */
-    email: "info@leylaabkeh.ir" as string | null,
+    email: "info@leyla-abkeh.ir" as string | null,
     /** خالی‌گذاری‌شده: کد پستی تا تأیید */
     postalCode: null as string | null,
     /** مختصات تأییدشدۀ دفتر (برای نقشه و دادۀ ساختاریافته) */
