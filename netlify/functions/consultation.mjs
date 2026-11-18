@@ -142,6 +142,39 @@ async function deliverWebhook(payload) {
   return response.ok;
 }
 
+/**
+ * ذخیرۀ درخواست در Supabase (جدول consultations از طریق RPC امن submit_consultation)
+ * ------------------------------------------------------------------
+ * هیچ کلید محرمانه‌ای لازم نیست: RPC با security definer فقط یک INSERT
+ * به‌همراه محدودیت طول‌ها انجام می‌دهد و فقط برای نقش anon در دسترس است.
+ * اگر SUPABASE_URL یا SUPABASE_ANON_KEY تنظیم نشده باشند، این ذخیره رد می‌شود.
+ */
+async function persistToSupabase(data, meta) {
+  const url = process.env.SUPABASE_URL;
+  const anonKey = process.env.SUPABASE_ANON_KEY;
+  if (!url || !anonKey) return false;
+
+  const response = await fetch(`${url.replace(/\/+$/, "")}/rest/v1/rpc/submit_consultation`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      apikey: anonKey,
+      authorization: `Bearer ${anonKey}`,
+    },
+    body: JSON.stringify({
+      p_reference: meta.reference,
+      p_name: data.name,
+      p_phone: data.phone,
+      p_topic: data.topic,
+      p_message: data.message ?? null,
+      p_duration_minutes: data.durationMinutes ?? null,
+      p_contact_method: data.contactMethod ?? null,
+    }),
+    signal: AbortSignal.timeout(8000),
+  });
+  return response.ok;
+}
+
 export default async (req) => {
   if (req.method !== "POST") {
     return json(405, { ok: false, message: "متد پشتیبانی نمی‌شود." });
@@ -205,7 +238,9 @@ export default async (req) => {
   const text = buildMessage(validation.data, { reference, receivedAtLocal });
   const subject = `درخواست مشاورۀ جدید — ${validation.data.topic} — ${reference}`;
 
+  const supabaseConfigured = Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY);
   const configured =
+    supabaseConfigured ||
     Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) ||
     Boolean(process.env.RESEND_API_KEY && process.env.CONSULTATION_NOTIFY_EMAIL && process.env.CONSULTATION_FROM_EMAIL) ||
     Boolean(process.env.CONSULTATION_WEBHOOK_URL);
@@ -221,6 +256,7 @@ export default async (req) => {
   }
 
   const results = await Promise.allSettled([
+    persistToSupabase(validation.data, { reference }),
     deliverTelegram(text),
     deliverEmail(subject, text),
     deliverWebhook({ reference, receivedAt, ...validation.data }),
@@ -231,11 +267,15 @@ export default async (req) => {
     (result) => result.status === "rejected" || (result.status === "fulfilled" && result.value === false)
   ).length;
 
+  const persistResult = results[0];
+  const persisted = persistResult.status === "fulfilled" && persistResult.value === true;
+
   console.log(
     JSON.stringify({
       event: "consultation_received",
       reference,
       receivedAt,
+      persisted,
       delivered,
       channelFailures: failures,
     })

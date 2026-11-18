@@ -42,6 +42,8 @@ describe("تابع دریافت درخواست مشاوره", () => {
     vi.unstubAllGlobals();
     delete process.env.TELEGRAM_BOT_TOKEN;
     delete process.env.TELEGRAM_CHAT_ID;
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_ANON_KEY;
   });
 
   it("درخواست با متد غیر POST را رد می‌کند", async () => {
@@ -121,6 +123,35 @@ describe("تابع دریافت درخواست مشاوره", () => {
     expect(second.status).toBe(429);
     const data = await second.json();
     expect(data.retryAfter).toBeGreaterThan(0);
+  });
+
+  it("در صورت تنظیم Supabase، درخواست در جدول consultations ذخیره می‌شود", async () => {
+    process.env.SUPABASE_URL = "https://project.example.supabase.co";
+    process.env.SUPABASE_ANON_KEY = "anon-test-key";
+    const response = await handler(request(validBody), context);
+    expect(response.status).toBe(201);
+    const calls = vi.mocked(globalThis.fetch).mock.calls.map((call) => String(call[0]));
+    expect(calls.some((url) => url.includes("/rest/v1/rpc/submit_consultation"))).toBe(true);
+    const rpcCall = vi.mocked(globalThis.fetch).mock.calls.find((call) =>
+      String(call[0]).includes("/rest/v1/rpc/submit_consultation")
+    );
+    const rpcBody = JSON.parse(String(rpcCall?.[1]?.body));
+    expect(rpcBody.p_reference).toMatch(/^LV-/);
+    expect(rpcBody.p_name).toBe(validBody.name);
+    expect(rpcBody.p_phone).toBe(validBody.phone);
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_ANON_KEY;
+  });
+
+  it("ذخیرۀ موفق در Supabase حتی بودن تلگرام هم کافی است", async () => {
+    delete process.env.TELEGRAM_BOT_TOKEN;
+    delete process.env.TELEGRAM_CHAT_ID;
+    process.env.SUPABASE_URL = "https://project.example.supabase.co";
+    process.env.SUPABASE_ANON_KEY = "anon-test-key";
+    const response = await handler(request(validBody), context);
+    expect(response.status).toBe(201);
+    delete process.env.SUPABASE_URL;
+    delete process.env.SUPABASE_ANON_KEY;
   });
 
   it("Turnstile را در صورت پیکربندی الزامی می‌کند", async () => {

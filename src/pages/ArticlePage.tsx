@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import PageHero from "../components/PageHero";
+import CommentSection from "../components/CommentSection";
 import FinalCTA from "../components/FinalCTA";
 import { Link } from "../lib/router";
 import { ARTICLES, articlePath, type Article } from "../content/articles";
@@ -309,6 +310,7 @@ export default function ArticlePage({ article }: { article: Article }) {
 
             <ShareRow article={article} />
             <AuthorBox />
+            <CommentSection slug={article.slug} />
 
             {(newer || older) && (
               <nav aria-label="مقاله‌های مجاور" className="mt-8 grid gap-4 sm:grid-cols-2">

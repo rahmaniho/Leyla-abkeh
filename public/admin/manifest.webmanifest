@@ -1,0 +1,36 @@
+{
+  "name": "مدیریت سایت | دفتر وکالت لیلا آبکه",
+  "short_name": "مدیریت سایت",
+  "description": "پنل مدیریت و انتشار محتوای سایت دفتر وکالت لیلا آبکه (لیلا آبکه، وکیل پایه یک دادگستری)",
+  "lang": "fa-IR",
+  "dir": "rtl",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1c28",
+  "theme_color": "#0f1c28",
+  "categories": ["business", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any" }
+  ],
+  "shortcuts": [
+    {
+      "name": "مقالهٔ جدید",
+      "short_name": "مقالهٔ جدید",
+      "description": "ساخت مستقیم یک مقالهٔ تازه",
+      "url": "/admin/#/collections/blog/entries/new",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "فهرست مقالات",
+      "short_name": "مقالات",
+      "description": "مرور و ویرایش مقالات موجود",
+      "url": "/admin/#/collections/blog",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}
