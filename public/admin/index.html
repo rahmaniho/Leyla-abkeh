@@ -2,33 +2,264 @@
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content="پنل مدیریت و انتشار محتوای سایت دفتر وکالت لیلا آبکه — قابل نصب به‌عنوان وب‌اپ روی گوشی و دسکتاپ" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <title>پنل مدیریت محتوا</title>
+    <meta name="theme-color" content="#0f1c28" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/admin/manifest.webmanifest" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="مدیریت سایت" />
+
+    <title>پنل مدیریت سایت | دفتر وکالت لیلا آبکه</title>
+
+    <style>
+      :root {
+        --ink-deep: #0f1c28;
+        --ink: #1a2a3a;
+        --ink-soft: #23364a;
+        --ink-mist: #33506b;
+        --gold: #b8915a;
+        --gold-light: #d4b483;
+        --gold-pale: #ead9bd;
+        --gold-deep: #86672f;
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        background: radial-gradient(1100px 620px at 85% -10%, rgba(184,145,90,.16), transparent 60%),
+                    radial-gradient(900px 540px at 8% 110%, rgba(51,80,107,.35), transparent 55%),
+                    var(--ink-deep);
+        color: var(--gold-pale);
+        font-family: Vazirmatn, Tahoma, "Segoe UI", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* ---------- صفحۀ بارگذاری ---------- */
+      #boot {
+        position: fixed; inset: 0; z-index: 40;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 18px; text-align: center; padding: 24px;
+        background: transparent; transition: opacity .45s ease, visibility .45s ease;
+      }
+      #boot.done { opacity: 0; visibility: hidden; pointer-events: none; }
+      #boot img { height: 128px; width: auto; filter: drop-shadow(0 18px 40px rgba(184,145,90,.28)); }
+      #boot h1 { margin: 2px 0 0; font-size: 1.2rem; color: #fff; font-weight: 800; letter-spacing: .2px; }
+      #boot p { margin: 0; font-size: .8rem; color: var(--gold-light); opacity: .9; }
+      .bar { width: min(240px, 60vw); height: 3px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+      .bar i { display: block; height: 100%; width: 35%; border-radius: inherit;
+        background: linear-gradient(90deg, transparent, var(--gold-light), var(--gold), transparent);
+        animation: slide 1.15s ease-in-out infinite; }
+      @keyframes slide { 0% { transform: translateX(120%); } 100% { transform: translateX(-280%); } }
+      .boot-note { font-size: .68rem; color: rgba(234,217,189,.5); }
+
+      /* ---------- دکمۀ شناور راهنما ---------- */
+      #fab {
+        position: fixed; z-index: 60; left: max(14px, env(safe-area-inset-left)); bottom: max(16px, env(safe-area-inset-bottom));
+        display: flex; align-items: center; gap: 8px;
+        height: 46px; padding: 0 16px 0 12px; border: 1px solid rgba(212,180,131,.4); border-radius: 999px;
+        background: rgba(15,28,40,.88); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        color: var(--gold-light); cursor: pointer;
+        font-family: inherit; font-size: .8rem; font-weight: 700;
+        box-shadow: 0 12px 34px -10px rgba(0,0,0,.6);
+        transition: transform .18s ease, border-color .18s ease, color .18s ease;
+      }
+      #fab:hover, #fab:focus-visible { transform: translateY(-2px); border-color: var(--gold-light); color: #fff; outline: none; }
+      #fab .q { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%;
+        border: 1px solid currentColor; font-size: .82rem; line-height: 1; }
+
+      /* ---------- پانل راهنما ---------- */
+      #sheet {
+        position: fixed; z-index: 70; left: max(12px, env(safe-area-inset-left)); bottom: max(74px, calc(env(safe-area-inset-bottom) + 74px));
+        width: min(430px, calc(100vw - 24px)); max-height: min(74vh, 640px); overflow: auto;
+        border: 1px solid rgba(212,180,131,.28); border-radius: 20px;
+        background: rgba(15,28,40,.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 30px 80px -18px rgba(0,0,0,.75);
+        padding: 18px 18px 14px; display: none;
+      }
+      #sheet.open { display: block; animation: rise .28s ease; }
+      @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+      #sheet h2 { margin: 2px 0 10px; font-size: .95rem; color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+      #sheet .close { border: 0; background: rgba(255,255,255,.06); color: var(--gold-pale); width: 30px; height: 30px; border-radius: 10px; cursor: pointer; font-size: .95rem; }
+      #sheet .close:hover { background: rgba(255,255,255,.12); }
+      .sect { border: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.03); border-radius: 14px; padding: 10px 12px; margin: 10px 0; }
+      .sect h3 { margin: 0 0 6px; font-size: .8rem; color: var(--gold-light); letter-spacing: .2px; }
+      .sect ol, .sect ul { margin: 0; padding-inline-start: 18px; font-size: .74rem; line-height: 2.15; color: rgba(234,217,189,.92); }
+      .sect code { background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.08); padding: 1px 6px; border-radius: 6px; font-size: .72rem; direction: ltr; unicode-bidi: embed; }
+      .sect a { color: var(--gold-light); text-decoration: none; border-bottom: 1px dotted currentColor; }
+      .sect a:hover { color: #fff; }
+      #install-btn {
+        display: none; width: 100%; margin: 6px 0 2px; padding: 10px 12px; border-radius: 12px; cursor: pointer;
+        border: 1px solid rgba(212,180,131,.5); background: linear-gradient(180deg, rgba(212,180,131,.18), rgba(184,145,90,.1));
+        color: var(--gold-light); font-family: inherit; font-weight: 800; font-size: .82rem;
+      }
+      #install-btn:hover { background: rgba(212,180,131,.26); color: #fff; }
+      .fine { font-size: .64rem; color: rgba(234,217,189,.45); line-height: 1.9; margin: 10px 2px 2px; }
+      .fine b { color: var(--gold-light); font-weight: 700; }
+
+      @media (max-width: 480px) {
+        #fab { font-size: .74rem; height: 44px; }
+        #sheet { bottom: max(70px, calc(env(safe-area-inset-bottom) + 66px)); }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .bar i { animation: none; width: 100%; opacity: .7; }
+        #sheet.open { animation: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- صفحۀ بارگذاری (تا آماده شدن احراز هویت و پنل) -->
+    <main id="boot" aria-hidden="true">
+      <img src="/images/brand/logo-lockup.webp" alt="" width="180" height="255" />
+      <div>
+        <h1>دفتر وکالت لیلا آبکه</h1>
+        <p>سامانۀ مدیریت محتوای سایت</p>
+      </div>
+      <div class="bar"><i></i></div>
+      <span class="boot-note">در حال اتصال به سرویس مدیریت…</span>
+    </main>
+
+    <!-- دکمۀ شناور راهنما/نصب — همیشه در دسترس مدیر -->
+    <button id="fab" type="button" aria-expanded="false" aria-controls="sheet" aria-label="باز کردن راهنمای مدیر سایت">
+      <span class="q" aria-hidden="true">؟</span>
+      <span>راهنمای مدیر</span>
+    </button>
+
+    <!-- پانل راهنمای مدیر سایت -->
+    <aside id="sheet" role="dialog" aria-modal="false" aria-label="راهنمای مدیر سایت">
+      <h2>
+        راهنمای مدیر سایت
+        <button class="close" id="sheet-close" type="button" aria-label="بستن راهنما">✕</button>
+      </h2>
+
+      <button id="install-btn" type="button">📲 نصب «مدیریت سایت» روی این دستگاه</button>
+
+      <div class="sect">
+        <h3>📱 نصب روی گوشی</h3>
+        <ul>
+          <li><b>اندروید (Chrome):</b> منوی ⋮ → «افزودن به صفحۀ اصلی» یا «نصب برنامه»</li>
+          <li><b>آیفون (Safari):</b> دکمۀ اشتراک‌گذاری ← «Add to Home Screen / افزودن به صفحۀ اصلی»</li>
+        </ul>
+        پس از نصب، آیکن <b>«مدیریت سایت»</b> کنار برنامه‌ها می‌نشیند و تمام‌صفحه باز می‌شود.
+      </div>
+
+      <div class="sect">
+        <h3>🚀 راه‌اندازی اولیه (یک‌بار)</h3>
+        <ol>
+          <li>Netlify → سایت → <b>Identity</b> → <b>Enable Identity</b></li>
+          <li>Identity → <b>Services</b> → <b>Git Gateway</b> → Enable</li>
+          <li>Identity → <b>Invite users</b> → ایمیل مدیر را وارد کنید</li>
+          <li>لینک دعوت در ایمیل را باز کنید و رمز بسازید</li>
+        </ol>
+        راهنمای کامل:
+        <a href="https://github.com/rahmaniho/Leyla-abkeh/blob/main/docs/CMS-SETUP.md" target="_blank" rel="noopener noreferrer">docs/CMS-SETUP.md</a>
+      </div>
+
+      <div class="sect">
+        <h3>✍️ گردش‌کار روزانه</h3>
+        <ol>
+          <li>مقالۀ تازه → پیش‌نویس → «آمادۀ انتشار»</li>
+          <li>انتشار → یک کامیت روی <code>main</code> → سایت خودکار به‌روز می‌شود (معمولاً کمتر از ۲ دقیقه)</li>
+          <li>اشتباه را می‌توان با «بازگردانی» همان کامیت اصلاح کرد؛ همه‌چیز در تاریخچۀ Git باقی است</li>
+        </ol>
+      </div>
+
+      <p class="fine">
+        سایت عمومی: <a href="https://leyla-abkeh.ir/" target="_blank" rel="noopener noreferrer">leyla-abkeh.ir</a> ·
+        پنل مبتنی بر <b>Decap CMS 3.17.1</b> · احراز هویت <b>Netlify Identity</b><br />
+        این نشانی در موتورهای جست‌وجو ایندکس نمی‌شود (noindex).
+      </p>
+    </aside>
+
     <!-- ویجت احراز هویت Netlify (برای ورود با Git Gateway) -->
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
-  </head>
-  <body>
-    <div id="loading" style="font-family: Tahoma, sans-serif; padding: 2rem; text-align: center">
-      در حال بارگذاری پنل مدیریت…
-    </div>
     <!-- Decap CMS — نسخۀ قفل‌شده -->
-    <script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.17.1/dist/decap-cms.js" defer></script>
+
     <script>
-      window.addEventListener("load", function () {
-        var loading = document.getElementById("loading");
-        if (loading) loading.remove();
-        if (window.netlifyIdentity) {
-          window.netlifyIdentity.on("init", function (user) {
-            if (!user) {
-              window.netlifyIdentity.on("login", function () {
-                document.location.href = "/admin/";
-              });
-            }
+      (function () {
+        "use strict";
+
+        /* ثبت Service Worker (فقط روی HTTPS/localhost؛ scope = /admin/) */
+        try {
+          var isLocal = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname);
+          if ("serviceWorker" in navigator && (location.protocol === "https:" || isLocal)) {
+            window.addEventListener("load", function () {
+              navigator.serviceWorker.register("/admin/sw.js", { scope: "/admin/" }).catch(function () {});
+            });
+          }
+        } catch (error) { /* SW اختیاری است؛ پنل بدون آن هم کار می‌کند */ }
+
+        var boot = document.getElementById("boot");
+        function hideBoot() { if (boot) boot.classList.add("done"); }
+        /* اگر همه‌چیز درست پیش رفت، صفحۀ بارگذاری روی load برداشته می‌شود */
+        window.addEventListener("load", hideBoot);
+        /* ایمنی: حتی اگر اسکریپت CDN شکست بخورد، صفحه قفل نماند */
+        window.setTimeout(hideBoot, 12000);
+
+        /* دکمۀ نصب PWA */
+        var deferredPrompt = null;
+        var installBtn = document.getElementById("install-btn");
+        window.addEventListener("beforeinstallprompt", function (event) {
+          event.preventDefault();
+          deferredPrompt = event;
+          if (installBtn) installBtn.style.display = "block";
+        });
+        if (installBtn) {
+          installBtn.addEventListener("click", function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.finally(function () {
+              deferredPrompt = null;
+              installBtn.style.display = "none";
+            });
           });
         }
-      });
+        window.addEventListener("appinstalled", function () {
+          if (installBtn) installBtn.style.display = "none";
+        });
+
+        /* پانل راهنما: باز/بسته */
+        var fab = document.getElementById("fab");
+        var sheet = document.getElementById("sheet");
+        var closeBtn = document.getElementById("sheet-close");
+        function setOpen(open) {
+          sheet.classList.toggle("open", open);
+          fab.setAttribute("aria-expanded", String(open));
+          if (open) { closeBtn.focus(); } else { fab.focus(); }
+        }
+        fab.addEventListener("click", function () { setOpen(!sheet.classList.contains("open")); });
+        closeBtn.addEventListener("click", function () { setOpen(false); });
+        document.addEventListener("keydown", function (event) {
+          if (event.key === "Escape" && sheet.classList.contains("open")) setOpen(false);
+        });
+        document.addEventListener("click", function (event) {
+          if (sheet.classList.contains("open") && !sheet.contains(event.target) && !fab.contains(event.target)) {
+            setOpen(false);
+          }
+        });
+
+        /* پس از ورود موفق، Decap صفحۀ خودش را نشان می‌دهد؛ هدف ما فقط ریدایرکت زیبا به /admin/ است */
+        try {
+          if (window.netlifyIdentity) {
+            window.netlifyIdentity.on("init", function (user) {
+              if (!user) {
+                window.netlifyIdentity.on("login", function () { document.location.href = "/admin/"; });
+              }
+            });
+          }
+        } catch (error) { /* ویجت Identity بارگذاری نشد؛ Decap خودش پیام خطا می‌دهد */ }
+      })();
     </script>
   </body>
 </html>
