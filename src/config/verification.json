@@ -43,10 +43,5 @@
     "key": "content.statistics",
     "label": "آمار پرونده/نرخ موفقیت/سابقه",
     "detail": "اعداد ۸۵۰ پرونده، ۹۵٪ موفقیت، ۱۲ سال و ۴٫۹ امتیاز بدون منبع بودند و منتشر نمی‌شوند."
-  },
-  {
-    "key": "site.url",
-    "label": "دامنۀ نهایی",
-    "detail": "دامنۀ پیش‌فرض leyla-abkeh.netlify.app است (canonical/sitemap/OG). دامنۀ نهایی را با VITE_SITE_URL تنظیم کنید."
   }
 ]

@@ -118,6 +118,8 @@ Markdown در `src/content/blog/`؛ قالب فیلدها در `public/admin/con
 
 راهنمای کامل: [`docs/NETLIFY-SETUP.md`](docs/NETLIFY-SETUP.md) — راهنمای پنل مدیریت: [`docs/CMS-SETUP.md`](docs/CMS-SETUP.md)
 
+**دامنه‌های نهایی: [leyla-abkeh.ir](https://leyla-abkeh.ir) (اصلی/canonical) و [laylaabkeh.ir](https://laylaabkeh.ir) (ریدایرکت ۳۰۱ به اصلی)** — راهنمای کامل قدم‌به‌قدم انتشار (DNS، Netlify، HTTPS، کانال فرم، ایمیل، Search Console، /admin): [`docs/LAUNCH-CHECKLIST.md`](docs/LAUNCH-CHECKLIST.md)
+
 ## گزارش‌ها
 
 - [`docs/AUDIT.md`](docs/AUDIT.md) — ممیزی کامل پروژه پیش از تغییرات
