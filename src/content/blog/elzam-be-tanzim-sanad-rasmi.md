@@ -104,6 +104,7 @@ draft: false
 
 - [پیش‌فروش ساختمان و الزام سند رسمی](/articles/pishforosh-sakhteman-sand-rasmi)
 - [گواهی انحصار وراثت: مدارک و مراحل](/articles/enhesar-varasat-madarek-va-marahel)
+- [الزام به تفکیک و پایان‌کار](/articles/elzam-be-tafkik-payankar)
+- [راهنمای انتخاب وکیل ملکی در قزوین](/articles/behtarin-vakil-qazvin)
 
 برای بررسی پروندۀ خود [درخواست مشاوره](/contact) ثبت کنید یا صفحۀ [اموال غیرمنقول و امور ثبتی](/services/amlak-va-sebat) را ببینید.
-- [الزام به تفکیک و پایان‌کار](/articles/elzam-be-tafkik-payankar)

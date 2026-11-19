@@ -59,12 +59,13 @@ function buildSitemap(entries, siteUrl) {
       const loc = entry.path === "/" ? `${siteUrl}/` : `${siteUrl}${entry.path}/`;
       const lastmod = entry.lastmod ? `\n    <lastmod>${escapeXml(entry.lastmod)}</lastmod>` : "";
       const priority = entry.path === "/" ? "1.0" : entry.priority ?? "0.8";
+      const changefreq = entry.changefreq ?? "monthly";
       const image = entry.image
         ? `\n    <image:image>\n      <image:loc>${escapeXml(`${siteUrl}${entry.image}`)}</image:loc>\n${
             entry.imageAlt ? `      <image:title>${escapeXml(entry.imageAlt)}</image:title>\n` : ""
           }    </image:image>`
         : "";
-      return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod}${image}\n    <changefreq>monthly</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
+      return `  <url>\n    <loc>${escapeXml(loc)}</loc>${lastmod}${image}\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`;
     })
     .join("\n");
 

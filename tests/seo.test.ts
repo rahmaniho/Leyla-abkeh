@@ -146,6 +146,46 @@ describe("دادۀ ساختاریافته", () => {
     expect(articleSchema?.datePublished).toBeTruthy();
     expect(articleSchema?.dateModified).toBeTruthy();
   });
+
+  it("صفحۀ اصلی، WebSite با SearchAction، Attorney با knowsAbout و FAQPage دارد", () => {
+    const homeJsonLd = resolveRoute("/").meta.jsonLd ?? [];
+    const website = homeJsonLd.find((item) => item["@type"] === "WebSite");
+    const attorney = homeJsonLd.find((item) => item["@type"] === "Attorney");
+    const faq = homeJsonLd.find((item) => item["@type"] === "FAQPage");
+    expect(website?.potentialAction).toBeDefined();
+    expect(Array.isArray(attorney?.knowsAbout)).toBe(true);
+    expect(faq).toBeDefined();
+  });
+
+  it("صفحات خدمات و درباره دارای ItemList و ProfilePage هستند", () => {
+    const servicesTypes = (resolveRoute("/services").meta.jsonLd ?? []).map((item) => item["@type"]);
+    expect(servicesTypes).toContain("ItemList");
+    expect(servicesTypes).toContain("BreadcrumbList");
+
+    const aboutJsonLd = resolveRoute("/about").meta.jsonLd ?? [];
+    expect(aboutJsonLd.map((item) => item["@type"])).toContain("ProfilePage");
+    const person = aboutJsonLd.find((item) => item["@type"] === "Person");
+    expect(person?.gender).toBe("https://schema.org/Female");
+  });
+
+  it("تگ‌های hreflang و article:section و geo در خروجی head موجودند", () => {
+    const homeHead = renderHeadTags(resolveRoute("/").meta);
+    expect(homeHead).toContain('hreflang="fa-IR"');
+    expect(homeHead).toContain('name="geo.position"');
+
+    const articleHead = renderHeadTags(resolveRoute(`/articles/${ARTICLES[0].slug}`).meta);
+    expect(articleHead).toContain('property="article:section"');
+    expect(articleHead).toContain('property="article:tag"');
+  });
+
+  it("مقالۀ راهنمای انتخاب وکیل در قزوین از سایر مقالات لینک ورودی دارد", () => {
+    const inboundCount = ARTICLES.filter(
+      (article) =>
+        article.slug !== "behtarin-vakil-qazvin" &&
+        article.body.includes("(/articles/behtarin-vakil-qazvin)")
+    ).length;
+    expect(inboundCount).toBeGreaterThanOrEqual(5);
+  });
 });
 
 describe("نقشۀ سایت", () => {

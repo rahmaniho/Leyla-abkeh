@@ -1,20 +1,38 @@
 import PageHero from "../components/PageHero";
 import Services from "../components/Services";
 import FinalCTA from "../components/FinalCTA";
+import { SERVICES, servicePath } from "../content/services";
 import { Link } from "../lib/router";
-import { buildAttorneySchema, type PageMeta } from "../lib/seo";
+import { buildAttorneySchema, buildBreadcrumbSchema, pageUrl, type PageMeta } from "../lib/seo";
+
+const breadcrumbs = [
+  { name: "صفحۀ اصلی", path: "/" },
+  { name: "خدمات حقوقی", path: "/services" },
+];
 
 export const meta: PageMeta = {
-  title: "خدمات حقوقی در قزوین | وکالت خانواده، کیفری و ملکی | لیلا آبکه",
+  title: "خدمات حقوقی در قزوین | وکیل ملکی، ارث، مهریه، نفقه، حقوقی و کیفری | لیلا آبکه",
   description:
-    "حوزه‌های فعالیت دفتر وکالت لیلا آبکه در قزوین: دعاوی خانواده، کیفری، ملکی و ثبتی، ارث و انحصار وراثت، قراردادها و مطالبات، چک و اسناد تجاری، حقوق کار و شرکت‌ها.",
+    "حوزه‌های وکالت لیلا آبکه، وکیل زن در قزوین: دعاوی خانواده (مهریه، نفقه و طلاق)، وکیل ملکی و ثبتی، وکیل ارث، دعاوی حقوقی، کیفری، چک و شرکت‌ها.",
   path: "/services",
   type: "website",
-  breadcrumbs: [
-    { name: "صفحۀ اصلی", path: "/" },
-    { name: "خدمات حقوقی", path: "/services" },
+  breadcrumbs,
+  jsonLd: [
+    buildAttorneySchema(),
+    buildBreadcrumbSchema(breadcrumbs),
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "خدمات حقوقی دفتر وکالت لیلا آبکه در قزوین",
+      numberOfItems: SERVICES.length,
+      itemListElement: SERVICES.map((service, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: pageUrl(servicePath(service.slug)),
+        name: service.title,
+      })),
+    },
   ],
-  jsonLd: [buildAttorneySchema()],
 };
 
 const STEPS = [
@@ -79,6 +97,12 @@ export default function ServicesPage() {
               className="rounded-full border border-ink/15 px-6 py-3 text-[13px] font-extrabold text-ink transition-colors hover:border-gold/50 hover:text-gold-deep"
             >
               پرسش‌های متداول
+            </Link>
+            <Link
+              to="/articles/behtarin-vakil-qazvin"
+              className="rounded-full border border-ink/15 px-6 py-3 text-[13px] font-extrabold text-ink transition-colors hover:border-gold/50 hover:text-gold-deep"
+            >
+              معیارهای انتخاب وکیل در قزوین
             </Link>
           </div>
         </div>

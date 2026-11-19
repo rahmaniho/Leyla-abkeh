@@ -41,6 +41,7 @@ export function buildLlmsTxt(entries: LlmsEntry[], siteUrl: string): string {
     `- عنوان: ${lawyer.professionalTitle}`,
     lawyer.licenseNumber ? `- شماره پروانه وکالت: ${lawyer.licenseNumberLatin}` : "",
     `- شهر: ${siteConfig.site.city}، ایران`,
+    "- حوزه‌های تخصصی: وکیل زن در قزوین، دعاوی خانواده (مهریه، نفقه، طلاق، حضانت)، دعاوی ملکی و ثبتی، ارث و انحصار وراثت، دعاوی حقوقی و مطالبات مالی، دعاوی کیفری، چک و اسناد تجاری",
     ...(primaryPhone ? [`- تلفن و واتساپ: ${primaryPhone.display}`] : []),
     `- ایمیل: ${contact.email}`,
     `- نشانی: ${contact.address.full}`,

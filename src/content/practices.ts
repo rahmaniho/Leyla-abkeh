@@ -52,7 +52,7 @@ export const PRACTICE_GROUPS: PracticeGroup[] = [
   {
     id: "motalebat",
     title: "قراردادها و دعاوی مالی",
-    summary: "تعهدی که اجرا نشده یا مبلغی که پرداخت نشده؛ از اخطار تا دادخواست.",
+    summary: "دعاوی حقوقی و مالی: تعهدی که اجرا نشده یا مبلغی که پرداخت نشده؛ از اخطار تا دادخواست.",
     icon: "contract",
     service: "gharardad-va-motalebat",
     claims: [

@@ -14,7 +14,7 @@ import verificationData from "./verification.json";
 const FALLBACK_SITE_URL = "https://leyla-abkeh.ir";
 
 /** تاریخ آخرین بازبینی محتوای صفحات ثابت (برای sitemap و نمایش) */
-export const SITE_LAST_UPDATED = "2026-10-23";
+export const SITE_LAST_UPDATED = "2026-11-19";
 
 function normalizeSiteUrl(value: string | undefined): string {
   if (!value) return FALLBACK_SITE_URL;
@@ -149,8 +149,8 @@ export const siteConfig = {
     city: "قزوین",
     region: "قزوین",
     country: "IR",
-    defaultTitle: `${LAWYER_PROFESSIONAL_TITLE} | لیلا آبکه`,
-    defaultDescription: `دفتر وکالت لیلا آبکه در قزوین؛ ${LAWYER_PROFESSIONAL_TITLE}، مشاورۀ حقوقی در دعاوی خانواده، کیفری، ملکی، ارث، چک و قراردادها.`,
+    defaultTitle: `لیلا آبکه، وکیل زن در قزوین | ${LAWYER_PROFESSIONAL_TITLE}`,
+    defaultDescription: `دفتر وکالت لیلا آبکه، ${LAWYER_PROFESSIONAL_TITLE}؛ وکیل زن در قزوین برای دعاوی حقوقی، کیفری، ملکی، ارث، مهریه، نفقه و خانواده.`,
   },
 
   lawyer: {
