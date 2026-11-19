@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import AuthGate from "../../components/AuthGate";
-import TopNav from "../../components/TopNav";
+import Shell from "../../components/Shell";
 import { supabase, type AdminNotification } from "../../lib/supabase";
 import { relativeTimeFa, formatDateTimeFa } from "../../lib/dates";
 
@@ -69,8 +69,7 @@ export default function NotificationsPage() {
 
   return (
     <AuthGate>
-      <TopNav />
-      <main className="container">
+      <Shell>
         <div className="page-head">
           <div>
             <h1 className="page-title">اعلان‌ها</h1>
@@ -101,7 +100,13 @@ export default function NotificationsPage() {
                   className={`notif-row big${item.read ? "" : " unread"}`}
                   onClick={() => markOneRead(item.id)}
                 >
-                  <span className="notif-dot" aria-hidden="true" />
+                  <span className="notif-icon" aria-hidden="true">
+                    {item.ref_table === "consultations" ? (
+                      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.2L4 21l1.9-5.2A8 8 0 1 1 21 12z"/></svg>
+                    )}
+                  </span>
                   <span className="notif-body">
                     <span className="notif-title">{item.title}</span>
                     {item.body && <span className="notif-summary">{item.body}</span>}
@@ -115,7 +120,7 @@ export default function NotificationsPage() {
             })}
           </section>
         )}
-      </main>
+      </Shell>
     </AuthGate>
   );
 }

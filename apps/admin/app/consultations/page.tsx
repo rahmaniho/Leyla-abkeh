@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import TopNav from "../../components/TopNav";
+import Shell from "../../components/Shell";
+import Avatar from "../../components/Avatar";
 import { supabase, CONSULTATION_STATUS, type ConsultationRow, type ConsultationStatus } from "../../lib/supabase";
 
 const FILTERS: { key: "all" | ConsultationStatus; label: string }[] = [
@@ -72,8 +73,7 @@ export default function ConsultationsPage() {
 
   return (
     <AuthGate>
-      <TopNav />
-      <main className="container">
+      <Shell>
         <h1 className="page-title">درخواست‌های مشاوره</h1>
         <p className="page-sub">مدیریت و پیگیری درخواست‌هایی که از فرم سایت ثبت شده‌اند</p>
 
@@ -95,12 +95,15 @@ export default function ConsultationsPage() {
           visible.map((row) => (
             <article className="row" key={row.id}>
               <div className="row-head">
-                <div>
-                  <span className="row-title">{row.name}</span>
-                  <div className="row-meta" style={{ marginTop: 4 }}>
-                    <a className="mono" href={`tel:${row.phone}`}>{row.phone}</a>
-                    {row.contact_method ? ` · روش ترجیحی: ${row.contact_method}` : ""}
-                    {row.duration_minutes ? ` · ${row.duration_minutes} دقیقه` : ""}
+                <div className="row-identity">
+                  <Avatar name={row.name} size={42} />
+                  <div>
+                    <span className="row-title">{row.name}</span>
+                    <div className="row-meta" style={{ marginTop: 3 }}>
+                      <a className="mono" href={`tel:${row.phone}`}>{row.phone}</a>
+                      {row.contact_method ? ` · روش ترجیحی: ${row.contact_method}` : ""}
+                      {row.duration_minutes ? ` · ${row.duration_minutes} دقیقه` : ""}
+                    </div>
                   </div>
                 </div>
                 <div style={{ textAlign: "left" }}>
@@ -139,7 +142,7 @@ export default function ConsultationsPage() {
             </article>
           ))
         )}
-      </main>
+      </Shell>
     </AuthGate>
   );
 }

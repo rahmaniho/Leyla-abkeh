@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import TopNav from "../../components/TopNav";
+import Shell from "../../components/Shell";
+import Avatar from "../../components/Avatar";
 import { supabase, COMMENT_STATUS, type CommentRow, type CommentStatus } from "../../lib/supabase";
 
 const TABS: CommentStatus[] = ["pending", "approved", "rejected"];
@@ -64,8 +65,7 @@ export default function CommentsPage() {
 
   return (
     <AuthGate>
-      <TopNav />
-      <main className="container">
+      <Shell>
         <h1 className="page-title">نظرات مقالات</h1>
         <p className="page-sub">هیچ نظری بدون تأیید شما روی سایت منتشر نمی‌شود</p>
 
@@ -87,7 +87,10 @@ export default function CommentsPage() {
           rows.map((comment) => (
             <article className="row" key={comment.id}>
               <div className="row-head">
-                <span className="row-title">{comment.author_name}</span>
+                <div className="row-identity">
+                  <Avatar name={comment.author_name} size={38} />
+                  <span className="row-title">{comment.author_name}</span>
+                </div>
                 <span className="row-meta">{formatFa(comment.created_at)}</span>
               </div>
               <p className="row-body">{comment.body}</p>
@@ -110,7 +113,7 @@ export default function CommentsPage() {
             </article>
           ))
         )}
-      </main>
+      </Shell>
     </AuthGate>
   );
 }
