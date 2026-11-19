@@ -29,6 +29,27 @@ export const COMMENT_STATUS = {
 } as const;
 export type CommentStatus = keyof typeof COMMENT_STATUS;
 
+export type NotificationType = "consultation_new" | "comment_new";
+
+export type NotificationRefTable = "consultations" | "comments";
+
+export interface AdminNotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  ref_table: NotificationRefTable;
+  ref_id: string | null;
+  read: boolean;
+  created_at: string;
+}
+
+export interface VisitStatRow {
+  day: string;
+  path: string;
+  views: number;
+}
+
 export interface ConsultationRow {
   id: string;
   reference: string;

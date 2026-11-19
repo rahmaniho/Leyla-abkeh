@@ -5,6 +5,13 @@ import AuthGate from "../../components/AuthGate";
 import TopNav from "../../components/TopNav";
 import { supabase } from "../../lib/supabase";
 
+async function authHeaders(extra: Record<string, string> = {}): Promise<Record<string, string>> {
+  if (!supabase) return { ...extra };
+  const { data } = await supabase.auth.getSession();
+  const token = data.session?.access_token;
+  return token ? { ...extra, authorization: `Bearer ${token}` } : { ...extra };
+}
+
 interface ArticleItem {
   slug: string;
   title: string | null;
@@ -38,7 +45,8 @@ export default function ArticlesPage() {
 
   useEffect(() => {
     let mounted = true;
-    fetch("/api/articles")
+    authHeaders()
+      .then((headers) => fetch("/api/articles", { headers }))
       .then(async (response) => {
         const data = (await response.json()) as { ok: boolean; articles?: ArticleItem[]; message?: string };
         if (!mounted) return;
@@ -83,7 +91,7 @@ export default function ArticlesPage() {
     try {
       const response = await fetch("/api/articles", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: await authHeaders({ "content-type": "application/json" }),
         body: JSON.stringify({
           title,
           slug,

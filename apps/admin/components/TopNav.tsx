@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { supabase } from "../lib/supabase";
+import NotificationBell from "./NotificationBell";
 
 const LINKS = [
   { href: "/", label: "داشبورد" },
   { href: "/consultations", label: "درخواست‌های مشاوره" },
   { href: "/comments", label: "نظرات" },
   { href: "/articles", label: "مقالات" },
+  { href: "/reports", label: "گزارش‌ها" },
 ];
 
 export default function TopNav() {
@@ -42,6 +44,7 @@ export default function TopNav() {
               {link.label}
             </Link>
           ))}
+          <NotificationBell />
           <button type="button" className="signout" onClick={signOut}>
             خروج
           </button>

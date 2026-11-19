@@ -21,6 +21,13 @@
   status = 200
   force = true
 
+# مسیر عمومی تابع شمارش بی‌نام بازدید
+[[redirects]]
+  from = "/api/visit"
+  to = "/.netlify/functions/visit"
+  status = 200
+  force = true
+
 # ---------------------------- هدرها ----------------------------
 
 # هدرهای امنیتی عمومی

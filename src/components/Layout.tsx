@@ -5,6 +5,7 @@ import FloatingCall from "./FloatingCall";
 import { usePathname, useRouter } from "../lib/router";
 import { applyMetaInBrowser, type PageMeta } from "../lib/seo";
 import { track } from "../lib/analytics";
+import { trackPageView } from "../lib/visitors";
 
 /**
  * چیدمان مشترک صفحات: لینک پرش، ناوبری، محتوای اصلی، پاورقی و دکمۀ تماس.
@@ -46,6 +47,7 @@ export default function Layout({ meta, children }: { meta: PageMeta; children: R
   // سنجش بازدید صفحه‌ای — فقط مسیر، بدون شناسه یا داده شخصی
   useEffect(() => {
     track("page_view", { path: pathname });
+    trackPageView(pathname);
   }, [pathname]);
 
   return (
