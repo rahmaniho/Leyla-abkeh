@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import AuthGate from "../../components/AuthGate";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../components/DashboardLayout";
 import { supabase, type AdminNotification } from "../../lib/supabase";
 import { relativeTimeFa, formatDateTimeFa } from "../../lib/dates";
 
@@ -69,11 +69,13 @@ export default function NotificationsPage() {
 
   return (
     <AuthGate>
-      <Shell>
+      <DashboardLayout>
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه"><Link href="/">خانه</Link><span aria-hidden="true">‹</span><span aria-current="page">گزارش فعالیت‌ها</span></nav>
+        
         <div className="page-head">
           <div>
-            <h1 className="page-title">اعلان‌ها</h1>
-            <p className="page-sub">هر رویداد تازهٔ سایت (درخواست مشاوره، دیدگاه جدید) همین‌جا نمایش داده می‌شود</p>
+            <h1 className="page-title">گزارش فعالیت‌ها</h1>
+            <p className="page-sub">هر رویداد تازهٔ سایت (درخواست مشاوره، دیدگاه جدید، انتشار مقاله) همین‌جا نمایش داده می‌شود</p>
           </div>
           <button type="button" className="btn secondary" onClick={markAllRead} disabled={marking || unread === 0}>
             {marking ? "در حال انجام…" : "همه را خوانده کن"}
@@ -120,7 +122,7 @@ export default function NotificationsPage() {
             })}
           </section>
         )}
-      </Shell>
+      </DashboardLayout>
     </AuthGate>
   );
 }

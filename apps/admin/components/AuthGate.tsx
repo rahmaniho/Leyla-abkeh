@@ -12,8 +12,11 @@ import { supabase, supabaseReady } from "../lib/supabase";
 export default function AuthGate({ children }: { children: ReactNode }) {
   const router = useRouter();
   const [ready, setReady] = useState(false);
+  // حالت نمایشی (?demo=1): از دروازهٔ احراز هویت عبور می‌کنیم تا رابط کاربری بدون بک‌اند دیده شود
+  const [demo] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("demo") === "1");
 
   useEffect(() => {
+    if (demo) return;
     if (!supabase) return;
     let mounted = true;
 
@@ -34,7 +37,11 @@ export default function AuthGate({ children }: { children: ReactNode }) {
       mounted = false;
       listener.subscription.unsubscribe();
     };
-  }, [router]);
+  }, [router, demo]);
+
+  if (demo) {
+    return <>{children}</>;
+  }
 
   if (!supabaseReady) {
     return (

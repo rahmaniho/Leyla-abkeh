@@ -85,12 +85,19 @@ export async function GET(request: NextRequest) {
             headers: githubHeaders(token),
             cache: "no-store",
           });
-          if (!rawRes.ok) return { slug, title: null };
-          const head = (await rawRes.text()).slice(0, 400);
-          const match = head.match(/^title:\s*"?(.+?)"?\s*$/m);
-          return { slug, title: match ? match[1] : null };
+          if (!rawRes.ok) return { slug, title: null, publishDate: null, draft: false };
+          const head = (await rawRes.text()).slice(0, 1600);
+          const titleMatch = head.match(/^title:\s*"?(.+?)"?\s*$/m);
+          const dateMatch = head.match(/^publishDate:\s*"?(.+?)"?\s*$/m);
+          const draftMatch = head.match(/^draft:\s*"?(.+?)"?\s*$/m);
+          return {
+            slug,
+            title: titleMatch ? titleMatch[1] : null,
+            publishDate: dateMatch ? dateMatch[1] : null,
+            draft: draftMatch ? /^true$/i.test(draftMatch[1].trim()) : false,
+          };
         } catch {
-          return { slug, title: null };
+          return { slug, title: null, publishDate: null, draft: false };
         }
       })
     );
@@ -191,6 +198,59 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ok: false, message: putJson.message ?? `خطای GitHub (${putRes.status})` }, { status: 502 });
     }
     return NextResponse.json({ ok: true, slug, html_url: putJson.content?.html_url ?? null }, { status: 201 });
+  } catch {
+    return NextResponse.json({ ok: false, message: "ارتباط با GitHub برقرار نشد." }, { status: 502 });
+  }
+}
+/**
+ * حذف مقاله از مخزن (Contents API — حذف فایل .md)
+ * -------------------------------------------------
+ * پارامتر: ?slug=my-article — نیازمند نشست مدیر؛ Netlify پس از کامیت بیلد می‌کند.
+ */
+export async function DELETE(request: NextRequest) {
+  const denied = await requireSession(request);
+  if (denied) return denied;
+
+  const token = process.env.GITHUB_TOKEN?.trim();
+  if (!token) {
+    return NextResponse.json({ ok: false, message: UNAUTHENTICATED_MESSAGE }, { status: 501 });
+  }
+
+  const slug = new URL(request.url).searchParams.get("slug")?.trim() ?? "";
+  if (!/^[a-z0-9-]{3,80}$/.test(slug)) {
+    return NextResponse.json({ ok: false, message: "نشانی مقاله معتبر نیست." }, { status: 400 });
+  }
+
+  try {
+    const current = await fetch(`${API}/contents/${BLOG_DIR}/${slug}.md?ref=${BRANCH}`, {
+      headers: githubHeaders(token),
+      cache: "no-store",
+    });
+    if (current.status === 404) {
+      return NextResponse.json({ ok: false, message: "مقاله‌ای با این نشانی یافت نشد." }, { status: 404 });
+    }
+    if (!current.ok) {
+      return NextResponse.json({ ok: false, message: `خطای GitHub (${current.status})` }, { status: 502 });
+    }
+    const currentJson = (await current.json()) as { sha?: string };
+    if (!currentJson.sha) {
+      return NextResponse.json({ ok: false, message: "شناسهٔ فایل از GitHub دریافت نشد." }, { status: 502 });
+    }
+
+    const deleteRes = await fetch(`${API}/contents/${BLOG_DIR}/${slug}.md`, {
+      method: "DELETE",
+      headers: { ...githubHeaders(token), "content-type": "application/json" },
+      body: JSON.stringify({
+        message: `content: remove ${slug} via admin dashboard`,
+        sha: currentJson.sha,
+        branch: BRANCH,
+      }),
+    });
+    if (!deleteRes.ok) {
+      const deleteJson = (await deleteRes.json().catch(() => ({}))) as { message?: string };
+      return NextResponse.json({ ok: false, message: deleteJson.message ?? `خطای GitHub (${deleteRes.status})` }, { status: 502 });
+    }
+    return NextResponse.json({ ok: true, slug });
   } catch {
     return NextResponse.json({ ok: false, message: "ارتباط با GitHub برقرار نشد." }, { status: 502 });
   }

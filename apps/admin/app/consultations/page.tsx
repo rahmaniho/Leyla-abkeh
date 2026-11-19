@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../components/DashboardLayout";
 import Avatar from "../../components/Avatar";
 import { supabase, CONSULTATION_STATUS, type ConsultationRow, type ConsultationStatus } from "../../lib/supabase";
+import Link from "next/link";
 
 const FILTERS: { key: "all" | ConsultationStatus; label: string }[] = [
   { key: "all", label: "همه" },
@@ -73,9 +74,13 @@ export default function ConsultationsPage() {
 
   return (
     <AuthGate>
-      <Shell>
-        <h1 className="page-title">درخواست‌های مشاوره</h1>
+      <DashboardLayout>
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه"><Link href="/">خانه</Link><span aria-hidden="true">‹</span><span aria-current="page">درخواست‌های مشاوره</span></nav>
+        <div className="page-head"><div>
+            <h1 className="page-title">درخواست‌های مشاوره</h1>
         <p className="page-sub">مدیریت و پیگیری درخواست‌هایی که از فرم سایت ثبت شده‌اند</p>
+          </div>
+        </div>
 
         <div className="tabs" role="tablist" aria-label="فیلتر وضعیت">
           {FILTERS.map((item) => (
@@ -142,7 +147,7 @@ export default function ConsultationsPage() {
             </article>
           ))
         )}
-      </Shell>
+      </DashboardLayout>
     </AuthGate>
   );
 }
