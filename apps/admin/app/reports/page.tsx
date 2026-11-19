@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import TopNav from "../../components/TopNav";
+import Shell from "../../components/Shell";
 import BarChart from "../../components/BarChart";
+import AreaChart from "../../components/AreaChart";
 import {
   supabase,
   CONSULTATION_STATUS,
@@ -275,8 +276,7 @@ export default function ReportsPage() {
 
   return (
     <AuthGate>
-      <TopNav />
-      <main className="container">
+      <Shell>
         <div className="page-head no-print">
           <div>
             <h1 className="page-title">گزارش‌ها</h1>
@@ -332,22 +332,46 @@ export default function ReportsPage() {
         {data && (
           <>
             {/* ---------- KPI های خلاصه ---------- */}
-            <div className="cards">
-              <div className="card highlight">
-                <div className="num">{numFa(data.consultationsTotal)}</div>
-                <div className="lbl">درخواست مشاوره در بازه</div>
+            <div className="cards kpi-grid">
+              <div className="card kpi-card highlight">
+                <div className="kpi-top">
+                  <span className="kpi-label">درخواست مشاوره در بازه</span>
+                  <span className="kpi-icon gold">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg>
+                  </span>
+                </div>
+                <div className="kpi-value">{numFa(data.consultationsTotal)}</div>
+                <div className="kpi-foot"><span>انجام‌شده: {numFa(data.consultationsByStatus.done)}</span></div>
               </div>
-              <div className="card">
-                <div className="num">{numFa(data.commentsByStatus.pending)}</div>
-                <div className="lbl">دیدگاه در انتظار تأیید</div>
+              <div className="card kpi-card">
+                <div className="kpi-top">
+                  <span className="kpi-label">دیدگاه در انتظار تأیید</span>
+                  <span className="kpi-icon purple">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.2L4 21l1.9-5.2A8 8 0 1 1 21 12z"/></svg>
+                  </span>
+                </div>
+                <div className="kpi-value">{numFa(data.commentsByStatus.pending)}</div>
+                <div className="kpi-foot"><span>تأییدشده: {numFa(data.commentsByStatus.approved)}</span></div>
               </div>
-              <div className="card">
-                <div className="num">{numFa(data.visitsTotal)}</div>
-                <div className="lbl">بازدید صفحه در بازه</div>
+              <div className="card kpi-card">
+                <div className="kpi-top">
+                  <span className="kpi-label">بازدید صفحه در بازه</span>
+                  <span className="kpi-icon green">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                  </span>
+                </div>
+                <div className="kpi-value">{numFa(data.visitsTotal)}</div>
+                <div className="kpi-foot"><span>بی‌نام · بدون کوکی</span></div>
               </div>
-              <div className="card">
-                <div className="num">{consultationsShare}</div>
-                <div className="lbl">سهم درخواست‌های انجام‌شده</div>
+              <div className="card kpi-card">
+                <div className="kpi-top">
+                  <span className="kpi-label">سهم درخواست‌های انجام‌شده</span>
+                  <span className="kpi-icon blue">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  </span>
+                </div>
+                <div className="kpi-value">{consultationsShare}</div>
+                <div className="kpi-foot"><span>از کل درخواست‌های بازه</span></div>
               </div>
             </div>
 
@@ -416,7 +440,7 @@ export default function ReportsPage() {
               ) : (
                 <>
                   <h3 className="report-h3">روند روزانهٔ بازدید</h3>
-                  <BarChart values={data.dailyVisits} labels={data.days.map((day) => day.label)} ariaLabel="نمودار میله‌ای بازدید روزانهٔ سایت" unit="بازدید" />
+                  <AreaChart values={data.dailyVisits} labels={data.days.map((day) => day.label)} ariaLabel="نمودار ناحیه‌ای بازدید روزانهٔ سایت" unit="بازدید" stroke="#0e9f6a" gradientId="reportVisits" />
                   <h3 className="report-h3">پربازدیدترین صفحه‌ها</h3>
                   <table className="report-table">
                     <thead>
@@ -449,7 +473,7 @@ export default function ReportsPage() {
             </section>
           </>
         )}
-      </main>
+      </Shell>
     </AuthGate>
   );
 }

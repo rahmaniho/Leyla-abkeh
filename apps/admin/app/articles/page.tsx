@@ -2,7 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import AuthGate from "../../components/AuthGate";
-import TopNav from "../../components/TopNav";
+import Shell from "../../components/Shell";
 import { supabase } from "../../lib/supabase";
 
 async function authHeaders(extra: Record<string, string> = {}): Promise<Record<string, string>> {
@@ -123,8 +123,7 @@ export default function ArticlesPage() {
 
   return (
     <AuthGate>
-      <TopNav />
-      <main className="container">
+      <Shell>
         <h1 className="page-title">مقالات</h1>
         <p className="page-sub">مقالات در Git نگه‌داری می‌شوند (Markdown در src/content/blog) و با هر کامیت، Netlify سایت را دوباره می‌سازد</p>
 
@@ -205,7 +204,7 @@ export default function ArticlesPage() {
             {submitting ? "در حال ثبت در مخزن…" : "ثبت مقاله در مخزن"}
           </button>
         </form>
-      </main>
+      </Shell>
     </AuthGate>
   );
 }
