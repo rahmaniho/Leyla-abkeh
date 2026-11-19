@@ -33,9 +33,9 @@ export default function Hero() {
             id="hero-title"
             className="mt-5 text-[2rem] font-black leading-[1.5] text-white sm:text-[3.05rem] sm:leading-[1.4] lg:text-[3.3rem]"
           >
-            وکیل خانواده، کیفری
+            وکیل خانواده، کیفری،
             <br />
-            و ملکی <span className="text-gradient-gold">در قزوین</span>
+            حقوقی و ملکی <span className="text-gradient-gold">در قزوین</span>
           </h1>
         </div>
 
@@ -60,8 +60,8 @@ export default function Hero() {
 
         <div className="max-w-[720px] lg:col-start-1 lg:row-start-2 lg:self-start">
           <p className="max-w-xl text-[16px] leading-8 text-white/85 sm:text-lg sm:leading-9 lg:mt-5">
-            برای بررسی مسائل خانواده، کیفری، ملکی و دیگر موضوعات حقوقی، موضوع و مدارک خود را
-            در جلسۀ مشاوره مطرح کنید. تصمیم‌گیری آگاهانه با توضیح مسیرها و رازداری حرفه‌ای آغاز می‌شود.
+            با {lawyer.name}، وکیل زن پایه یک دادگستری در قزوین، مسائل حقوقی، کیفری، ملکی و ثبتی،
+            ارث و انحصار وراثت و دعاوی خانواده (مهریه، نفقه، طلاق و حضانت) را پیش از اقدام بررسی کنید.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">

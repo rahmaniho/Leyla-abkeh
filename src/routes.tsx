@@ -74,8 +74,21 @@ function serviceMeta(slug: string): PageMeta | null {
       name: service.title,
       serviceType: service.title,
       description: service.metaDescription,
+      category: service.tags.join("، "),
       url: pageUrl(path),
-      areaServed: { "@type": "City", name: "قزوین" },
+      mainEntityOfPage: pageUrl(path),
+      areaServed: [
+        { "@type": "City", name: "قزوین" },
+        { "@type": "AdministrativeArea", name: "استان قزوین" },
+      ],
+      availableChannel: {
+        "@type": "ServiceChannel",
+        serviceLocation: {
+          "@type": "Place",
+          name: siteConfig.site.name,
+          address: siteConfig.contact.address.full,
+        },
+      },
       provider: { "@id": `${pageUrl("/")}#attorney` },
       inLanguage: "fa-IR",
     },
@@ -186,6 +199,8 @@ function articleMeta(slug: string): PageMeta | null {
       : {}),
     publishedTime: article.publishDate,
     modifiedTime: article.lastReviewed ?? article.publishDate,
+    section: article.tags[0],
+    tags: article.tags,
     breadcrumbs,
     ogImage: article.cover,
     ogImageAlt: article.coverAlt,
@@ -244,6 +259,7 @@ export interface SitemapEntry {
   path: string;
   lastmod: string;
   priority?: string;
+  changefreq?: "weekly" | "monthly";
   /** تصویر شاخص صفحه، برای بخش image در نقشۀ سایت */
   image?: string;
   imageAlt?: string;
@@ -255,17 +271,35 @@ export function sitemapEntries(): SitemapEntry[] {
     ...Object.keys(STATIC_ROUTES).map((path) => ({
       path,
       lastmod: SITE_LAST_UPDATED,
-      priority: path === "/" ? "1.0" : "0.8",
+      priority:
+        path === "/"
+          ? "1.0"
+          : path === "/services" || path === "/about" || path === "/contact"
+            ? "0.9"
+            : "0.8",
+      changefreq: (path === "/" || path === "/services" || path === "/articles"
+        ? "weekly"
+        : "monthly") as "weekly" | "monthly",
+      ...(path === "/" || path === "/about"
+        ? {
+            image: `${siteConfig.lawyer.photo.basePath}.jpg`,
+            imageAlt: siteConfig.lawyer.photo.alt,
+          }
+        : {}),
     })),
     ...SERVICES.map((service) => ({
       path: servicePath(service.slug),
       lastmod: service.updated,
-      priority: "0.7",
+      priority: "0.85",
+      changefreq: "monthly" as const,
     })),
     ...ARTICLES.map((article) => ({
       path: articlePath(article.slug),
       lastmod: (article.lastReviewed ?? article.publishDate).slice(0, 10),
-      priority: "0.6",
+      priority: article.slug === "behtarin-vakil-qazvin" ? "0.85" : "0.7",
+      changefreq: (article.slug === "behtarin-vakil-qazvin" ? "weekly" : "monthly") as
+        | "weekly"
+        | "monthly",
       ...(article.cover ? { image: article.cover, imageAlt: article.coverAlt } : {}),
     })),
   ];

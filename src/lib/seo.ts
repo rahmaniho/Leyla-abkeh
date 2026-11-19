@@ -19,6 +19,8 @@ export interface PageMeta {
   ogImageAlt?: string;
   publishedTime?: string;
   modifiedTime?: string;
+  section?: string;
+  tags?: string[];
   breadcrumbs?: BreadcrumbItem[];
   /** دادۀ ساختاریافتۀ اختصاصی صفحه (بدون امتیاز یا آمار تأییدنشده) */
   jsonLd?: JsonLd[];
@@ -111,22 +113,47 @@ export function buildAttorneySchema(): JsonLd {
   const verifiedTelephone = primaryPhone?.e164;
   const showAddress = !verification.address;
   const showHours = !verification.hours;
+  const practiceAreas = [
+    "دعاوی خانواده",
+    "مطالبۀ مهریه",
+    "مطالبۀ نفقه",
+    "طلاق توافقی و یک‌طرفه",
+    "حضانت فرزند",
+    "دعاوی ملکی و ثبتی",
+    "الزام به تنظیم سند رسمی",
+    "خلع ید و تصرف عدوانی",
+    "دعاوی ارث و انحصار وراثت",
+    "تقسیم ترکه",
+    "دعاوی حقوقی و مطالبات مالی",
+    "دعاوی کیفری",
+    "چک و اسناد تجاری",
+    "حقوق کار و بیمه",
+    "حقوق شرکت‌ها و قراردادهای تجاری",
+  ];
 
   return {
     "@context": "https://schema.org",
     "@type": "Attorney",
     "@id": `${SITE_URL}/#attorney`,
     name: site.name,
-    alternateName: lawyer.name,
+    alternateName: `${lawyer.name} — وکیل زن در ${site.city}`,
+    description: site.defaultDescription,
     url: SITE_URL,
+    mainEntityOfPage: pageUrl("/"),
     image: absoluteUrl(lawyer.photo.basePath + ".jpg"),
     logo: absoluteUrl(siteConfig.brand.mark.png),
+    priceRange: "$$",
     ...(verifiedTelephone ? { telephone: verifiedTelephone } : {}),
     ...(siteConfig.contact.email ? { email: siteConfig.contact.email } : {}),
     founder: {
       "@type": "Person",
       name: lawyer.name,
       jobTitle: lawyer.jobTitle,
+      gender: "https://schema.org/Female",
+      url: pageUrl("/about"),
+      image: absoluteUrl(lawyer.photo.basePath + ".jpg"),
+      worksFor: { "@id": `${SITE_URL}/#attorney` },
+      knowsAbout: practiceAreas,
       ...buildLawyerMembershipSchema(lawyer.barAssociation),
     },
     ...(showAddress
@@ -151,10 +178,17 @@ export function buildAttorneySchema(): JsonLd {
           hasMap: `https://www.google.com/maps/search/?api=1&query=${siteConfig.contact.geo.latitude},${siteConfig.contact.geo.longitude}`,
         }
       : {}),
-    areaServed: {
-      "@type": "City",
-      name: "قزوین",
-    },
+    areaServed: [
+      {
+        "@type": "City",
+        name: "قزوین",
+      },
+      {
+        "@type": "AdministrativeArea",
+        name: "استان قزوین",
+      },
+    ],
+    knowsAbout: practiceAreas,
     ...(showHours
       ? {
           openingHoursSpecification: contact.hours.days.map((day) => ({
@@ -192,8 +226,17 @@ export function buildWebsiteSchema(): JsonLd {
     "@id": `${SITE_URL}/#website`,
     url: SITE_URL,
     name: siteConfig.site.name,
+    description: siteConfig.site.defaultDescription,
     inLanguage: "fa-IR",
     publisher: { "@id": `${SITE_URL}/#attorney` },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${SITE_URL}/articles/?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
   };
 }
 
@@ -231,13 +274,27 @@ export function renderHeadTags(meta: PageMeta): string {
   const image = absoluteUrl(meta.ogImage ?? DEFAULT_OG_IMAGE);
   const robots = meta.noindex
     ? "noindex, nofollow"
-    : "index, follow, max-image-preview:large, max-snippet:-1";
+    : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1";
 
   const tags: string[] = [
     `<title>${escapeAttribute(meta.title)}</title>`,
     `<meta name="description" content="${escapeAttribute(meta.description)}" />`,
+    `<meta name="author" content="${escapeAttribute(siteConfig.lawyer.name)}" />`,
     `<link rel="canonical" href="${escapeAttribute(canonical)}" />`,
+    ...(meta.noindex
+      ? []
+      : [
+          `<link rel="alternate" hreflang="fa-IR" href="${escapeAttribute(canonical)}" />`,
+          `<link rel="alternate" hreflang="x-default" href="${escapeAttribute(canonical)}" />`,
+        ]),
     `<meta name="robots" content="${robots}" />`,
+    `<meta name="geo.placename" content="${escapeAttribute(siteConfig.site.city)}" />`,
+    ...(siteConfig.contact.geo
+      ? [
+          `<meta name="geo.position" content="${siteConfig.contact.geo.latitude};${siteConfig.contact.geo.longitude}" />`,
+          `<meta name="ICBM" content="${siteConfig.contact.geo.latitude}, ${siteConfig.contact.geo.longitude}" />`,
+        ]
+      : []),
     `<meta property="og:type" content="${meta.type ?? "website"}" />`,
     `<meta property="og:site_name" content="${escapeAttribute(siteConfig.site.name)}" />`,
     `<meta property="og:locale" content="${siteConfig.site.locale}" />`,
@@ -252,6 +309,7 @@ export function renderHeadTags(meta: PageMeta): string {
     `<meta name="twitter:title" content="${escapeAttribute(meta.title)}" />`,
     `<meta name="twitter:description" content="${escapeAttribute(meta.description)}" />`,
     `<meta name="twitter:image" content="${escapeAttribute(image)}" />`,
+    `<meta name="twitter:image:alt" content="${escapeAttribute(meta.ogImageAlt ?? siteConfig.lawyer.name)}" />`,
     `<link rel="alternate" type="application/rss+xml" title="مقالات حقوقی لیلا آبکه" href="${escapeAttribute(`${SITE_URL}/feed.xml`)}" />`,
   ];
 
@@ -277,6 +335,17 @@ export function renderHeadTags(meta: PageMeta): string {
     );
   }
 
+  if (meta.type === "article") {
+    tags.push(`<meta property="article:author" content="${escapeAttribute(pageUrl("/about"))}" />`);
+    if (meta.section) {
+      tags.push(`<meta property="article:section" content="${escapeAttribute(meta.section)}" />`);
+    }
+    if (meta.tags) {
+      for (const tag of meta.tags) {
+        tags.push(`<meta property="article:tag" content="${escapeAttribute(tag)}" />`);
+      }
+    }
+  }
   if (meta.publishedTime) {
     tags.push(`<meta property="article:published_time" content="${meta.publishedTime}" />`);
   }
@@ -292,6 +361,8 @@ export function applyMetaInBrowser(meta: PageMeta): void {
   if (typeof document === "undefined") return;
 
   const canonical = pageUrl(meta.path);
+  const image = absoluteUrl(meta.ogImage ?? DEFAULT_OG_IMAGE);
+  const imageAlt = meta.ogImageAlt ?? siteConfig.lawyer.name;
   document.title = meta.title;
 
   const setMeta = (selector: string, attribute: "name" | "property", key: string, content: string) => {
@@ -305,20 +376,22 @@ export function applyMetaInBrowser(meta: PageMeta): void {
   };
 
   setMeta('meta[name="description"]', "name", "description", meta.description);
-  setMeta('meta[name="robots"]', "name", "robots", meta.noindex ? "noindex, nofollow" : "index, follow");
+  setMeta(
+    'meta[name="robots"]',
+    "name",
+    "robots",
+    meta.noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+  );
   setMeta('meta[property="og:title"]', "property", "og:title", meta.title);
   setMeta('meta[property="og:description"]', "property", "og:description", meta.description);
   setMeta('meta[property="og:url"]', "property", "og:url", canonical);
   setMeta('meta[property="og:type"]', "property", "og:type", meta.type ?? "website");
-  setMeta(
-    'meta[property="og:image"]',
-    "property",
-    "og:image",
-    absoluteUrl(meta.ogImage ?? DEFAULT_OG_IMAGE)
-  );
-  setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", meta.ogImageAlt ?? siteConfig.lawyer.name);
+  setMeta('meta[property="og:image"]', "property", "og:image", image);
+  setMeta('meta[property="og:image:alt"]', "property", "og:image:alt", imageAlt);
   setMeta('meta[name="twitter:title"]', "name", "twitter:title", meta.title);
   setMeta('meta[name="twitter:description"]', "name", "twitter:description", meta.description);
+  setMeta('meta[name="twitter:image"]', "name", "twitter:image", image);
+  setMeta('meta[name="twitter:image:alt"]', "name", "twitter:image:alt", imageAlt);
 
   let canonicalLink = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
   if (!canonicalLink) {

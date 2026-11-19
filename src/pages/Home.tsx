@@ -11,8 +11,19 @@ import Pricing from "../components/Pricing";
 import FAQ from "../components/FAQ";
 import { SITE_FAQS } from "../content/faqs";
 import FinalCTA from "../components/FinalCTA";
-import { buildAttorneySchema, buildWebsiteSchema, type PageMeta } from "../lib/seo";
+import { buildAttorneySchema, buildFaqSchema, buildWebsiteSchema, type PageMeta } from "../lib/seo";
 import { siteConfig } from "../config/site";
+
+const HOME_FAQS = SITE_FAQS.slice(0, 4);
+
+const FEATURED_ARTICLE_SLUGS = [
+  "behtarin-vakil-qazvin",
+  "mehrieh-motalebe-va-ijra",
+  "nafaqe-motalebe-va-tark-enfaq",
+  "elzam-be-tanzim-sanad-rasmi",
+  "enhesar-varasat-madarek-va-marahel",
+  "dafaa-dar-dadgah",
+];
 
 export const meta: PageMeta = {
   title: siteConfig.site.defaultTitle,
@@ -25,7 +36,7 @@ export const meta: PageMeta = {
     href: siteConfig.media.hero.poster,
     type: "image/jpeg",
   },
-  jsonLd: [buildWebsiteSchema(), buildAttorneySchema()],
+  jsonLd: [buildWebsiteSchema(), buildAttorneySchema(), buildFaqSchema(HOME_FAQS)],
 };
 
 export default function HomePage() {
@@ -38,10 +49,10 @@ export default function HomePage() {
       <LegalTopics />
       <Process />
       <Benefits />
-      <LatestArticles />
+      <LatestArticles slugs={FEATURED_ARTICLE_SLUGS} />
       <Testimonials />
       <Pricing />
-      <FAQ items={SITE_FAQS.slice(0, 4)} moreHref="/faq" />
+      <FAQ items={HOME_FAQS} moreHref="/faq" />
       <FinalCTA />
     </>
   );

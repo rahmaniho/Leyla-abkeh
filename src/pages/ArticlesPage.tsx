@@ -38,6 +38,7 @@ export const meta: PageMeta = {
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
+      url: pageUrl("/articles"),
       name: "مقالات حقوقی",
       inLanguage: "fa-IR",
       isPartOf: { "@id": `${pageUrl("/articles")}#blog` },
@@ -52,6 +53,7 @@ export const meta: PageMeta = {
       "@context": "https://schema.org",
       "@type": "Blog",
       "@id": `${pageUrl("/articles")}#blog`,
+      url: pageUrl("/articles"),
       name: "مقالات حقوقی دفتر وکالت لیلا آبکه",
       inLanguage: "fa-IR",
       publisher: { "@id": `${pageUrl("/")}#attorney` },

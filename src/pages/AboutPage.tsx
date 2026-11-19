@@ -5,27 +5,54 @@ import SectionHeader from "../components/SectionHeader";
 import LogoMotion from "../components/LogoMotion";
 import FinalCTA from "../components/FinalCTA";
 import { siteConfig } from "../config/site";
-import { buildAttorneySchema, buildLawyerMembershipSchema, absoluteUrl, pageUrl, type PageMeta } from "../lib/seo";
+import {
+  buildAttorneySchema,
+  buildBreadcrumbSchema,
+  buildLawyerMembershipSchema,
+  absoluteUrl,
+  pageUrl,
+  type PageMeta,
+} from "../lib/seo";
 import LawyerPortrait from "../components/LawyerPortrait";
+
+const breadcrumbs = [
+  { name: "صفحۀ اصلی", path: "/" },
+  { name: "درباره وکیل", path: "/about" },
+];
 
 export const meta: PageMeta = {
   title: `دربارۀ لیلا آبکه | ${siteConfig.lawyer.professionalTitle}`,
-  description: `لیلا آبکه، ${siteConfig.lawyer.professionalTitle}؛ آشنایی با رویکرد دفتر، محرمانگی اطلاعات موکل، شفافیت هزینه‌ها و پیگیری پرونده.`,
+  description: `لیلا آبکه، ${siteConfig.lawyer.professionalTitle}؛ وکیل زن در قزوین در دعاوی خانواده، مهریه، نفقه، ملکی، ارث، حقوقی و کیفری.`,
   path: "/about",
   type: "website",
-  breadcrumbs: [
-    { name: "صفحۀ اصلی", path: "/" },
-    { name: "درباره وکیل", path: "/about" },
-  ],
+  breadcrumbs,
   jsonLd: [
     buildAttorneySchema(),
+    buildBreadcrumbSchema(breadcrumbs),
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      url: pageUrl("/about"),
+      name: `دربارۀ ${siteConfig.lawyer.name}`,
+      mainEntity: { "@id": `${pageUrl("/about")}#person` },
+    },
     {
       "@context": "https://schema.org",
       "@type": "Person",
       "@id": `${pageUrl("/about")}#person`,
       name: siteConfig.lawyer.name,
       jobTitle: siteConfig.lawyer.jobTitle,
+      gender: "https://schema.org/Female",
       ...buildLawyerMembershipSchema(),
+      knowsAbout: [
+        "وکیل زن در قزوین",
+        "دعاوی خانواده",
+        "مطالبۀ مهریه و نفقه",
+        "دعاوی ملکی و ثبتی",
+        "دعاوی ارث و انحصار وراثت",
+        "دعاوی حقوقی و قراردادی",
+        "دعاوی کیفری",
+      ],
       // تصویر اصلی + تصاویر رسمی دفتر: این‌ها همان فایل‌هایی هستند که در
       // مقالۀ «انتخاب وکیل در قزوین» هم منتشر شده‌اند، تا موتور جست‌وجو
       // (به‌ویژه جست‌وجوی تصویر) این عکس‌ها را به نام وکیل نسبت دهد.
@@ -114,6 +141,45 @@ export default function AboutPage() {
                 اختلاف خانوادگی، پروندۀ کیفری، معاملۀ ملکی که به مشکل خورده یا مطالبه‌ای که سال‌ها
                 معطل مانده است. در چنین شرایطی، آنچه بیش از هر چیز کمک می‌کند، یک ارزیابی روشن و
                 یک مسیر مشخص است.
+              </p>
+              <p>
+                بسیاری از مراجعان در قزوین — به‌ویژه در{" "}
+                <Link
+                  to="/services/khanevadeh"
+                  className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+                >
+                  دعاوی خانواده، مهریه و نفقه
+                </Link>{" "}
+                — ترجیح می‌دهند با یک وکیل زن گفت‌وگو کنند تا جزئیات پروندۀ خود را راحت‌تر و بدون
+                معذوریت مطرح کنند. در کنار این حوزه، دفتر وکالت در{" "}
+                <Link
+                  to="/services/amlak-va-sebat"
+                  className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+                >
+                  دعاوی ملکی و ثبتی
+                </Link>
+                ،{" "}
+                <Link
+                  to="/services/ers-va-varasat"
+                  className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+                >
+                  پرونده‌های ارث و انحصار وراثت
+                </Link>
+                ،{" "}
+                <Link
+                  to="/services/gharardad-va-motalebat"
+                  className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+                >
+                  دعاوی حقوقی و مطالبات مالی
+                </Link>{" "}
+                و{" "}
+                <Link
+                  to="/services/keyfari"
+                  className="font-bold text-gold-deep underline decoration-gold/40 underline-offset-4"
+                >
+                  دفاع در پرونده‌های کیفری
+                </Link>{" "}
+                فعالیت دارد.
               </p>
               <p>
                 رویکرد این دفتر بر سه پایه استوار است: توضیح صریح وضعیت حقوقی پرونده، تعیین

@@ -18,7 +18,7 @@ export default function ServicePage({ service }: { service: Service }) {
   const relatedServices = SERVICES.filter((item) => service.related.includes(item.slug));
   const relatedArticles = ARTICLES.filter((article) =>
     article.relatedServices.includes(service.slug)
-  ).slice(0, 3);
+  ).slice(0, 6);
 
   return (
     <>

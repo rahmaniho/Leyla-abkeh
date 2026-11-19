@@ -95,3 +95,4 @@ draft: false
 - [دفاع در تحقیقات مقدماتی](/articles/dafaa-dar-tahghighat-moghaddamati)
 - [اعتراض به رأی کیفری](/articles/eteraz-be-ray-keyfari)
 - [تنظیم شکواییه](/articles/tanzim-shekvaiye)
+- [معیارهای انتخاب وکیل کیفری در قزوین](/articles/behtarin-vakil-qazvin)

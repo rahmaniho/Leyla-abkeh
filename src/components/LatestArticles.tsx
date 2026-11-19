@@ -9,8 +9,18 @@ import { Link } from "../lib/router";
  * فقط مقالات منتشرشده (بدون پیش‌نویس) نمایش داده می‌شوند و هر آیتم به صفحۀ
  * کامل مقاله لینک دارد؛ این بخش هم به کشف محتوا و هم به لینک‌سازی داخلی کمک می‌کند.
  */
-export default function LatestArticles({ limit = 2 }: { limit?: number }) {
-  const items = ARTICLES.slice(0, limit);
+export default function LatestArticles({
+  limit = 2,
+  slugs,
+}: {
+  limit?: number;
+  slugs?: string[];
+}) {
+  const items = slugs
+    ? slugs
+        .map((slug) => ARTICLES.find((article) => article.slug === slug))
+        .filter((article): article is (typeof ARTICLES)[number] => Boolean(article))
+    : ARTICLES.slice(0, limit);
   if (items.length === 0) return null;
 
   return (

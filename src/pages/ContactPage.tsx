@@ -36,6 +36,7 @@ export const meta: PageMeta = {
       "@type": "ContactPage",
       url: pageUrl("/contact"),
       name: "تماس با دفتر وکالت",
+      mainEntity: { "@id": `${siteConfig.site.url}/#attorney` },
     },
   ],
 };
