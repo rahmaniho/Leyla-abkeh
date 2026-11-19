@@ -7,3 +7,6 @@ coverage/
 .netlify/
 .DS_Store
 *.log
+
+# build info
+*.tsbuildinfo

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * API مقالات — فهرست و «افزودن مقاله» از طریق GitHub Contents API
@@ -7,7 +8,33 @@ import { NextRequest, NextResponse } from "next/server";
  * نیازمند GITHUB_TOKEN (توکن دسترسی ریزدانه با Permission: Contents = Read and write
  * فقط برای ریپازیتوری Leyla-abkeh) است که فقط سمت سرور استفاده می‌شود.
  * بدون توکن، پاسخ ۵۰۱ برمی‌گردد و رابط کاربری راهنمای راه‌اندازی نشان می‌دهد.
+ *
+ * احراز هویت: همهٔ ورودی‌ها نیازمند Bearer token نشست Supabase هستند
+ * (هدر Authorization: Bearer <access_token>)؛ نقش RLS فقط برای کاربران واردشده مجاز است.
  */
+
+const UNOAUTHENTICATED = { ok: false, message: "برای دسترسی به این بخش باید وارد پنل شده باشید." } as const;
+
+async function requireSession(request: NextRequest): Promise<NextResponse | null> {
+  const header = request.headers.get("authorization") ?? "";
+  const match = header.match(/^Bearer\s+(.+)$/i);
+  const token = match?.[1]?.trim();
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  if (!token || !url || !anonKey) {
+    return NextResponse.json(UNOAUTHENTICATED, { status: 401 });
+  }
+  try {
+    const client = createClient(url, anonKey, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { data, error } = await client.auth.getUser(token);
+    if (error || !data.user) {
+      return NextResponse.json(UNOAUTHENTICATED, { status: 401 });
+    }
+    return null; // مجاز
+  } catch {
+    return NextResponse.json(UNOAUTHENTICATED, { status: 401 });
+  }
+}
 
 const OWNER = "rahmaniho";
 const REPO = "Leyla-abkeh";
@@ -28,7 +55,10 @@ function githubHeaders(token: string) {
 const UNAUTHENTICATED_MESSAGE =
   "GITHUB_TOKEN در تنظیمات پروژهٔ Vercel تنظیم نشده است. یک توکن ریزدانه با Contents: Read and write فقط برای این ریپازیتوری بسازید و با نام GITHUB_TOKEN اضافه کنید.";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const denied = await requireSession(request);
+  if (denied) return denied;
+
   const token = process.env.GITHUB_TOKEN?.trim();
   if (!token) {
     return NextResponse.json({ ok: false, message: UNAUTHENTICATED_MESSAGE }, { status: 501 });
@@ -86,6 +116,9 @@ function yamlEscape(value: string) {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await requireSession(request);
+  if (denied) return denied;
+
   const token = process.env.GITHUB_TOKEN?.trim();
   if (!token) {
     return NextResponse.json({ ok: false, message: UNAUTHENTICATED_MESSAGE }, { status: 501 });
