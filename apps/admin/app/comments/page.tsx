@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../components/DashboardLayout";
 import Avatar from "../../components/Avatar";
 import { supabase, COMMENT_STATUS, type CommentRow, type CommentStatus } from "../../lib/supabase";
+import Link from "next/link";
 
 const TABS: CommentStatus[] = ["pending", "approved", "rejected"];
 
@@ -65,9 +66,13 @@ export default function CommentsPage() {
 
   return (
     <AuthGate>
-      <Shell>
-        <h1 className="page-title">نظرات مقالات</h1>
+      <DashboardLayout>
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه"><Link href="/">خانه</Link><span aria-hidden="true">‹</span><span aria-current="page">نظرات</span></nav>
+        <div className="page-head"><div>
+            <h1 className="page-title">نظرات مقالات</h1>
         <p className="page-sub">هیچ نظری بدون تأیید شما روی سایت منتشر نمی‌شود</p>
+          </div>
+        </div>
 
         <div className="tabs" role="tablist" aria-label="وضعیت نظرات">
           {TABS.map((status) => (
@@ -113,7 +118,7 @@ export default function CommentsPage() {
             </article>
           ))
         )}
-      </Shell>
+      </DashboardLayout>
     </AuthGate>
   );
 }

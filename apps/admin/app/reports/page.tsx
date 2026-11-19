@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import AuthGate from "../../components/AuthGate";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../components/DashboardLayout";
 import BarChart from "../../components/BarChart";
 import AreaChart from "../../components/AreaChart";
 import {
@@ -14,6 +14,7 @@ import {
   type VisitStatRow,
 } from "../../lib/supabase";
 import { lastNDays, formatDateTimeFa, percentFa, type DayBucket } from "../../lib/dates";
+import Link from "next/link";
 
 type Preset = "7" | "30" | "90" | "custom";
 
@@ -276,7 +277,9 @@ export default function ReportsPage() {
 
   return (
     <AuthGate>
-      <Shell>
+      <DashboardLayout>
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه"><Link href="/">خانه</Link><span aria-hidden="true">‹</span><span aria-current="page">گزارش‌ها</span></nav>
+        
         <div className="page-head no-print">
           <div>
             <h1 className="page-title">گزارش‌ها</h1>
@@ -473,7 +476,7 @@ export default function ReportsPage() {
             </section>
           </>
         )}
-      </Shell>
+      </DashboardLayout>
     </AuthGate>
   );
 }

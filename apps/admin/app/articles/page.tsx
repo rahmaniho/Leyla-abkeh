@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import Link from "next/link";
 import AuthGate from "../../components/AuthGate";
-import Shell from "../../components/Shell";
+import DashboardLayout from "../../components/DashboardLayout";
+import ArticlesTable from "../../components/ArticlesTable";
 import { supabase } from "../../lib/supabase";
 
 async function authHeaders(extra: Record<string, string> = {}): Promise<Record<string, string>> {
@@ -15,6 +17,8 @@ async function authHeaders(extra: Record<string, string> = {}): Promise<Record<s
 interface ArticleItem {
   slug: string;
   title: string | null;
+  publishDate: string | null;
+  draft: boolean;
 }
 
 const SERVICES = [
@@ -43,13 +47,12 @@ export default function ArticlesPage() {
   const [submitting, setSubmitting] = useState(false);
   const [formMessage, setFormMessage] = useState<{ kind: "ok" | "err" | "info"; text: string } | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
+  const loadArticles = useCallback(() => {
+    setListState((state) => (state === "ready" ? state : "loading"));
     authHeaders()
       .then((headers) => fetch("/api/articles", { headers }))
       .then(async (response) => {
         const data = (await response.json()) as { ok: boolean; articles?: ArticleItem[]; message?: string };
-        if (!mounted) return;
         if (response.status === 501) {
           setListState("unconfigured");
           setListMessage(data.message ?? "GITHUB_TOKEN تنظیم نشده است.");
@@ -64,14 +67,14 @@ export default function ArticlesPage() {
         setListState("ready");
       })
       .catch(() => {
-        if (!mounted) return;
         setListState("error");
         setListMessage("دریافت فهرست مقالات ناموفق بود.");
       });
-    return () => {
-      mounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    loadArticles();
+  }, [loadArticles]);
 
   async function submitArticle(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -113,6 +116,7 @@ export default function ArticlesPage() {
           text: `مقالهٔ «${data.slug}» در مخزن کامیت شد. Netlify به‌طور خودکار بیلد و منتشر می‌کند (معمولاً کمتر از ۲ دقیقه).`,
         });
         setTitle(""); setSlug(""); setDescription(""); setBody(""); setTags("");
+        loadArticles();
       }
     } catch {
       setFormMessage({ kind: "err", text: "ثبت مقاله ناموفق بود. اتصال شبکه را بررسی کنید." });
@@ -123,12 +127,29 @@ export default function ArticlesPage() {
 
   return (
     <AuthGate>
-      <Shell>
-        <h1 className="page-title">مقالات</h1>
-        <p className="page-sub">مقالات در Git نگه‌داری می‌شوند (Markdown در src/content/blog) و با هر کامیت، Netlify سایت را دوباره می‌سازد</p>
+      <DashboardLayout>
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه">
+          <Link href="/">خانه</Link>
+          <span aria-hidden="true">‹</span>
+          <span aria-current="page">مقالات</span>
+        </nav>
+        <div className="page-head">
+          <div>
+            <h1 className="page-title">مقالات</h1>
+            <p className="page-sub">مقالات در Git نگه‌داری می‌شوند (Markdown در src/content/blog) و با هر کامیت، Netlify سایت را دوباره می‌سازد</p>
+          </div>
+          <div className="page-actions no-print">
+            <a href="https://leyla-abkeh.ir/articles/" target="_blank" rel="noreferrer" className="btn secondary sm">مشاهدهٔ همه در سایت</a>
+          </div>
+        </div>
 
         <section className="panel">
-          <h2>فهرست مقالات ({listState === "ready" ? articles.length : "…"})</h2>
+          <div className="panel-head">
+            <div>
+              <h2>فهرست مقالات ({listState === "ready" ? articles.length : "…"})</h2>
+              <span className="panel-sub">جستجو، فیلتر وضعیت، مرتب‌سازی و صفحه‌بندی</span>
+            </div>
+          </div>
           {listState === "loading" && <p className="row-meta">در حال دریافت فهرست…</p>}
           {(listState === "error" || listState === "unconfigured") && (
             <>
@@ -140,18 +161,7 @@ export default function ArticlesPage() {
               </p>
             </>
           )}
-          {listState === "ready" && (
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, columns: 2, gap: 16 }}>
-              {articles.map((article) => (
-                <li key={article.slug} style={{ padding: "6px 0", breakInside: "avoid" }}>
-                  <a href={`https://leyla-abkeh.ir/articles/${article.slug}/`} target="_blank" rel="noopener noreferrer" style={{ textDecoration: "none" }}>
-                    <span className="row-title" style={{ fontSize: "0.82rem" }}>{article.title ?? article.slug}</span>
-                    <span className="row-meta mono" dir="ltr" style={{ display: "block" }}>{article.slug}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+          {listState === "ready" && <ArticlesTable articles={articles} onChanged={loadArticles} />}
         </section>
 
         <form className="panel" onSubmit={submitArticle}>
@@ -204,7 +214,7 @@ export default function ArticlesPage() {
             {submitting ? "در حال ثبت در مخزن…" : "ثبت مقاله در مخزن"}
           </button>
         </form>
-      </Shell>
+      </DashboardLayout>
     </AuthGate>
   );
 }

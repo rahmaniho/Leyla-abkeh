@@ -1,24 +1,45 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import AuthGate from "../components/AuthGate";
-import Shell from "../components/Shell";
-import AreaChart from "../components/AreaChart";
-import BarChart from "../components/BarChart";
-import DonutChart from "../components/DonutChart";
-import Sparkline from "../components/Sparkline";
-import Avatar from "../components/Avatar";
+import DashboardLayout from "../components/DashboardLayout";
+import StatCard from "../components/StatCard";
+import StatusBadge from "../components/StatusBadge";
+import ArticlesTable, { articleStatus, formatJalali, type DashboardArticle } from "../components/ArticlesTable";
+import {
+  ComposedChart,
+  Bar,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  Newspaper,
+  PenLine,
+  PhoneCall,
+  Eye,
+  Plus,
+  FilePlus2,
+  ExternalLink,
+  FileDown,
+  MessageSquare,
+} from "lucide-react";
 import {
   supabase,
   CONSULTATION_STATUS,
-  COMMENT_STATUS,
   type ConsultationRow,
-  type CommentRow,
   type AdminNotification,
   type VisitStatRow,
 } from "../lib/supabase";
 import { lastNDays, relativeTimeFa, formatDateTimeFa } from "../lib/dates";
+import { buildDemoData, buildDemoArticles } from "../lib/demo";
 
 interface DashboardData {
   consultationsNew: number;
@@ -26,16 +47,15 @@ interface DashboardData {
   consultationsLast30: number;
   consultationsPrior30: number;
   consultationsDaily: number[];
+  consultationsDailyAll: number[];
   commentsPending: number;
-  commentsApproved: number;
-  commentsRejected: number;
   visitsLast30: number;
   visitsPrior30: number;
   dailyVisits: number[];
+  dailyArticleViews: number[];
   dailyLabels: string[];
   topPages: { path: string; views: number }[];
   recentConsultations: ConsultationRow[];
-  pendingComments: CommentRow[];
   notifications: AdminNotification[];
   unreadNotifications: number;
 }
@@ -49,27 +69,75 @@ interface TimelineEntry {
   href: string;
 }
 
-function Delta({ current, previous }: { current: number; previous: number }) {
-  if (previous === 0 && current === 0) return <span className="delta flat">بدون تغییر</span>;
-  if (previous === 0) return <span className="delta up">جدید ↑</span>;
-  const change = Math.round(((current - previous) / previous) * 100);
-  if (change === 0) return <span className="delta flat">بدون تغییر</span>;
-  const up = change > 0;
-  return <span className={`delta ${up ? "up" : "down"}`}>{Math.abs(change)}٪ {up ? "↑" : "↓"}</span>;
-}
+const CHART_COLORS = {
+  visits: "#5796F5",
+  articleViews: "#AD6AE8",
+  consultations: "#F2A45E",
+} as const;
 
 export default function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [range, setRange] = useState<7 | 14 | 30>(30);
+  const [range, setRange] = useState<7 | 30 | 90>(30);
+
+  const [articles, setArticles] = useState<DashboardArticle[] | null>(null);
+  const [articlesState, setArticlesState] = useState<"loading" | "ready" | "error" | "unconfigured">("loading");
+  const [articlesMessage, setArticlesMessage] = useState("");
+  // حالت نمایشی (?demo=1): دادهٔ قطعیِ ساختگی + نوار هشدار «حالت نمایشی»؛ هرگز به‌عنوان دادهٔ واقعی
+  const [demo] = useState(() => typeof window !== "undefined" && new URLSearchParams(window.location.search).get("demo") === "1");
+
+  const loadArticles = useCallback(async () => {
+    if (demo) {
+      setArticles(buildDemoArticles());
+      setArticlesState("ready");
+      return;
+    }
+    setArticlesState((state) => (state === "ready" ? state : "loading"));
+    try {
+      const headers: Record<string, string> = {};
+      if (supabase) {
+        const { data: sessionData } = await supabase.auth.getSession();
+        const token = sessionData.session?.access_token;
+        if (token) headers.authorization = `Bearer ${token}`;
+      }
+      const response = await fetch("/api/articles", { headers });
+      const payload = (await response.json().catch(() => ({}))) as { ok?: boolean; articles?: DashboardArticle[]; message?: string };
+      if (response.status === 501) {
+        setArticlesState("unconfigured");
+        setArticlesMessage(payload.message ?? "GITHUB_TOKEN در تنظیمات Vercel تنظیم نشده است.");
+        setArticles([]);
+        return;
+      }
+      if (!response.ok || !payload.ok) {
+        setArticlesState("error");
+        setArticlesMessage(payload.message ?? "دریافت فهرست مقالات ناموفق بود.");
+        return;
+      }
+      setArticles(payload.articles ?? []);
+      setArticlesState("ready");
+    } catch {
+      setArticlesState("error");
+      setArticlesMessage("دریافت فهرست مقالات ناموفق بود. اتصال شبکه را بررسی کنید.");
+    }
+  }, [demo]);
 
   useEffect(() => {
+    loadArticles();
+  }, [loadArticles]);
+
+  useEffect(() => {
+    if (demo) {
+      setData(buildDemoData());
+      return;
+    }
     if (!supabase) return;
     let mounted = true;
 
     async function load() {
       try {
         const client = supabase!;
+        const days90 = lastNDays(90);
+        const since90 = days90[0].key + "T00:00:00.000Z";
         const days30 = lastNDays(30);
         const since30 = days30[0].key + "T00:00:00.000Z";
         const priorDays = lastNDays(60);
@@ -80,13 +148,10 @@ export default function DashboardPage() {
           inProgress,
           consultationsLast30,
           consultationsPrior30,
-          consultationsRows30,
+          consultationsRows90,
           commentsPending,
-          commentsApproved,
-          commentsRejected,
           visitRows,
           recentConsultations,
-          pendingComments,
           notifications,
           unread,
         ] = await Promise.all([
@@ -94,27 +159,31 @@ export default function DashboardPage() {
           client.from("consultations").select("id", { count: "exact", head: true }).eq("status", "in_progress"),
           client.from("consultations").select("id", { count: "exact", head: true }).gte("created_at", since30),
           client.from("consultations").select("id", { count: "exact", head: true }).gte("created_at", priorSince).lt("created_at", since30),
-          client.from("consultations").select("created_at").gte("created_at", since30),
+          client.from("consultations").select("created_at").gte("created_at", since90),
           client.from("comments").select("id", { count: "exact", head: true }).eq("status", "pending"),
-          client.from("comments").select("id", { count: "exact", head: true }).eq("status", "approved"),
-          client.from("comments").select("id", { count: "exact", head: true }).eq("status", "rejected"),
-          client.from("visit_stats").select("day, path, views").gte("day", priorDays[0].key),
+          client.from("visit_stats").select("day, path, views").gte("day", days90[0].key),
           client.from("consultations").select("*").order("created_at", { ascending: false }).limit(4),
-          client.from("comments").select("*").eq("status", "pending").order("created_at", { ascending: false }).limit(4),
           client.from("admin_notifications").select("*").order("created_at", { ascending: false }).limit(5),
           client.from("admin_notifications").select("id", { count: "exact", head: true }).eq("read", false),
         ]);
 
         if (!mounted) return;
 
-        const dayCount = new Map(days30.map((day) => [day.key, 0]));
+        const dayBuckets90 = new Map(days90.map((day) => [day.key, 0]));
+        const articleBuckets90 = new Map(days90.map((day) => [day.key, 0]));
         let visitsLast30 = 0;
         let visitsPrior30 = 0;
         const perPath = new Map<string, number>();
+        const inLast30 = new Set(days30.map((day) => day.key));
+
         for (const row of (visitRows.data as VisitStatRow[] | null) ?? []) {
           const views = Number(row.views) || 0;
-          if (dayCount.has(row.day)) {
-            dayCount.set(row.day, (dayCount.get(row.day) ?? 0) + views);
+          const isArticle = typeof row.path === "string" && row.path.startsWith("/articles/");
+          if (dayBuckets90.has(row.day)) {
+            dayBuckets90.set(row.day, (dayBuckets90.get(row.day) ?? 0) + views);
+            if (isArticle) articleBuckets90.set(row.day, (articleBuckets90.get(row.day) ?? 0) + views);
+          }
+          if (inLast30.has(row.day)) {
             visitsLast30 += views;
             perPath.set(row.path, (perPath.get(row.path) ?? 0) + views);
           } else {
@@ -122,28 +191,29 @@ export default function DashboardPage() {
           }
         }
 
-        const consultationsDailyMap = new Map(days30.map((day) => [day.key, 0]));
-        for (const row of (consultationsRows30.data as { created_at: string }[] | null) ?? []) {
+        const consultationsDailyMap = new Map(days90.map((day) => [day.key, 0]));
+        for (const row of (consultationsRows90.data as { created_at: string }[] | null) ?? []) {
           const key = new Date(row.created_at).toISOString().slice(0, 10);
           if (consultationsDailyMap.has(key)) consultationsDailyMap.set(key, (consultationsDailyMap.get(key) ?? 0) + 1);
         }
+
+        const consultationsDaily90 = days90.map((day) => consultationsDailyMap.get(day.key) ?? 0);
 
         setData({
           consultationsNew: newCount.count ?? 0,
           consultationsInProgress: inProgress.count ?? 0,
           consultationsLast30: consultationsLast30.count ?? 0,
           consultationsPrior30: consultationsPrior30.count ?? 0,
-          consultationsDaily: days30.map((day) => consultationsDailyMap.get(day.key) ?? 0),
+          consultationsDaily: consultationsDaily90.slice(-30),
+          consultationsDailyAll: consultationsDaily90,
           commentsPending: commentsPending.count ?? 0,
-          commentsApproved: commentsApproved.count ?? 0,
-          commentsRejected: commentsRejected.count ?? 0,
           visitsLast30,
           visitsPrior30,
-          dailyVisits: days30.map((day) => dayCount.get(day.key) ?? 0),
-          dailyLabels: days30.map((day) => day.label),
+          dailyVisits: days90.map((day) => dayBuckets90.get(day.key) ?? 0),
+          dailyArticleViews: days90.map((day) => articleBuckets90.get(day.key) ?? 0),
+          dailyLabels: days90.map((day) => day.label),
           topPages: [...perPath.entries()].map(([path, views]) => ({ path, views })).sort((a, b) => b.views - a.views).slice(0, 5),
           recentConsultations: (recentConsultations.data as ConsultationRow[]) ?? [],
-          pendingComments: (pendingComments.data as CommentRow[]) ?? [],
           notifications: (notifications.data as AdminNotification[]) ?? [],
           unreadNotifications: unread.count ?? 0,
         });
@@ -156,7 +226,7 @@ export default function DashboardPage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [demo]);
 
   const timeline = useMemo<TimelineEntry[]>(() => {
     if (!data) return [];
@@ -164,266 +234,406 @@ export default function DashboardPage() {
     for (const row of data.recentConsultations) {
       entries.push({ id: `c-${row.id}`, at: row.created_at, kind: "consultation", title: `درخواست مشاوره — ${row.name}`, detail: row.topic, href: "/consultations" });
     }
-    for (const row of data.pendingComments) {
-      entries.push({ id: `m-${row.id}`, at: row.created_at, kind: "comment", title: `دیدگاه در انتظار تأیید — ${row.author_name}`, detail: row.article_slug, href: "/comments" });
+    for (const item of data.notifications.filter((n) => n.ref_table === "comments" && !n.read)) {
+      entries.push({ id: `m-${item.id}`, at: item.created_at, kind: "comment", title: item.title, detail: item.body, href: "/comments" });
     }
     return entries.sort((a, b) => +new Date(b.at) - +new Date(a.at)).slice(0, 6);
   }, [data]);
 
-  const chartSlice = useMemo(() => {
-    if (!data) return { values: [] as number[], labels: [] as string[] };
-    return {
-      values: data.dailyVisits.slice(-range),
-      labels: data.dailyLabels.slice(-range),
-    };
+  // دادهٔ نمودار برای بازهٔ انتخابی (۷ / ۳۰ / ۹۰ روز اخیر)
+  const chartData = useMemo(() => {
+    if (!data) return [] as { label: string; visits: number; articleViews: number; consultations: number }[];
+    return data.dailyLabels.slice(-range).map((label, index) => {
+      const offset = data.dailyLabels.length - range;
+      return {
+        label,
+        visits: data.dailyVisits[offset + index],
+        articleViews: data.dailyArticleViews[offset + index],
+        consultations: data.consultationsDailyAll[offset + index],
+      };
+    });
   }, [data, range]);
 
-  const commentsTotal = data ? data.commentsPending + data.commentsApproved + data.commentsRejected : 0;
+  const articleStats = useMemo(() => {
+    if (!articles) return { published: 0, drafts: 0, scheduled: 0, total: 0 };
+    let published = 0, drafts = 0, scheduled = 0;
+    for (const article of articles) {
+      const status = articleStatus(article);
+      if (status === "published") published += 1;
+      else if (status === "draft") drafts += 1;
+      else scheduled += 1;
+    }
+    return { published, drafts, scheduled, total: articles.length };
+  }, [articles]);
+
+  const latestArticles = useMemo(() => {
+    if (!articles) return [] as DashboardArticle[];
+    return [...articles]
+      .sort((a, b) => {
+        const aTime = a.publishDate ? new Date(a.publishDate).getTime() : 0;
+        const bTime = b.publishDate ? new Date(b.publishDate).getTime() : 0;
+        return bTime - aTime;
+      })
+      .slice(0, 5);
+  }, [articles]);
+
+  const contentStatusSegments = useMemo(
+    () => [
+      { name: "منتشرشده", value: articleStats.published, color: "#2DCF91" },
+      { name: "زمان‌بندی‌شده", value: articleStats.scheduled, color: "#5796F5" },
+      { name: "پیش‌نویس", value: articleStats.drafts, color: "#8B93A5" },
+    ].filter((segment) => segment.value > 0),
+    [articleStats]
+  );
+
   const maxTopViews = data ? Math.max(1, ...data.topPages.map((page) => page.views)) : 1;
+  const articlesReady = articlesState === "ready";
 
   return (
     <AuthGate>
-      <Shell>
+      <DashboardLayout>
+        {/* ============ سرصفحه: مسیر + اقدام‌ها ============ */}
+        <nav className="breadcrumb no-print" aria-label="مسیر صفحه">
+          <Link href="/">خانه</Link>
+          <span aria-hidden="true">‹</span>
+          <span aria-current="page">داشبورد</span>
+        </nav>
         <div className="page-head">
           <div>
             <h1 className="page-title">داشبورد</h1>
-            <p className="page-sub">نمای کلی زندهٔ عملکرد سایت، درخواست‌ها و کارهای در انتظار اقدام</p>
+            <p className="page-sub">نمای کلی زندهٔ عملکرد سایت، محتوا و کارهای در انتظار اقدام</p>
           </div>
-          <Link href="/reports" className="btn gold">گزارش کامل ←</Link>
+          <div className="page-actions no-print">
+            {data && data.commentsPending > 0 && (
+              <Link href="/comments" className="btn secondary sm" title="دیدگاه‌های در انتظار تأیید">
+                <MessageSquare size={15} strokeWidth={2} aria-hidden="true" />
+                {data.commentsPending.toLocaleString("fa-IR")} دیدگاه در انتظار
+              </Link>
+            )}
+            <Link href="/articles" className="btn gold sm">
+              <Plus size={15} strokeWidth={2.4} aria-hidden="true" /> افزودن مقاله
+            </Link>
+            <Link href="/coming-soon?module=pages" className="btn secondary sm">
+              <FilePlus2 size={15} strokeWidth={2} aria-hidden="true" /> ایجاد صفحه
+            </Link>
+            <a href="https://leyla-abkeh.ir" target="_blank" rel="noreferrer" className="btn secondary sm">
+              <ExternalLink size={15} strokeWidth={2} aria-hidden="true" /> مشاهده وب‌سایت
+            </a>
+            <Link href="/reports" className="btn secondary sm">
+              <FileDown size={15} strokeWidth={2} aria-hidden="true" /> خروجی گزارش
+            </Link>
+          </div>
         </div>
 
+        {demo && (
+          <p className="msg info demo-ribbon" role="status">
+            <strong>حالت نمایشی</strong> — ارقام این صفحه دادهٔ ساختگیِ قطعی برای پیش‌نمایش رابط کاربری‌اند، نه دادهٔ واقعی دفتر.
+          </p>
+        )}
         {error && <p className="msg err" role="alert">{error}</p>}
+        {!articlesReady && articlesState !== "loading" && (
+          <p className={`msg ${articlesState === "unconfigured" ? "info" : "err"}`} role="status">
+            {articlesMessage}
+          </p>
+        )}
 
-        {/* ============ KPI ها ============ */}
+        {/* ============ KPI ها (دادهٔ واقعی) ============ */}
         <div className="cards kpi-grid">
-          <Link href="/consultations" className="card kpi-card highlight">
-            <div className="kpi-top">
-              <span className="kpi-label">درخواست جدید</span>
-              <span className="kpi-icon gold">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.9v2a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 3 5.2 2 2 0 0 1 5 3h2a2 2 0 0 1 2 1.7c.13 1 .37 2 .71 2.9a2 2 0 0 1-.5 2.1L7.6 12.4a16 16 0 0 0 4 4l2.7-1.7a2 2 0 0 1 2.1.5c.9.34 1.9.58 2.9.71a2 2 0 0 1 1.7 2z"/></svg>
-              </span>
-            </div>
-            <div className="kpi-value">{data ? data.consultationsNew.toLocaleString("fa-IR") : "…"}</div>
-            <div className="kpi-foot">
-              <span>۳۰ روز اخیر: {data ? data.consultationsLast30.toLocaleString("fa-IR") : "…"}</span>
-              {data && <Delta current={data.consultationsLast30} previous={data.consultationsPrior30} />}
-            </div>
-            {data && <Sparkline values={data.consultationsDaily} color="#b8915a" ariaLabel="روند ۳۰ روزهٔ درخواست‌ها" />}
-          </Link>
-
-          <Link href="/consultations" className="card kpi-card">
-            <div className="kpi-top">
-              <span className="kpi-label">در حال پیگیری</span>
-              <span className="kpi-icon blue">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>
-              </span>
-            </div>
-            <div className="kpi-value">{data ? data.consultationsInProgress.toLocaleString("fa-IR") : "…"}</div>
-            <div className="kpi-foot"><span>صف فعال پیگیری شما</span></div>
-          </Link>
-
-          <Link href="/comments" className="card kpi-card">
-            <div className="kpi-top">
-              <span className="kpi-label">دیدگاه در انتظار تأیید</span>
-              <span className="kpi-icon purple">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.2L4 21l1.9-5.2A8 8 0 1 1 21 12z"/></svg>
-              </span>
-            </div>
-            <div className="kpi-value">{data ? data.commentsPending.toLocaleString("fa-IR") : "…"}</div>
-            <div className="kpi-foot"><span>تأییدشدهٔ کل: {data ? data.commentsApproved.toLocaleString("fa-IR") : "…"}</span></div>
-          </Link>
-
-          <Link href="/reports" className="card kpi-card">
-            <div className="kpi-top">
-              <span className="kpi-label">بازدید ۳۰ روز اخیر</span>
-              <span className="kpi-icon green">
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-              </span>
-            </div>
-            <div className="kpi-value">{data ? data.visitsLast30.toLocaleString("fa-IR") : "…"}</div>
-            <div className="kpi-foot">
-              <span>۳۰ روز قبل: {data ? data.visitsPrior30.toLocaleString("fa-IR") : "…"}</span>
-              {data && <Delta current={data.visitsLast30} previous={data.visitsPrior30} />}
-            </div>
-            {data && <Sparkline values={data.dailyVisits} color="#0e9f6a" ariaLabel="روند ۳۰ روزهٔ بازدید" />}
-          </Link>
+          <StatCard
+            icon={Newspaper}
+            tone="blue"
+            label="مقالات منتشرشده"
+            value={articlesReady ? articleStats.published : "…"}
+            sub={articlesReady ? `از ${articleStats.total.toLocaleString("fa-IR")} مقالهٔ کل${articleStats.scheduled ? ` · ${articleStats.scheduled.toLocaleString("fa-IR")} زمان‌بندی‌شده` : ""}` : "دریافت از مخزن Git…"}
+            href="/articles"
+          />
+          <StatCard
+            icon={PenLine}
+            tone="orange"
+            label="پیش‌نویس مقالات"
+            value={articlesReady ? articleStats.drafts : "…"}
+            sub="در دست ویرایش — منتشر نشده‌اند"
+            href="/articles"
+          />
+          <StatCard
+            icon={PhoneCall}
+            tone="green"
+            label="درخواست‌های مشاوره جدید"
+            value={data ? data.consultationsNew : "…"}
+            sub={data ? `۳۰ روز اخیر: ${data.consultationsLast30.toLocaleString("fa-IR")}` : "…"}
+            delta={data ? { current: data.consultationsLast30, previous: data.consultationsPrior30 } : null}
+            spark={data?.consultationsDaily}
+            href="/consultations"
+          />
+          <StatCard
+            icon={Eye}
+            tone="purple"
+            label="بازدید ۳۰ روز اخیر"
+            value={data ? data.visitsLast30 : "…"}
+            sub={data ? `۳۰ روز قبل: ${data.visitsPrior30.toLocaleString("fa-IR")}` : "…"}
+            delta={data ? { current: data.visitsLast30, previous: data.visitsPrior30 } : null}
+            spark={data?.dailyVisits.slice(-30)}
+            href="/reports"
+          />
         </div>
 
+        {/* ============ نمودار ترکیبی + وضعیت محتوا ============ */}
         <div className="dash-grid">
-          {/* ============ ستون اصلی ============ */}
-          <div className="dash-main">
-            <section className="panel">
-              <div className="panel-head">
-                <div>
-                  <h2>روند بازدید سایت</h2>
-                  <span className="panel-sub">بازدید بی‌نام · بدون کوکی · مسیرهای عمومی</span>
-                </div>
-                <div className="tabs" role="group" aria-label="بازهٔ نمودار" style={{ margin: 0 }}>
-                  {([7, 14, 30] as const).map((value) => (
-                    <button key={value} type="button" className={`tab${range === value ? " active" : ""}`} onClick={() => setRange(value)}>
-                      {value} روز
-                    </button>
-                  ))}
-                </div>
+          <section className="panel" aria-label="روند بازدید و درخواست‌ها">
+            <div className="panel-head">
+              <div>
+                <h2>روند بازدید و درخواست‌های مشاوره</h2>
+                <span className="panel-sub">بازدید بی‌نام · بدون کوکی · دادهٔ واقعی پایگاه‌داده</span>
               </div>
-              {data ? (
-                data.visitsLast30 === 0 && data.visitsPrior30 === 0 ? (
-                  <p className="empty">هنوز بازدیدی ثبت نشده است. پس از انتشار نسخهٔ شمارش، داده‌ها اینجا نمایش داده می‌شود.</p>
-                ) : (
-                  <AreaChart values={chartSlice.values} labels={chartSlice.labels} ariaLabel="نمودار ناحیه‌ای بازدید روزانهٔ سایت" unit="بازدید" gradientId="dashVisits" />
-                )
-              ) : (
-                <p className="row-meta">در حال بارگذاری نمودار…</p>
-              )}
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <h2>آخرین درخواست‌های مشاوره</h2>
-                <Link href="/consultations" className="nav-link" style={{ fontSize: "0.72rem", color: "var(--gold-deep)", textDecoration: "none", fontWeight: 800 }}>همهٔ درخواست‌ها ←</Link>
+              <div className="tabs no-print" role="group" aria-label="بازهٔ نمودار">
+                {([7, 30, 90] as const).map((value) => (
+                  <button key={value} type="button" className={`tab${range === value ? " active" : ""}`} onClick={() => setRange(value)}>
+                    {value} روز
+                  </button>
+                ))}
               </div>
-              {data && data.recentConsultations.length === 0 ? (
-                <p className="empty">هنوز درخواستی ثبت نشده است.</p>
+            </div>
+            {data ? (
+              data.visitsLast30 === 0 && data.visitsPrior30 === 0 ? (
+                <p className="empty">هنوز بازدیدی ثبت نشده است. پس از انتشار شمارشگر بی‌نام، داده‌ها اینجا نمایش داده می‌شود.</p>
               ) : (
-                (data?.recentConsultations ?? []).map((row) => (
-                  <div className="row" key={row.id}>
-                    <div className="row-head">
-                      <div className="row-identity">
-                        <Avatar name={row.name} size={38} />
-                        <div>
-                          <span className="row-title">{row.name}</span>
-                          <div className="row-meta">{row.topic} · <a className="mono" href={`tel:${row.phone}`}>{row.phone}</a></div>
-                        </div>
-                      </div>
-                      <span className="row-meta">{formatDateTimeFa(row.created_at)}</span>
-                    </div>
-                    <div className="row-actions">
-                      <span className={`badge ${row.status}`}>{CONSULTATION_STATUS[row.status]}</span>
-                      <Link href="/consultations" className="btn secondary" style={{ padding: "5px 12px", fontSize: "0.72rem" }}>مدیریت ←</Link>
-                    </div>
+                <>
+                  <div dir="ltr" style={{ width: "100%", height: 280 }}>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <ComposedChart data={chartData} margin={{ top: 8, right: 0, left: 0, bottom: 0 }} barCategoryGap="30%">
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--line-strong)" />
+                        <XAxis
+                          dataKey="label"
+                          tick={{ fontSize: 11, fill: "var(--text-2)" }}
+                          tickLine={false}
+                          axisLine={false}
+                          minTickGap={18}
+                        />
+                        <YAxis
+                          yAxisId="views"
+                          orientation="left"
+                          width={36}
+                          tick={{ fontSize: 11, fill: "var(--text-2)" }}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          yAxisId="consult"
+                          orientation="right"
+                          width={30}
+                          allowDecimals={false}
+                          tick={{ fontSize: 11, fill: "var(--text-2)" }}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <Tooltip
+                          cursor={{ fill: "var(--blue-tint)" }}
+                          contentStyle={{
+                            background: "var(--surface)",
+                            border: "1px solid var(--line-strong)",
+                            borderRadius: 12,
+                            fontSize: "0.74rem",
+                            fontFamily: "inherit",
+                          }}
+                        />
+                        <Bar yAxisId="views" dataKey="visits" name="بازدید کل" fill={CHART_COLORS.visits} radius={[6, 6, 0, 0]} maxBarSize={26} />
+                        <Line yAxisId="views" type="monotone" dataKey="articleViews" name="بازدید مقالات" stroke={CHART_COLORS.articleViews} strokeWidth={2.4} dot={false} />
+                        <Line yAxisId="consult" type="monotone" dataKey="consultations" name="درخواست مشاوره" stroke={CHART_COLORS.consultations} strokeWidth={2.4} dot={{ r: 2.4 }} />
+                      </ComposedChart>
+                    </ResponsiveContainer>
                   </div>
-                ))
-              )}
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <div>
-                  <h2>روند روزانهٔ درخواست‌ها — ۳۰ روز اخیر</h2>
-                </div>
-              </div>
-              {data ? (
-                data.consultationsLast30 === 0 ? (
-                  <p className="empty">در ۳۰ روز اخیر درخواستی ثبت نشده است.</p>
-                ) : (
-                  <BarChart values={data.consultationsDaily} labels={data.dailyLabels} ariaLabel="نمودار میله‌ای درخواست‌های روزانهٔ مشاوره" unit="درخواست" />
-                )
-              ) : (
-                <p className="row-meta">در حال بارگذاری…</p>
-              )}
-            </section>
-          </div>
-
-          {/* ============ ستون کناری ============ */}
-          <div className="dash-side">
-            <section className="panel">
-              <div className="panel-head">
-                <h2>وضعیت نظرات (کل)</h2>
-                <Link href="/comments" className="nav-link" style={{ fontSize: "0.72rem", color: "var(--gold-deep)", textDecoration: "none", fontWeight: 800 }}>مدیریت ←</Link>
-              </div>
-              {data ? (
-                commentsTotal === 0 ? (
-                  <p className="empty">هنوز دیدگاهی ثبت نشده است.</p>
-                ) : (
-                  <DonutChart
-                    ariaLabel="توزیع وضعیت نظرات سایت"
-                    centerLabel="دیدگاه"
-                    centerValue={commentsTotal.toLocaleString("fa-IR")}
-                    segments={[
-                      { label: COMMENT_STATUS.pending, value: data.commentsPending, color: "#d9732b" },
-                      { label: COMMENT_STATUS.approved, value: data.commentsApproved, color: "#0e9f6a" },
-                      { label: COMMENT_STATUS.rejected, value: data.commentsRejected, color: "#b42318" },
-                    ]}
-                  />
-                )
-              ) : (
-                <p className="row-meta">در حال بارگذاری…</p>
-              )}
-            </section>
-
-            <section className="panel">
-              <div className="panel-head">
-                <h2>رویدادهای تازه</h2>
-                <Link href="/notifications" className="nav-link" style={{ fontSize: "0.72rem", color: "var(--gold-deep)", textDecoration: "none", fontWeight: 800 }}>
-                  همه ←{data && data.unreadNotifications > 0 ? ` (${data.unreadNotifications.toLocaleString("fa-IR")} جدید)` : ""}
-                </Link>
-              </div>
-              {data && data.notifications.length === 0 ? (
-                <p className="empty">هنوز رویدادی رخ نداده است.</p>
-              ) : (
-                (data?.notifications ?? []).map((item) => (
-                  <Link key={item.id} href={item.ref_table === "consultations" ? "/consultations" : "/comments"} className={`notif-row${item.read ? "" : " unread"}`}>
-                    <span className="notif-icon" aria-hidden="true">
-                      {item.ref_table === "consultations" ? (
-                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg>
-                      ) : (
-                        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.2L4 21l1.9-5.2A8 8 0 1 1 21 12z"/></svg>
-                      )}
-                    </span>
-                    <span className="notif-body">
-                      <span className="notif-title">{item.title}</span>
-                      {item.body && <span className="notif-summary">{item.body}</span>}
-                      <span className="notif-time">{relativeTimeFa(item.created_at)}</span>
-                    </span>
-                  </Link>
-                ))
-              )}
-            </section>
-
-            <section className="panel">
-              <h2>پربازدیدترین صفحه‌ها — ۳۰ روز</h2>
-              {data && data.topPages.length === 0 ? (
-                <p className="empty">داده‌ای برای نمایش نیست.</p>
-              ) : (
-                (data?.topPages ?? []).map((page) => (
-                  <div className="top-page" key={page.path}>
-                    <div className="top-page-head">
-                      <span className="mono top-path">{page.path}</span>
-                      <b>{page.views.toLocaleString("fa-IR")}</b>
-                    </div>
-                    <div className="top-bar">
-                      <div className="top-bar-fill" style={{ width: `${(page.views / maxTopViews) * 100}%` }} />
-                    </div>
+                  <div className="chart-legend" dir="rtl">
+                    <span><i style={{ background: CHART_COLORS.visits }} /> بازدید کل</span>
+                    <span><i style={{ background: CHART_COLORS.articleViews }} /> بازدید مقالات</span>
+                    <span><i style={{ background: CHART_COLORS.consultations }} /> درخواست مشاوره</span>
                   </div>
-                ))
-              )}
-            </section>
+                </>
+              )
+            ) : (
+              <p className="row-meta">در حال بارگذاری نمودار…</p>
+            )}
+          </section>
 
-            <section className="panel">
-              <h2>فعالیت‌های اخیر</h2>
-              {timeline.length === 0 ? (
-                <p className="empty">هنوز رویدادی ثبت نشده است.</p>
-              ) : (
-                <ol className="timeline">
-                  {timeline.map((entry) => (
-                    <li key={entry.id} className="timeline-item">
-                      <span className={`timeline-dot ${entry.kind}`} aria-hidden="true" />
-                      <div>
-                        <Link href={entry.href} className="timeline-title">{entry.title}</Link>
-                        <div className="timeline-meta">
-                          <span>{entry.detail}</span>
-                          <span>·</span>
-                          <time dateTime={entry.at}>{relativeTimeFa(entry.at)}</time>
-                        </div>
-                      </div>
+          {/* ---------- وضعیت محتوای سایت ---------- */}
+          <section className="panel" aria-label="وضعیت محتوای سایت">
+            <div className="panel-head">
+              <div>
+                <h2>وضعیت محتوای سایت</h2>
+                <span className="panel-sub">بر اساس فرانت‌متر فایل‌های مقاله در مخزن</span>
+              </div>
+            </div>
+            {articlesReady && articleStats.total > 0 ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 18, flexWrap: "wrap" }}>
+                <div dir="ltr" style={{ position: "relative", width: 150, height: 150, flex: "0 0 auto" }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={contentStatusSegments} dataKey="value" nameKey="name" innerRadius={52} outerRadius={70} paddingAngle={3} strokeWidth={2} stroke="var(--surface)">
+                        {contentStatusSegments.map((segment) => (
+                          <Cell key={segment.name} fill={segment.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          background: "var(--surface)",
+                          border: "1px solid var(--line-strong)",
+                          borderRadius: 12,
+                          fontSize: "0.74rem",
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                  <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                    <b style={{ fontSize: "1.25rem", color: "var(--text)", lineHeight: 1 }}>{articleStats.total.toLocaleString("fa-IR")}</b>
+                    <span style={{ fontSize: "0.58rem", color: "var(--text-2)" }}>مقاله</span>
+                  </div>
+                </div>
+                <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8, fontSize: "0.74rem" }}>
+                  {contentStatusSegments.map((segment) => (
+                    <li key={segment.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <i style={{ width: 11, height: 11, borderRadius: 3, background: segment.color, display: "inline-block" }} />
+                      <span style={{ color: "var(--text-2)" }}>{segment.name}</span>
+                      <b style={{ color: "var(--text)" }}>{segment.value.toLocaleString("fa-IR")}</b>
                     </li>
                   ))}
-                </ol>
-              )}
-            </section>
-          </div>
+                </ul>
+              </div>
+            ) : articlesReady ? (
+              <p className="empty">هنوز مقاله‌ای در مخزن ثبت نشده است.</p>
+            ) : (
+              <p className="row-meta">در حال دریافت وضعیت محتوا…</p>
+            )}
+            <p className="panel-sub" style={{ marginTop: 10 }}>حالت «در بازبینی» پس از راه‌اندازی گردش‌کار تأیید محتوا اضافه می‌شود.</p>
+          </section>
         </div>
-      </Shell>
+
+        {/* ============ سه کارت ثانویه ============ */}
+        <div className="grid-3">
+          {/* مقالات اخیر */}
+          <section className="panel" aria-label="مقالات اخیر">
+            <div className="panel-head">
+              <h2>مقالات اخیر</h2>
+              <Link href="/articles" className="nav-link">همه ←</Link>
+            </div>
+            {articlesReady && latestArticles.length === 0 ? (
+              <p className="empty">هنوز مقاله‌ای ثبت نشده است.</p>
+            ) : (
+              (latestArticles ?? []).map((article) => (
+                <div className="notif-row" key={article.slug} style={{ padding: "8px 6px" }}>
+                  <span className="notif-body" style={{ gap: 3 }}>
+                    <a className="notif-title" style={{ textDecoration: "none", lineHeight: 1.9 }} href={`https://leyla-abkeh.ir/articles/${article.slug}`} target="_blank" rel="noreferrer">
+                      {article.title ?? article.slug}
+                    </a>
+                    <span className="timeline-meta">
+                      <span>{formatJalali(article.publishDate)}</span>
+                      <StatusBadge type="article" status={articleStatus(article)} />
+                    </span>
+                  </span>
+                </div>
+              ))
+            )}
+            {!articlesReady && articlesState === "loading" && <p className="row-meta">در حال بارگذاری…</p>}
+          </section>
+
+          {/* فعالیت‌های اخیر */}
+          <section className="panel" aria-label="فعالیت‌های اخیر">
+            <div className="panel-head">
+              <h2>فعالیت‌های اخیر</h2>
+              <Link href="/notifications" className="nav-link">همه ←</Link>
+            </div>
+            {timeline.length === 0 ? (
+              <p className="empty">{data ? "هنوز رویدادی ثبت نشده است." : "در حال بارگذاری…"}</p>
+            ) : (
+              <ol className="timeline">
+                {timeline.map((entry) => (
+                  <li key={entry.id} className="timeline-item">
+                    <span className={`timeline-dot ${entry.kind}`} aria-hidden="true" />
+                    <div>
+                      <Link href={entry.href} className="timeline-title">{entry.title}</Link>
+                      <div className="timeline-meta">
+                        <span>{entry.detail}</span>
+                        <time dateTime={entry.at}>{relativeTimeFa(entry.at)}</time>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          {/* صفحات پربازدید */}
+          <section className="panel" aria-label="صفحات پربازدید">
+            <div className="panel-head">
+              <h2>صفحات پربازدید — ۳۰ روز</h2>
+              <Link href="/reports" className="nav-link">گزارش ←</Link>
+            </div>
+            {data && data.topPages.length === 0 ? (
+              <p className="empty">داده‌ای برای نمایش نیست.</p>
+            ) : (
+              (data?.topPages ?? []).map((page) => (
+                <div className="top-page" key={page.path}>
+                  <div className="top-page-head">
+                    <span className="mono top-path" dir="ltr">{page.path}</span>
+                    <b>{page.views.toLocaleString("fa-IR")}</b>
+                  </div>
+                  <div className="top-bar">
+                    <div className="top-bar-fill" style={{ width: `${(page.views / maxTopViews) * 100}%` }} />
+                  </div>
+                </div>
+              ))
+            )}
+            {!data && <p className="row-meta">در حال بارگذاری…</p>}
+          </section>
+        </div>
+
+        {/* ============ آخرین مقالات (جدول کامل) ============ */}
+        <section className="panel" aria-label="آخرین مقالات">
+          <div className="panel-head">
+            <div>
+              <h2>آخرین مقالات</h2>
+              <span className="panel-sub">جستجو، فیلتر وضعیت، مرتب‌سازی و صفحه‌بندی روی محتوای مخزن</span>
+            </div>
+            <Link href="/articles" className="btn secondary sm no-print">
+              <Plus size={15} strokeWidth={2.2} aria-hidden="true" /> افزودن مقاله
+            </Link>
+          </div>
+          {articlesReady ? (
+            <ArticlesTable articles={articles ?? []} onChanged={loadArticles} />
+          ) : articlesState === "loading" ? (
+            <div className="skeleton" style={{ height: 240 }} aria-hidden="true" />
+          ) : (
+            <p className="empty">{articlesMessage || "فهرست مقالات در دسترس نیست."}</p>
+          )}
+        </section>
+
+        {/* ============ آخرین درخواست‌های مشاوره (اقدام سریع) ============ */}
+        <section className="panel" aria-label="آخرین درخواست‌های مشاوره">
+          <div className="panel-head">
+            <h2>آخرین درخواست‌های مشاوره</h2>
+            <Link href="/consultations" className="nav-link">همهٔ درخواست‌ها ←</Link>
+          </div>
+          {data && data.recentConsultations.length === 0 ? (
+            <p className="empty">هنوز درخواستی ثبت نشده است.</p>
+          ) : (
+            (data?.recentConsultations ?? []).map((row) => (
+              <div className="row" key={row.id}>
+                <div className="row-head">
+                  <div className="row-identity">
+                    <div>
+                      <span className="row-title">{row.name}</span>
+                      <div className="row-meta">{row.topic} · <a className="mono" href={`tel:${row.phone}`}>{row.phone}</a></div>
+                    </div>
+                  </div>
+                  <span className="row-meta">{formatDateTimeFa(row.created_at)}</span>
+                </div>
+                <div className="row-actions">
+                  <span className={`badge ${row.status}`}>{CONSULTATION_STATUS[row.status]}</span>
+                  <Link href="/consultations" className="btn secondary sm">مدیریت ←</Link>
+                </div>
+              </div>
+            ))
+          )}
+        </section>
+      </DashboardLayout>
     </AuthGate>
   );
 }
